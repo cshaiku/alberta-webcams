@@ -20,8 +20,8 @@ header('X-Robots-Tag: noindex, follow');
 <meta name="description" content="Explore saved snapshots of <?= e($camera['title']) ?> with a thumbnail filmstrip and time lapse playback."><meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://sltd.ca/awc/timeline.php?camera=<?= e($id) ?>">
 <link rel="icon" type="image/svg+xml" href="/awc/assets/brand/awc.svg">
-<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-timeline1">
-<script type="module" src="/awc/assets/timeline.js?v=20261031-timeline1"></script>
+<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-filmstrip2">
+<script type="module" src="/awc/assets/timeline.js?v=20261031-filmstrip2"></script>
 <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body id="app" class="timeline-page" data-camera="<?= e($id) ?>" data-day="<?= e($day) ?>" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -31,11 +31,9 @@ header('X-Robots-Tag: noindex, follow');
 <section class="timeline-heading"><div><h1><?= e($camera['title']) ?></h1><p><?= e($camera['region']) ?></p></div><label class="day-picker">Day <select id="timeline-day"<?= !$days ? ' disabled' : '' ?>><?php if (!$days): ?><option value="<?= e($day) ?>">No saved days</option><?php endif; ?><?php foreach ($days as $date): ?><option value="<?= e($date) ?>"<?= $date === $day ? ' selected' : '' ?>><?= e($date) ?></option><?php endforeach; ?><?php if ($days && !in_array($day,$days,true)): ?><option value="<?= e($day) ?>" selected><?= e($day) ?></option><?php endif; ?></select></label></section>
 <section class="timeline-stage" aria-label="Selected snapshot"><img id="timeline-image" alt="" hidden><div id="timeline-empty">Loading snapshots…</div><a id="timeline-original" target="_blank" rel="noopener" hidden>Open original <?= icon('external') ?></a></section>
 <section class="timeline-console" aria-label="Timeline controls">
-<div class="playback-controls"><button id="timeline-prev" aria-label="Previous snapshot" disabled>←</button><button id="timeline-play" aria-label="Play snapshots" disabled>Play</button><button id="timeline-next" aria-label="Next snapshot" disabled>→</button><time id="timeline-time">No snapshot selected</time><label class="speed-picker">Speed <select id="timeline-speed"><option value="1500">Slow</option><option value="750" selected>Normal</option><option value="300">Fast</option></select></label><span id="timeline-count"></span></div>
-<label class="scrubber-label" for="timeline-scrubber">Scrub snapshots <span>Mountain time</span></label><input id="timeline-scrubber" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Snapshot timeline">
-<div class="timeline-extents"><span id="timeline-start"></span><span id="timeline-end"></span></div>
-<div id="timeline-filmstrip" class="timeline-filmstrip" aria-label="Snapshot thumbnails"></div>
-<p id="timeline-status" role="status" aria-live="polite">Images record retrieval time. Camera capture times may differ.</p>
+<div class="playback-controls"><div class="transport"><button id="timeline-prev" aria-label="Previous snapshot" disabled>←</button><button id="timeline-play" aria-label="Play snapshots" disabled>Play</button><button id="timeline-next" aria-label="Next snapshot" disabled>→</button></div><label class="speed-picker">Speed <select id="timeline-speed"><option value="1500">Slow</option><option value="750" selected>Normal</option><option value="300">Fast</option></select></label></div>
+<div id="timeline-filmstrip" class="timeline-filmstrip" aria-label="Snapshot thumbnails"><div class="timeline-frames"></div></div>
+<p id="timeline-status" class="sr-only" role="status" aria-live="polite"></p>
 </section>
 <noscript>This timeline needs JavaScript. <a href="/awc/?view=archive&amp;camera=<?= e($id) ?>">Browse the archive grid.</a></noscript>
 </main>

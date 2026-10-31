@@ -1,6 +1,6 @@
 {
   "url": "https://sltd.ca/awc/timeline.php?camera=ab_128",
-  "backup": "domains/sltd.ca/private/deploy-backups/awc-timeline-20261031",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-filmstrip-20261031",
   "checks": [
     "PHP and JavaScript syntax checks",
     "Local timeline browser test with live archive responses",
@@ -8,10 +8,20 @@
   ],
   "files": {
     "index.php": "986543fd27a9de7da6432796bf90ddfd3c58c2e0ba0a38b5ba8f23d3d49021f3",
-    "timeline.php": "0adf63353f151cb79b395e62a5d0587c43ccff4f708e216a5faa8792c208116e",
+    "timeline.php": "3659fe82c79565b6aa1a73bb6243d7871b6d6bb2705268dd2d7456b4bdaffd05",
     "assets/app.js": "22748d8231f446d0862ac7d6397d4ec3b473942dad3b21482f5ad0bfbb900a5a",
-    "assets/timeline.js": "8b2ca8afb858a28f47be3a8bfbde5499c4ce336231343315918999c93eaed81e",
-    "assets/timeline.css": "55d616e9a4a6b5c4d8462af2b8d42aa0d47ca4c1b961eb0a0cea627f4eee4791"
+    "assets/timeline.js": "34a1198e00e78459c59a42c2cdd3619486406b377612b01b51942abb5a3251f1",
+    "assets/timeline.css": "b1809d007fe0fdad061e839d5eedb28d29c47e33be3631e0b97f4f075230d101"
   },
-  "indexing": "noindex, follow, excluded from sitemap"
+  "indexing": "noindex, follow, excluded from sitemap",
+  "presentation": {
+    "thumbnailWidth": 180,
+    "thumbnailGap": 0,
+    "centeredFilmstrip": true,
+    "centeredTransport": true,
+    "slider": false,
+    "externalTimestamps": false,
+    "gapMarkers": false,
+    "visibleFooterStatus": false
+  }
 }
