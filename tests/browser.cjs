@@ -7,8 +7,6 @@ const base = process.env.AWC_TEST_URL || 'http://127.0.0.1:8768/awc/';
  await page.locator('[data-filter=edmonton]').click();assert.equal(await page.locator('.camera-card').count(),4);
  await page.locator('[data-filter=highways]').click();assert.equal(await page.locator('.camera-card').count(),8);
  await page.locator('[data-filter=all]').click();
- await page.locator('#density').selectOption('compact');assert(await page.locator('#gallery').evaluate(e=>e.classList.contains('compact')));
- await page.locator('#density').selectOption('comfortable');
  await page.locator('.image-button img').first().evaluate(e=>e.decode());assert.match(await page.locator('.image-button img').first().evaluate(e=>e.currentSrc),/format=webp/);
  await page.locator('.image-button').first().click();assert(await page.locator('#viewer').evaluate(e=>e.open));await page.keyboard.press('Escape');assert(!(await page.locator('#viewer').evaluate(e=>e.open)));
  await page.locator('#rail-toggle').click();await page.locator('.camera-link[data-camera=ab_128]').click();await page.waitForSelector('.image-button');assert.equal(await page.locator('#archive-controls').isVisible(),true);

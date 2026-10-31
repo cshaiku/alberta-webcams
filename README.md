@@ -12,7 +12,7 @@ The working example is intended for https://sltd.ca/awc/. Codex project folder: 
 * The shared hosting scheduler saves a new set of JPEG images every 15 minutes, with previous images preserved when an individual camera fails. The manual retrieval button is removed.
 * Archive browses one camera by date and hour, with an enlarged viewer and previous or next image controls.
 * Map shows a schematic province outline using official camera coordinates. Camera buttons provide an accessible alternative.
-* The camera rail collapses to give images more room. On phones it opens as a drawer. Large and compact image sizes are available.
+* The camera rail collapses to give images more room. On phones it opens as a drawer. The desktop collection uses three equal columns.
 * All times use America/Edmonton. UI timestamps record retrieval time; a source image may have an older embedded capture timestamp.
 * Retrieval requires a session CSRF token and shares a one minute server cooldown and exclusive lock across visitors. Shared hosting retrieves images every 15 minutes through a private CLI cron job.
 
@@ -39,7 +39,7 @@ DYWS is not integrated because this viewer has no ordering, booking or payment w
 
 ## Premium modernization
 
-The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, persistent image density, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
+The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, uniform image tiles, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
 
 PHP GD with WebP support is required for optimized derivatives. Original JPEGs remain available. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.
 

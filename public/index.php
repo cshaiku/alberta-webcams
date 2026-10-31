@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-scroll1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-header48">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-scroll1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-header48"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -71,7 +71,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
         <a href="/awc/?view=map" data-view="map"<?= $view === 'map' ? ' aria-current="page"' : '' ?>><?= icon('map') ?><span>Map</span></a>
     </nav>
 
-    <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label><label class="density"><span class="sr-only">Image size</span><select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="large">Large images</option></select></label></div></div>
+    <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label></div></div>
     </div>
     <sdou-preferences-center target="#app" storage-key="awc.reading.v1"></sdou-preferences-center>
 </header>

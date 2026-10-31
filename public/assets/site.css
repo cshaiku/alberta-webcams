@@ -364,3 +364,26 @@
   .header #header-controls { flex: 1; }
   .header .collection-toolbar { justify-content: space-between; }
 }
+
+@layer workspace {
+  :root { --header-height: 48px; }
+  .header { min-block-size: 48px; block-size: 48px; }
+  .header .brand span { font-size: calc(.75em + 4px); }
+  #app .header .views a { font-size: calc(.75em + 4px); min-block-size: 48px; white-space: nowrap; }
+  #app .header .filters button, #app .header .search input { font-size: calc(.7em + 4px); }
+  .header .collection-toolbar { justify-content: start; gap: 16px; }
+  .header .toolbar-tools { flex: 1 1 720px; max-inline-size: 720px; }
+  .header .search { flex: 1 1 720px; max-inline-size: 720px; }
+  @media (min-width: 761px) and (max-width: 1000px) {
+    .header .views a { padding-inline: 8px; }
+    .header .views a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+    .header .collection-toolbar { gap: 8px; }
+  }
+  @media (max-width: 760px) {
+    .header .toolbar-tools { flex-basis: 100%; }
+  }
+}
+@layer workspace {
+  .header .filters { flex: 0 0 auto; }
+  @media (max-width: 760px) { .header .filters { flex: 1 1 100%; flex-wrap: wrap; } }
+}

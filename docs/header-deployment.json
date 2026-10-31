@@ -1,10 +1,13 @@
 {
   "url": "https://sltd.ca/awc/",
-  "backup": "domains/sltd.ca/private/deploy-backups/awc-scroll-20261031",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-header48-20261031",
   "changes": [
     "Existing SDOU gear moved into header",
     "Directional scroll visibility",
-    "Manual retrieval controls removed"
+    "Manual retrieval controls removed",
+    "Density dropdown and saved density behavior removed",
+    "Search directly after filters, capped at 720px",
+    "Header text increased by 4px and height set to 48px"
   ],
   "verifiedWidths": [
     1440,
@@ -20,8 +23,8 @@
     "Existing browser workflow suite passed"
   ],
   "files": {
-    "index.php": "d8cfba4d38eef75c1667dfdd509aa175e068e264c89bec3acd04f447125ab8ab",
-    "assets/site.css": "66e4ee32daf9d2cba34fb1640107813a1655c00e22745c2bf75cb8460b61f16d",
-    "assets/app.js": "1922ae681e8c528df055267efa776283a932f19a0db7b8b9dba152a48da1beeb"
+    "index.php": "28991282949f3fc5c94449f0baa61be596953861999ff2eacacb7c1b3e860c4d",
+    "assets/site.css": "aef2deb59c9963e55d73260363c6dcacaf75deb180a9f430c5e5af6bfcf6cb0b",
+    "assets/app.js": "4054be7ea4d1305c6c2c0cb6752ddccbdf840b616ef3f3ee8a7ac462796fc60f"
   }
 }

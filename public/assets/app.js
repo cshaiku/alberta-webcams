@@ -203,13 +203,6 @@ for (const [id, direction] of [['prev-day', -1], ['next-day', 1]]) {
   });
 }
 $('#today').addEventListener('click', () => { $('#date').value = mountainDate(); $('#hour').value = 'all'; render('push'); });
-function density(value) {
-  $('#gallery').classList.toggle('compact', value === 'compact');
-  $('#gallery').classList.toggle('large', value === 'large');
-  $('#density').value = value;
-}
-try { const saved = localStorage.getItem('awc.grid.density'); if (['comfortable','compact','large'].includes(saved)) density(saved); } catch { /* Preferences remain usable for this visit. */ }
-$('#density').addEventListener('change', () => { density($('#density').value); try { localStorage.setItem('awc.grid.density', $('#density').value); } catch { /* Storage is optional. */ } });
 window.addEventListener('popstate', () => { readURL(); render(); });
 function setMenu(open) {
   document.body.classList.toggle('controls-open', open);
