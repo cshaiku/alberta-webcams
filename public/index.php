@@ -1,10 +1,14 @@
 <?php
+if (isset($_GET['view']) && parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) !== '/awc/') {
+    header('Location: /awc/?' . http_build_query(array_intersect_key($_GET, array_flip(['view','camera','date','hour']))), true, 302);
+    exit;
+}
 header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'");
 header('Cache-Control: no-store');
 ?>
 <!doctype html>
 <html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="Explore Alberta webcam snapshots and browse the image archive by camera, date and time."><title>Alberta Webcams</title><link rel="stylesheet" href="/awc/assets/accessibility/shared/content.css"><link rel="stylesheet" href="/awc/assets/site.css?v=1"><script type="module" src="/awc/assets/app.js?v=1"></script><script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script></head>
-<body id="app" data-sdou-a11y-content data-default-theme="dark">
+<body id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
 <a class="skip" href="#main">Skip to camera images</a>
 <header class="header"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true">☰</button><a class="brand" href="/awc/"><span class="wordmark">AWC</span><span>Alberta Webcams</span></a><nav class="views" aria-label="Views"><button data-view="overview" aria-pressed="true">Overview</button><button data-view="archive" aria-pressed="false">Archive</button><button data-view="map" aria-pressed="false">Map</button></nav><button id="retrieve" class="primary">↻ <span>Retrieve images</span></button></header>
 <div class="workspace"><aside id="sidebar" class="sidebar"><div class="rail-head"><h2>Cameras</h2><span id="camera-count"></span></div><label class="search"><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Search cameras"></label><button id="all-cameras" class="all selected">All cameras</button><div id="camera-list"></div><div class="rail-foot"><span class="dot"></span> Manual retrieval<br><small>Snapshots from 511 Alberta</small></div></aside>

@@ -156,6 +156,7 @@ export class PreferenceController extends EventTarget {
     const theme = target.getAttribute("data-default-theme");
     this.initial = {
       ...defaults,
+      font: target.getAttribute("data-default-font") === "sans" ? "sans" : defaults.font,
       theme: ["dark", "light", "warm", "system"].includes(theme)
         ? theme
         : defaults.theme,
@@ -230,7 +231,7 @@ export class PreferenceController extends EventTarget {
       align: s.align,
       font: {
         studio: "Georgia,serif",
-        sans: "Verdana,Arial,sans-serif",
+        sans: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
         serif: "Georgia,serif",
         mono: "ui-monospace,monospace",
       }[s.font],
