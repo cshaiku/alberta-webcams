@@ -55,3 +55,32 @@
     #app .timeline-header .day-picker select { font-size: 11px; padding: 4px; max-inline-size: 108px; }
   }
 }
+
+@layer workspace {
+  .timeline-context { display: flex; align-items: center; gap: 18px; min-inline-size: 0; }
+  .timeline-header .timeline-heading { gap: 12px; }
+  .camera-identity { display: inline-flex; align-items: center; justify-content: center; min-inline-size: 32px; min-block-size: 44px; }
+  .camera-identity > span { display: inline-flex; }
+  .timeline-header .playback-controls { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 0; }
+  .timeline-header .transport { gap: 6px; }
+  #app .timeline-header .playback-controls button,#app .timeline-header .playback-controls select { min-block-size: 36px; padding: 6px 10px; border-radius: 4px; }
+  .timeline-header { grid-template-columns: minmax(0,1fr) auto minmax(44px,1fr); }
+  @media(max-width:1000px) {
+    .timeline-context { gap: 8px; }
+    .timeline-header .playback-controls { gap: 10px; }
+    .timeline-header .speed-picker { font-size: .7rem; gap: 4px; }
+    #app .timeline-header .playback-controls button,#app .timeline-header .playback-controls select { padding-inline: 6px; }
+  }
+  @media(max-width:650px) {
+    .timeline-header { block-size: 96px; min-block-size: 96px; grid-template-columns: minmax(0,1fr) 44px; grid-template-rows: 48px 48px; row-gap: 0; }
+    .timeline-context { grid-column: 1; grid-row: 1; }
+    .timeline-header sdou-preferences-center { grid-column: 2; grid-row: 1; }
+    .timeline-header .playback-controls { grid-column: 1 / -1; grid-row: 2; }
+    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 96px); }
+  }
+}
+@layer workspace {
+  @media(min-width:1001px) and (max-width:1250px) {
+    .timeline-nav a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  }
+}

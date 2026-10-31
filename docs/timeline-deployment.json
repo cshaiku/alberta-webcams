@@ -1,6 +1,6 @@
 {
   "url": "https://sltd.ca/awc/timeline.php?camera=ab_128",
-  "backup": "domains/sltd.ca/private/deploy-backups/awc-cache-20261031",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-controls-20261031",
   "checks": [
     "PHP and JavaScript syntax checks",
     "Local timeline browser test with live archive responses",
@@ -11,10 +11,10 @@
   ],
   "files": {
     "index.php": "986543fd27a9de7da6432796bf90ddfd3c58c2e0ba0a38b5ba8f23d3d49021f3",
-    "timeline.php": "69c7b1eb74af37a5275d62a3a737f9ca891e33262e91c9188f01546369ed311f",
+    "timeline.php": "767fc2660fa1bfdc92871d696ea64bdf532479ff13e9892924779637657934ba",
     "assets/app.js": "22748d8231f446d0862ac7d6397d4ec3b473942dad3b21482f5ad0bfbb900a5a",
     "assets/timeline.js": "10750966aa391f278ebec6e3bc0c170518a90e1fcabc9ab438f3425f5937212c",
-    "assets/timeline.css": "7de706ed43c7657779ced040881ef8659dd761c0e365b1c22b53f5fd16038e6c"
+    "assets/timeline.css": "b167f84932416522e9a15a07d9ed9a7762ada5e16f80cc0225c153cd83a835f0"
   },
   "indexing": "noindex, follow, excluded from sitemap",
   "presentation": {
@@ -26,7 +26,14 @@
     "externalTimestamps": false,
     "gapMarkers": false,
     "visibleFooterStatus": false,
-    "titleAndDayInMainHeader": true
+    "titleAndDayInMainHeader": true,
+    "header": {
+      "left": "All cameras, Archive, camera title icon, Day",
+      "center": "Previous, Play/Pause, Next, Speed",
+      "right": "Accessibility Preferences",
+      "desktopHeight": 48,
+      "phoneHeight": 96
+    }
   },
   "previewCache": {
     "decodedLimit": 24,
