@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-timeline1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-image-links1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-timeline1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-image-links1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
