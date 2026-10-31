@@ -1,0 +1,17 @@
+{
+  "camera": "ab_295",
+  "location": "Hwy 216: Anthony Henday Drive and 91 Street Overpass",
+  "officialCameraSiteId": 295,
+  "officialImageViewId": 533,
+  "imageUrl": "https://511.alberta.ca/map/Cctv/533",
+  "sourcePage": "https://511.alberta.ca/#camera-295",
+  "evidence": "Official 511 Alberta camera list maps site 295 to image views 533, 534 and 535. View 533 returned a 640 by 388 JPEG of the road, converted to WebP by our collector.",
+  "collectorCheck": {
+    "at": "2026-10-31T03:36:38-06:00",
+    "saved": 12,
+    "unavailable": 0,
+    "webpPrepared": 36,
+    "webpIncomplete": 0
+  },
+  "preserved": "Existing camera identity and coordinates; only image feed URL changed"
+}
