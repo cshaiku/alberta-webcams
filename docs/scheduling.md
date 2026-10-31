@@ -1,6 +1,6 @@
 # Fifteen minute retrieval
 
-The recurring job was registered in Hostinger hPanel for sltd.ca on October 31, 2026 at approximately 02:38 America/Edmonton. hPanel confirmed creation and listed the exact command and schedule below. The collector previously saved 11 images in its CLI test. The first automatic execution is pending verification, with the next boundary at 02:45. This runs on shared hosting.
+The recurring job was registered in Hostinger hPanel for sltd.ca on October 31, 2026 at approximately 02:38 America/Edmonton. hPanel confirmed creation and listed the exact command and schedule below. The collector previously saved 11 images in its CLI test. The automatic 02:45:06 America/Edmonton execution is verified from runtime state and eleven saved JPEG files. Its result recorded 11 saved and one unavailable. The public page and image URLs served that collection successfully. This runs on shared hosting.
 
 In Hostinger hPanel, select sltd.ca, open Cron Jobs, choose Custom, and use:
 
