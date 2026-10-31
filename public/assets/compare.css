@@ -5,7 +5,7 @@
   .compare-header [aria-current] { background: var(--panel); }
   #app .compare-header h1 { font-size: .9rem; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-inline-size: 0; }
   .compare-header sdou-preferences-center { margin-inline-start: auto; }
-  #compare-main { display: grid; grid-template-rows: auto minmax(240px,1fr) auto; block-size: calc(100dvh - 48px); min-inline-size: 0; }
+  #compare-main { display: grid; grid-template-rows: auto minmax(240px,1fr) auto; block-size: calc(100dvh - 48px - var(--footer-height,30px)); min-inline-size: 0; }
   .compare-pickers { display: flex; align-items: end; justify-content: center; gap: 12px; padding: 8px 12px; }
   .compare-pickers label { display: grid; gap: 4px; font-size: .75rem; min-inline-size: 0; }
   #app .compare-pickers select { inline-size: 250px; max-inline-size: 100%; font-size: .8rem; }
@@ -31,7 +31,7 @@
     #app .compare-pickers select { inline-size: 100%; padding: 6px 4px; font-size: .7rem; }
     #app #compare-swap { padding: 6px; }
     #compare-share { grid-column: 1 / -1; justify-self: center; }
-    #compare-main { min-block-size: calc(100dvh - 48px); block-size: auto; grid-template-rows: auto minmax(45dvh,1fr) auto; }
+    #compare-main { min-block-size: calc(100dvh - 48px - var(--footer-height,30px)); block-size: auto; grid-template-rows: auto minmax(45dvh,1fr) auto; }
   }
 }
 

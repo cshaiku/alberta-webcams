@@ -92,3 +92,13 @@ dialog > .panel-body { display: grid; grid-template-columns: minmax(0,1fr) minma
 }
 
 .dialog-head h2,.accessibility-column > h3,.personal-column > h3 { font-family: inherit; }
+
+.setting-field { display: grid; gap: 5px; font-size: .9rem; }
+.settings-pills { display: flex; flex-wrap: wrap; gap: 4px; border: 0; padding: 4px; margin: 4px 0 0; min-width: 0; background: var(--sdou-ax-bg); border-radius: 12px; }
+.settings-pills label { flex: 1 1 auto; position: relative; min-width: 0; cursor: pointer; }
+.settings-pills input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.settings-pills span { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 12px; font-size: .82rem; line-height: 1.4; border: 1px solid transparent; border-radius: 9px; text-align: center; }
+.settings-pills input:checked + span { background: var(--sdou-ax-panel); border-color: var(--sdou-ax-gold); color: var(--sdou-ax-ink); box-shadow: 0 1px 5px #0002; }
+.settings-pills input:focus-visible + span { outline: 2px solid var(--sdou-ax-gold); outline-offset: 2px; }
+.settings-pills input:disabled + span { opacity: .55; cursor: not-allowed; }
+select[data-pill-source] { display: none !important; }

@@ -2,7 +2,7 @@
   .timeline-page { min-block-size: 100dvh; }
   .timeline-header { gap: 20px; block-size: 48px; min-block-size: 48px; }
   .timeline-header a { display: inline-flex; align-items: center; gap: 8px; font-size: .9rem; min-block-size: 44px; }
-  #timeline-main { display: grid; grid-template-rows: auto minmax(220px,1fr) auto; block-size: calc(100dvh - 48px); min-inline-size: 0; }
+  #timeline-main { display: grid; grid-template-rows: auto minmax(220px,1fr) auto; block-size: calc(100dvh - 48px - var(--footer-height,30px)); min-inline-size: 0; }
   .timeline-heading { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   #app .timeline-heading h1 { font-size: 1rem; margin: 0; line-height: 1.4; }
   .timeline-heading p { font-size: .75rem; color: var(--muted); }
@@ -26,7 +26,7 @@
     #app .timeline-heading h1 { font-size: .85rem; }
     .timeline-heading p { display: none; }
     .timeline-console { padding: 6px; }
-    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 48px); grid-template-rows: auto minmax(220px,1fr) auto; }
+    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 48px - var(--footer-height,30px)); grid-template-rows: auto minmax(220px,1fr) auto; }
     .timeline-stage { min-block-size: 35dvh; }
     .playback-controls { grid-template-columns: 1fr; }
     .transport { grid-column: 1; }
@@ -76,7 +76,7 @@
     .timeline-context { grid-column: 1; grid-row: 1; }
     .timeline-header sdou-preferences-center { grid-column: 2; grid-row: 1; }
     .timeline-header .playback-controls { grid-column: 1 / -1; grid-row: 2; }
-    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 96px); }
+    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 96px - var(--footer-height,30px)); }
   }
 }
 @layer workspace {

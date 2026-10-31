@@ -1,0 +1,24 @@
+{
+  "url": "https://sltd.ca/awc/",
+  "settingsChoices": "Native radio pill selectors for 1 to 4 options, dropdown for 5 or more",
+  "footer": "Built with love by Starlit Digital.",
+  "homepage": "Featured at https://sltd.ca/ under Websites",
+  "checks": [
+    "Live personal and accessibility pill browser tests",
+    "Live full personal settings suite",
+    "Live homepage card, WebP image and link verified",
+    "Live footer credit and 320/390/1440 reflow verified"
+  ],
+  "files": {
+    "public/assets/accessibility/components/preferences-center/pills.js": "c77dd4d22f94e66148a21b905fc9ce4ebd41f266d8620a708a43e319b804070d",
+    "public/assets/accessibility/components/preferences-center/index.js": "2e2c716148da08b412ca344ffe5937c1d87b13cc34bb28f6cde69cd59d6cf6cd",
+    "public/assets/accessibility/components/preferences-center/component.css": "a7e66fb146e2778ea2512919e4f12c7f3f46c904d38dacd64fb900e89ff619fe",
+    "public/assets/site.css": "7b502e3ff7ba63a91eaf33d5e87b89a30111c8c5c5ea6b1270c0d9897b9e9616",
+    "public/assets/map.css": "a04223c35d5621cdc6cea1ec3cb6270aa44052645b36c2d58c5fa9355aa34f01",
+    "public/assets/timeline.css": "8f378971d6f70ba4f90cb6d10fa9fd5f6115bb341c05b82d6f4ffa45fc3abb4b",
+    "public/assets/compare.css": "a38e31800894c4cf055b0d992ef051a93d60668232ea1a712e912748ab331719",
+    "public/index.php": "8b6167afad95569b3e87a3332de58c53d809d5bc6ee4f0a5089febd7b890cc70",
+    "public/timeline.php": "edb3e9d09c33d0b54965c51f9cf5c09026e0737c58d67aacfc11168cd54aaf80",
+    "public/compare.php": "2c688301eac4fa1df910065630306880582e8f657930e68d577e6f592f849dbd"
+  }
+}

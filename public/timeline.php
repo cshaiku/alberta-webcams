@@ -24,9 +24,9 @@ header('X-Robots-Tag: noindex, follow');
 <meta name="description" content="Explore saved snapshots of <?= e($camera['title']) ?> with a thumbnail filmstrip and time lapse playback."><meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://sltd.ca/awc/timeline.php?camera=<?= e($id) ?>">
 <link rel="icon" type="image/svg+xml" href="/awc/assets/brand/awc.svg">
-<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-personal1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-personal1">
+<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-credit1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-credit1">
 <script type="module" src="/awc/assets/timeline.js?v=20261031-personal1"></script>
-<script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-personal1"></script>
+<script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-pills1"></script>
 <script type="application/json" id="awc-settings"><?= json_encode(public_settings(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) ?></script>
 </head>
 <body id="app" class="timeline-page" data-camera="<?= e($id) ?>" data-day="<?= e($day) ?>" data-sdou-a11y-content data-default-theme="<?= e(app_settings()['ui']['defaultTheme']) ?>" data-default-font="sans">
@@ -42,4 +42,5 @@ header('X-Robots-Tag: noindex, follow');
 </section>
 <noscript>This timeline needs JavaScript. <a href="/awc/?view=archive&amp;camera=<?= e($id) ?>">Browse the archive grid.</a></noscript>
 </main>
+<footer class="product-credit">Built with love by <a href="https://sltd.ca/">Starlit Digital</a>.</footer>
 </body></html>

@@ -411,3 +411,9 @@
  .user-retrieved { position: absolute; inset: 4px auto auto 4px; z-index: 2; padding: 3px 6px; background: #09151fe8; color: #fff; font: 11px/1.5 system-ui,sans-serif; pointer-events: none; }
  @media(hover:none) { #app .camera-favourite { opacity: 1; } }
 }
+
+@layer workspace {
+ :root { --footer-height: 30px; }
+ .product-credit { min-block-size: var(--footer-height); padding: 6px 12px; text-align: center; font: 12px/18px system-ui,sans-serif; color: var(--muted); background: var(--page); }
+ .product-credit a { text-decoration: underline; text-underline-offset: 3px; }
+}

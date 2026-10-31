@@ -1,0 +1,6 @@
+# Reviewed false positives: deployment SHA256 file digests, not API credentials.
+c0fc4ff7eaacb53f6ac81dff7f31c82a7143cb95:docs/json-configuration-deployment.json:generic-api-key:36
+cc760626af4a538d3686e53c96eac08f43a41057:docs/map-deployment.json:generic-api-key:23
+0af47b92621fdba056c64a1a63e0a96c5ca0bc85:docs/archive-deployment.json:generic-api-key:18
+3061e2a89e2bb1610bcc69384405cb72d6533d5f:docs/deployment.json:generic-api-key:12
+3061e2a89e2bb1610bcc69384405cb72d6533d5f:docs/deployment.json:generic-api-key:14

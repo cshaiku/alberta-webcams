@@ -2,7 +2,7 @@
 
 Restoration of Chris Simmons’s AWC site, previously at awc.cshaiku.com.
 
-Repository visibility: **private**. The owner may make it public later. Do not change visibility automatically. Review source provenance, image reuse terms and private history before public release. No license has been granted to third parties yet.
+Repository visibility: **public**, published at the owner’s request. Runtime images, private deployment overrides, recovered legacy archives and user preferences are excluded from Git. Third party components retain their included licenses; no additional reuse license has been granted for original project code.
 
 The working example is intended for https://sltd.ca/awc/. Codex project folder: `/private/var/www/starlit-digital/alberta-webcams`. Adding this folder to the Codex sidebar is an owner step because the available app tools cannot create a project.
 
@@ -41,7 +41,7 @@ DYWS is not integrated because this viewer has no ordering, booking or payment w
 
 The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, uniform image tiles, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
 
-PHP GD with WebP support is required for capture and optimized derivatives. Captures and responsive variants are WebP only; no JPEG or PNG capture copies are retained. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.
+PHP GD with WebP support is required for capture and optimized derivatives. Captures and responsive variants are WebP only; no JPEG or PNG capture copies are retained. The private runtime persists across releases. The source repository is public at the owner’s request.
 
 ## Dense image workspace and scheduler
 
@@ -98,3 +98,5 @@ The existing gear now opens one native full viewport Settings dialog. My Network
 Personal preferences use validated, versioned JSON in browser localStorage under `awc.user.v1`. No account, server record or upload is introduced. Preferences include favourites, camera order, named saved routes, selected personal Network, arrival view, remembering camera/view/map center and zoom, playback speed, follow latest behavior, desktop columns and optional labelled retrieval timestamps. Explicit Network links bypass the arrival redirect, so users can always return to the full network. Up/down buttons make camera order usable by keyboard and touch; route membership is saved in that order. Routes can be edited and deleted. An empty personal network offers a working Show all cameras action. Unknown or malformed stored values are normalized, labels are escaped, cross tab changes are synchronized and blocked storage is reported as visit only behavior.
 
 Timeline and Compare keep historical selections when follow latest is off; Network freezes new automatic image collection display. Saved routes and favourites also narrow the map camera list and markers. Retrieval time labels are optional and placed at the top of images, away from providers’ usual bottom timestamp strip. My Network reset does not reset reading preferences, and resetting accessibility does not reset personal choices. Existing default behavior is all eighteen cameras, three desktop columns, camera embedded timestamps and a fifteen minute refresh. The collector and private runtime are unchanged. See `tests/personal.cjs` and `docs/personal-settings-deployment.json`.
+
+Settings with one to four choices use native radio pill selectors in both columns. Five or more choices remain a dropdown, including dynamically growing route lists. Keyboard selection, stored values and accessibility hints are preserved. A small footer credits Starlit Digital.

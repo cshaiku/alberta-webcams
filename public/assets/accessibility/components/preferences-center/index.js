@@ -1,3 +1,4 @@
+import {installPills,syncPills} from './pills.js?v=20261031-pills1';
 import {mountPersonalPanel} from '../../../lib/personal.js?v=20261031-personal1';
 import {
   A11yComponent,
@@ -10,7 +11,7 @@ import {
 } from "../../shared/base.js?v=sdou20261029b";
 class PreferencesCenter extends A11yComponent {
   static styles = new URL(
-    "./component.css?v=20261031-personal1",
+    "./component.css?v=20261031-pills1",
     import.meta.url,
   ).href;
   render() {
@@ -60,9 +61,11 @@ class PreferencesCenter extends A11yComponent {
       );
     });
     motionGroup.querySelector(".group-body").append(pause);
+    this.pillObserver=installPills(this.shadowRoot);
   }
   sync() {
     super.sync();
+    syncPills(this.shadowRoot);
     if (!this.preferences) return;
     const p = this.preferences.colors;
     for (const [name, value] of Object.entries({

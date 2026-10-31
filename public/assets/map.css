@@ -2,7 +2,7 @@
 .map-view .workspace { display: block; }
 .map-view .sidebar,.map-view #rail-toggle { display: none !important; }
 #map-panel { min-inline-size: 0; }
-.camera-map-shell { position: relative; block-size: calc(100dvh - var(--header-height,48px)); min-block-size: 440px; overflow: hidden; background: #dce2dd; }
+.camera-map-shell { position: relative; block-size: calc(100dvh - var(--header-height,48px) - var(--footer-height,30px)); min-block-size: 440px; overflow: hidden; background: #dce2dd; }
 #camera-map { position: absolute; inset: 0; z-index: 0; font-family: inherit; background: #dce2dd; }
 .map-surface { background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 16px; box-shadow: 0 8px 28px #0002; }
 @supports(backdrop-filter:blur(18px)) { .map-surface { background: color-mix(in srgb,var(--panel) 94%,transparent); backdrop-filter: blur(18px); } }

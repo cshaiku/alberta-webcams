@@ -55,11 +55,11 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
     <link rel="stylesheet" href="/awc/assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="/awc/assets/map.css?v=20261031-personal1">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-personal1">
+    <link rel="stylesheet" href="/awc/assets/map.css?v=20261031-credit1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-credit1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
     <script type="module" src="/awc/assets/app.js?v=20261031-personal2"></script>
-    <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-personal1"></script>
+    <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-pills1"></script>
 <script type="application/json" id="awc-settings"><?= json_encode(public_settings(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) ?></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="<?= e(app_settings()['ui']['defaultTheme']) ?>" data-default-font="sans">
@@ -103,5 +103,6 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
 <dialog id="viewer" aria-labelledby="viewer-title" aria-describedby="viewer-time"><div class="viewer-toolbar"><div><p class="eyebrow">A CLOSER LOOK</p><h2 id="viewer-title"></h2></div><button id="viewer-close" class="icon-button" aria-label="Close image"><?= icon('close') ?></button></div><img id="viewer-image" width="840" height="630" alt=""><div class="viewer-bottom"><button id="viewer-prev" aria-label="Previous image">←</button><p id="viewer-time"></p><a id="viewer-original" href="/awc/?view=overview" target="_blank" rel="noopener">Original <?= icon('external') ?></a><button id="viewer-next" aria-label="Next image">→</button></div></dialog>
 
 <template id="ui-icons"><?php foreach (['camera','clock','arrow','expand','close','info','pin'] as $name): ?><span data-icon="<?= e($name) ?>"><?= icon($name) ?></span><?php endforeach; ?></template>
+<footer class="product-credit">Built with love by <a href="https://sltd.ca/">Starlit Digital</a>.</footer>
 </body>
 </html>
