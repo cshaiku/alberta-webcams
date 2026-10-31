@@ -191,6 +191,7 @@ document.addEventListener('click', event => {
   else if (target.dataset.filter) { state.filter = target.dataset.filter; render('push'); }
   else if (target.id === 'all-cameras' || target.dataset.action === 'reset') resetFilters();
   else if (target.id === 'retrieve' || target.dataset.action === 'retrieve') retrieve();
+  else if (target.id === 'menu-toggle') setMenu(!document.body.classList.contains('controls-open'));
   else if (target.id === 'rail-toggle') toggleRail();
   else if (['rail-close','rail-backdrop'].includes(target.id)) { closeRail(); $('#rail-toggle').focus(); }
   else if (target.id === 'viewer-close') $('#viewer').close();
@@ -232,9 +233,16 @@ function density(value) {
 try { const saved = localStorage.getItem('awc.grid.density'); if (['comfortable','compact','large'].includes(saved)) density(saved); } catch { /* Preferences remain usable for this visit. */ }
 $('#density').addEventListener('change', () => { density($('#density').value); try { localStorage.setItem('awc.grid.density', $('#density').value); } catch { /* Storage is optional. */ } });
 window.addEventListener('popstate', () => { readURL(); render(); });
-mobile.addEventListener('change', closeRail);
+function setMenu(open) {
+  document.body.classList.toggle('controls-open', open);
+  $('#menu-toggle').setAttribute('aria-expanded', String(open));
+  $('#menu-toggle').setAttribute('aria-label', open ? 'Close controls' : 'Open controls');
+}
+mobile.addEventListener('change', () => { closeRail(); setMenu(false); });
+document.addEventListener('click', event => { if (mobile.matches && !event.target.closest('.header')) setMenu(false); });
 new ResizeObserver(entries => { document.documentElement.style.setProperty('--header-height', `${Math.ceil(entries[0].target.getBoundingClientRect().height)}px`); }).observe($('.header'));
 document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.body.classList.contains('controls-open')) { setMenu(false); $('#menu-toggle').focus(); }
   if (event.key === 'Escape' && document.body.classList.contains('rail-open')) { closeRail(); $('#rail-toggle').focus(); }
   if ($('#viewer').open) {
     if (event.key === 'ArrowLeft') { event.preventDefault(); stepViewer(-1); }

@@ -1,0 +1,22 @@
+{
+  "url": "https://sltd.ca/awc/",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-uniform-20261031",
+  "desktopColumns": 3,
+  "tileAspectRatio": "4:3",
+  "imageFit": "cover, bottom aligned",
+  "mobileControls": "hamburger disclosure",
+  "verifiedWidths": [
+    2023,
+    1440,
+    1024,
+    768,
+    760,
+    390,
+    320
+  ],
+  "files": {
+    "index.php": "0520e8e3df5aff9ffea1007fa53a0bfba5c5e51c0cf416e82d36f1530c7f6385",
+    "assets/site.css": "f0d39f7b8d79acee166735bb2292e36f8dc039bc6e43e07ffeb641d3214a62a1",
+    "assets/app.js": "a0ec085fbfb3dc13d78ecb2d58cc6300db99ea2ac677ed334d4f12b659d157dd"
+  }
+}

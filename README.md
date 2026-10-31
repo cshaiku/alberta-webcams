@@ -14,7 +14,7 @@ The working example is intended for https://sltd.ca/awc/. Codex project folder: 
 * Map shows a schematic province outline using official camera coordinates. Camera buttons provide an accessible alternative.
 * The camera rail collapses to give images more room. On phones it opens as a drawer. Large and compact image sizes are available.
 * All times use America/Edmonton. UI timestamps record retrieval time; a source image may have an older embedded capture timestamp.
-* Retrieval requires a session CSRF token and shares a one minute server cooldown and exclusive lock across visitors. No scheduled jobs, automatic polling or background image collection are installed.
+* Retrieval requires a session CSRF token and shares a one minute server cooldown and exclusive lock across visitors. Shared hosting retrieves images every 15 minutes through a private CLI cron job.
 
 ## Run locally
 
@@ -47,4 +47,4 @@ PHP GD with WebP support is required for optimized derivatives. Original JPEGs r
 
 The owner requested an application style image wall. The default view now has no visible card labels, gaps, borders or outer padding. The camera drawer starts closed; compact controls and the enlarged viewer retain navigation and metadata. See [workspace update](docs/workspace-update.md).
 
-A shared private CLI collector is deployed and tested for a 15 minute schedule. **Automatic scheduling is not enabled yet** because the shared host has no crontab command and hPanel browser access was disabled. The exact command and schedule are ready in [scheduling setup](docs/scheduling.md).
+A shared private CLI collector is deployed and registered in Hostinger hPanel on a 15 minute schedule. See [scheduling setup](docs/scheduling.md). Camera tiles use uniform 4:3 slots to prevent layout shifts while retaining complete source images.

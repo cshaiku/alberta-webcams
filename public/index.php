@@ -54,21 +54,25 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-workspace2">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-uniform2">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-workspace2"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-uniform1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
 <a class="skip" href="#main">Skip to camera images</a>
 <header class="header">
-    <div class="header-brand"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true" title="Toggle camera sidebar"><?= icon('rail') ?></button><a class="brand" href="/awc/"><img src="/awc/assets/brand/awc.svg" width="38" height="38" alt=""><span>Alberta Webcams<small>A different perspective.</small></span></a></div>
+    <a class="brand" href="/awc/"><img src="/awc/assets/brand/awc.svg" width="38" height="38" alt=""><span>Alberta Webcams<small>A different perspective.</small></span></a>
+    <button id="menu-toggle" class="icon-button" aria-label="Open controls" aria-controls="header-controls" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div id="header-controls"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true" title="Toggle camera sidebar"><?= icon('rail') ?></button>
     <nav class="views" aria-label="Camera views">
         <a href="/awc/" data-view="overview"<?= $view === 'overview' ? ' aria-current="page"' : '' ?>><?= icon('grid') ?><span>Grid view</span></a>
         <a href="/awc/?view=archive" data-view="archive"<?= $view === 'archive' ? ' aria-current="page"' : '' ?>><?= icon('archive') ?><span>Archive</span></a>
         <a href="/awc/?view=map" data-view="map"<?= $view === 'map' ? ' aria-current="page"' : '' ?>><?= icon('map') ?><span>Map</span></a>
     </nav>
     <div class="header-actions"><span class="manual-label"><i class="dot"></i> On your schedule</span><button id="retrieve" class="primary" disabled><?= icon('refresh') ?><span>Retrieve images</span></button></div>
+    <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label><label class="density"><span class="sr-only">Image size</span><select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="large">Large images</option></select></label></div></div>
+    </div>
 </header>
 <div class="workspace">
     <aside id="sidebar" class="sidebar" aria-label="Camera collection">
@@ -80,7 +84,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <button id="rail-backdrop" class="rail-backdrop" aria-label="Close camera sidebar" hidden></button>
     <main id="main" tabindex="-1">
         <section class="collection-intro" aria-labelledby="page-title"><div class="page-heading"><p class="eyebrow" id="eyebrow">THE CAMERA COLLECTION</p><h1 id="page-title">Alberta, in view.</h1><p class="intro-copy" id="intro-copy">A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.</p></div><dl class="collection-stats"><div><dt>Cameras</dt><dd id="stat-cameras"><?= count($catalog) ?></dd></div><div><dt>Available</dt><dd id="stat-available"><?= $available ?></dd></div><div><dt>Time zone</dt><dd class="stat-zone">Mountain<small>Alberta, Canada</small></dd></div></dl></section>
-        <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label><label class="density"><span class="sr-only">Image size</span><select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="large">Large images</option></select></label></div></div>
+
         <form id="archive-controls" class="control-strip" hidden><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
         <div class="status-row"><p id="status" role="status" aria-live="polite"><?= isset($snapshotState['lastResult']) ? 'Latest collection · ' . $available . ' cameras available' : 'Select Retrieve images to collect the first snapshots.' ?></p><span id="capture-note"><?= icon('info') ?> Times below record retrieval, not camera capture.</span></div>
         <noscript><p class="notice">The camera grid is available below. Enable JavaScript to retrieve new images, use filters and open the archive controls.</p></noscript>
