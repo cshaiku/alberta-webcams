@@ -50,3 +50,11 @@ The owner requested an application style image wall. The default view now has no
 A shared private CLI collector is deployed and registered in Hostinger hPanel on a 15 minute schedule. See [scheduling setup](docs/scheduling.md). Camera tiles use uniform 4:3 slots to prevent layout shifts while retaining complete source images.
 
 The existing SDOU accessibility gear lives at the top right of the control bar. The bar hides while scrolling down and returns while scrolling up. Open menus, keyboard focus and the preferences dialog keep it visible. Reduced motion disables the transition.
+
+## Camera timelines
+
+Each camera has a separate page at `/awc/timeline.php?camera=<camera-id>`, linked from its archive grid. The page defaults to the latest archived day. Its large preview preserves the complete image, with responsive WebP delivery and original JPEG access. A chronological thumbnail filmstrip, native keyboard accessible range scrubber, previous and next buttons, and user initiated play/pause offer day by day exploration. Speed choices are 1500ms, 750ms and 300ms between decoded images. Playback stops at the end, when the tab is hidden, or when accessibility preferences gain focus. Hover previews on desktop and touch scrolling on phones are supported.
+
+The URL preserves the selected date and snapshot. Gaps over twenty minutes are marked in the strip. Labels use archive retrieval time in Mountain time; embedded camera capture timestamps can differ. The existing private archive API is reused. Invalid cameras return 404, missing days show an empty state, and date changes cancel stale requests. Timeline pages have camera specific titles and descriptions and remain noindex, follow, outside the collection sitemap. No new collector or runtime storage is introduced.
+
+Validation: `tests/timeline.cjs` covers archive links, decoded previews, scrubbing, keyboard control, playback completion, selection on reload, empty dates, invalid cameras, the preferences dialog and responsive widths. Local tests can read live image and archive responses without writing production data. See `docs/timeline-deployment.json` for the scoped deployment receipt.

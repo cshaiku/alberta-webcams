@@ -1,0 +1,41 @@
+@layer workspace {
+  .timeline-page { min-block-size: 100dvh; }
+  .timeline-header { gap: 20px; block-size: 48px; min-block-size: 48px; }
+  .timeline-header a { display: inline-flex; align-items: center; gap: 8px; font-size: .9rem; min-block-size: 44px; }
+  #timeline-main { display: grid; grid-template-rows: auto minmax(220px,1fr) auto; block-size: calc(100dvh - 48px); min-inline-size: 0; }
+  .timeline-heading { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  #app .timeline-heading h1 { font-size: 1rem; margin: 0; line-height: 1.4; }
+  .timeline-heading p { font-size: .75rem; color: var(--muted); }
+  .day-picker,.speed-picker { display: flex; align-items: center; gap: 8px; font-size: .8rem; }
+  .timeline-stage { display: grid; place-items: center; position: relative; min-block-size: 0; background: #030608; overflow: hidden; }
+  #app #timeline-image { display: block; inline-size: 100%; block-size: 100%; min-block-size: 0; object-fit: contain; border-radius: 0; }
+  #timeline-empty { position: absolute; padding: 20px; text-align: center; color: var(--muted); }
+  #app #timeline-original { position: absolute; inset: auto 8px 8px auto; display: inline-flex; align-items: center; gap: 6px; background: #09151fe8; color: #fff; padding: 8px; font-size: .75rem; }
+  .timeline-console { padding: 8px 12px; min-inline-size: 0; }
+  .playback-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #timeline-time { flex: 1; font-size: .9rem; font-variant-numeric: tabular-nums; min-inline-size: 150px; }
+  #timeline-count { font-size: .75rem; color: var(--muted); }
+  #app .timeline-console button,#app .timeline-console select,#app .day-picker select { padding: 6px 10px; min-block-size: 36px; border-radius: 4px; }
+  .scrubber-label { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); margin-block-start: 8px; }
+  #app #timeline-scrubber { inline-size: 100%; padding: 0; margin: 0; min-block-size: 28px; accent-color: var(--accent); border: 0; background: transparent; }
+  .timeline-extents { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .timeline-filmstrip { display: flex; align-items: stretch; overflow-x: auto; overflow-y: hidden; gap: 4px; padding-block: 8px; scrollbar-width: thin; overscroll-behavior-inline: contain; }
+  #app .timeline-thumb { flex: 0 0 100px; inline-size: 100px; padding: 0; border: 2px solid transparent; background: #030608; color: #fff; border-radius: 0; }
+  #app .timeline-thumb[aria-current="true"] { border-color: var(--accent); }
+  #app .timeline-thumb img { inline-size: 96px; block-size: 58px; object-fit: cover; border-radius: 0; display: block; }
+  .timeline-thumb time { display: block; font-size: 11px; line-height: 20px; font-variant-numeric: tabular-nums; }
+  .timeline-gap { flex: 0 0 50px; display: grid; place-items: center; font-size: 10px; color: var(--muted); text-align: center; border-inline: 1px dashed var(--rule); }
+  #timeline-status { min-block-size: 18px; font-size: .7rem; color: var(--muted); padding-block-start: 4px; }
+  @media(max-width:600px) {
+    .timeline-heading { padding: 8px; gap: 8px; flex-wrap: wrap; }
+    #app .timeline-heading h1 { font-size: .85rem; }
+    .timeline-heading p { display: none; }
+    .timeline-console { padding: 6px; }
+    #timeline-main { block-size: auto; min-block-size: calc(100dvh - 48px); grid-template-rows: auto minmax(220px,1fr) auto; }
+    .timeline-stage { min-block-size: 35dvh; }
+    #timeline-time { order: -1; flex: 1 0 100%; }
+    .speed-picker { margin-inline-start: auto; }
+    .timeline-header { gap: 12px; }
+    .timeline-header a { font-size: .8rem; }
+  }
+}

@@ -123,6 +123,7 @@ async function render(historyMode = 'replace') {
       const data = await request('archive', { signal: archiveController.signal, parameters: { camera: camera.id, date: 'all' } });
       archiveFrames = data.frames;
       $('#archive-heading').textContent = camera.title;
+      $('#timeline-link').href = `/awc/timeline.php?camera=${encodeURIComponent(camera.id)}${archivePeriod.length >= 10 ? '&date=' + archivePeriod.slice(0,10) : ''}`;
       state.items = data.frames.filter(frame => !archivePeriod || frame.stamp.startsWith(archivePeriod)).map(frame => ({ camera, stamp: frame.stamp }));
       renderArchiveTree(camera);
       if (state.items.length) showGallery();

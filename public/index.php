@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-timeline1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-archive1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-timeline1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -86,7 +86,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <main id="main" tabindex="-1">
         <section class="collection-intro" aria-labelledby="page-title"><div class="page-heading"><p class="eyebrow" id="eyebrow">THE CAMERA COLLECTION</p><h1 id="page-title">Alberta, in view.</h1><p class="intro-copy" id="intro-copy">A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.</p></div><dl class="collection-stats"><div><dt>Cameras</dt><dd id="stat-cameras"><?= count($catalog) ?></dd></div><div><dt>Available</dt><dd id="stat-available"><?= $available ?></dd></div><div><dt>Time zone</dt><dd class="stat-zone">Mountain<small>Alberta, Canada</small></dd></div></dl></section>
 
-        <form id="archive-controls" class="control-strip" hidden><strong id="archive-heading"></strong><button id="archive-all" type="button">All images</button><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
+        <form id="archive-controls" class="control-strip" hidden><strong id="archive-heading"></strong><a id="timeline-link" href="/awc/">Timeline view</a><button id="archive-all" type="button">All images</button><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
         <div class="status-row"><p id="status" role="status" aria-live="polite"><?= isset($snapshotState['lastResult']) ? 'Latest collection · ' . $available . ' cameras available' : 'Images are collected automatically every 15 minutes.' ?></p><span id="capture-note"><?= icon('info') ?> Times below record retrieval, not camera capture.</span></div>
         <noscript><p class="notice">The camera grid is available below. Enable JavaScript to use filters and open the archive controls.</p></noscript>
         <section id="gallery" class="gallery" aria-label="Camera snapshots"><?php foreach ($catalog as $index => $c) echo card_html($c, $snapshotState['cameras'][$c['id']] ?? [], $index); ?></section>

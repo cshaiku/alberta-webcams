@@ -10,5 +10,6 @@ test:
 	php tests/media.php
 	php tests/retrieval.php
 	node --check public/assets/app.js
+	node --check public/assets/timeline.js
 	node --check public/assets/lib/ui.js
 	node --check public/assets/lib/api.js
