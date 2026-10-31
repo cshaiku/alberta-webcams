@@ -35,3 +35,23 @@
     .timeline-header a { font-size: .8rem; }
   }
 }
+
+@layer workspace {
+  .timeline-header { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(44px,1fr); gap: 12px; }
+  .timeline-nav { display: flex; align-items: center; gap: 18px; min-inline-size: 0; }
+  .timeline-header .timeline-heading { display: flex; align-items: center; justify-content: center; padding: 0; gap: 20px; min-inline-size: 0; }
+  .timeline-heading > div { min-inline-size: 0; }
+  #app .timeline-header .timeline-heading h1 { font-size: .9rem; max-inline-size: 35vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .timeline-header .timeline-heading p { display: none; }
+  .timeline-header sdou-preferences-center { justify-self: end; margin: 0; }
+  #timeline-main { grid-template-rows: minmax(220px,1fr) auto; }
+  @media(max-width:1000px) {
+    .timeline-header { grid-template-columns: auto minmax(0,1fr) 44px; gap: 8px; }
+    .timeline-nav { gap: 12px; }
+    .timeline-nav a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+    .timeline-header .timeline-heading { flex-wrap: nowrap; gap: 8px; }
+    #app .timeline-header .timeline-heading h1 { font-size: .8rem; max-inline-size: 100%; }
+    .timeline-header .day-picker { font-size: 0; flex: 0 0 auto; }
+    #app .timeline-header .day-picker select { font-size: 11px; padding: 4px; max-inline-size: 108px; }
+  }
+}

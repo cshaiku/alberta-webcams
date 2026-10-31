@@ -6,19 +6,59 @@ let frames = [], index = 0, playing = false, timer, controller, generation = 0, 
 function pause() { playing = false; clearTimeout(timer); $('#timeline-play').textContent = 'Play'; $('#timeline-play').setAttribute('aria-label','Play snapshots'); }
 function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url); }
 function controls() { const disabled = !frames.length; $('#timeline-play').disabled=disabled || frames.length<2; $('#timeline-prev').disabled=disabled || index===0; $('#timeline-next').disabled=disabled || index===frames.length-1; }
+// Keep decoded image nodes, so a warm hover needs neither a request nor a decode.
+// 24 previews bound decoded memory; immutable snapshot URLs also use browser disk cache.
+const previewCache = new Map();
+const CACHE_LIMIT = 24;
+let warmGeneration = 0;
+function cachedPreview(stamp) {
+  let entry=previewCache.get(stamp);
+  if(entry) { previewCache.delete(stamp); previewCache.set(stamp,entry); return entry; }
+  const image=new Image();
+  image.decoding='sync';
+  image.src=imageURL(camera,stamp,840);
+  entry={image,ready:false,promise:null};
+  entry.promise=image.decode().then(()=>{entry.ready=true;trimCache();return image;}).catch(error=>{if(previewCache.get(stamp)===entry)previewCache.delete(stamp);throw error;});
+  previewCache.set(stamp,entry);
+  trimCache();
+  return entry;
+}
+function trimCache() {
+  for(const [stamp,entry] of previewCache) {
+    if(previewCache.size<=CACHE_LIMIT)break;
+    if(!entry.image.isConnected && entry.ready)previewCache.delete(stamp);
+  }
+}
+function warmPreviews(center) {
+  const run=++warmGeneration, day=generation;
+  const queue=[];
+  for(let distance=0;queue.length<Math.min(CACHE_LIMIT,frames.length);distance++) {
+    for(const i of distance ? [center+distance,center-distance] : [center])if(frames[i])queue.push(frames[i].stamp);
+  }
+  async function worker() {
+    while(queue.length && run===warmGeneration && day===generation) {
+      const stamp=queue.shift();
+      try { await cachedPreview(stamp).promise; } catch { /* A failed prefetch can retry on selection. */ }
+    }
+  }
+  for(let i=0;i<3;i++)worker();
+}
 async function selectFrame(next, { user = false, scroll = true } = {}) {
   if(user) pause();
   if(!frames.length) return;
   index=Math.max(0,Math.min(frames.length-1,next));
   const current=index, frame=frames[current], token=++selection, run=generation;
   controls();
-  const preview=new Image(); preview.src=imageURL(camera,frame.stamp,840);
-  try { await preview.decode(); } catch {
+  const cached=cachedPreview(frame.stamp);
+  try { if(!cached.ready)await cached.promise; } catch {
     if(token===selection && run===generation) { pause(); $('#timeline-status').textContent='This snapshot could not load. Choose another image or try again.'; }
     return;
   }
   if(token!==selection || run!==generation) return;
-  const image=$('#timeline-image'); image.src=preview.src; image.alt=`Camera snapshot retrieved ${stampLabel(frame.stamp)}`; image.hidden=false; $('#timeline-empty').hidden=true;
+  const previous=$('#timeline-image');
+  const image=cached.image;
+  if(previous!==image){previous.removeAttribute('id');image.id='timeline-image';previous.replaceWith(image);}
+  image.alt=`Camera snapshot retrieved ${stampLabel(frame.stamp)}`; image.hidden=false; $('#timeline-empty').hidden=true;
   $('#timeline-original').href=imageURL(camera,frame.stamp); $('#timeline-original').hidden=false;
   document.body.dataset.frame=String(current);
   document.querySelectorAll('.timeline-thumb').forEach((button,i)=>{if(i===current)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');});
@@ -26,14 +66,14 @@ async function selectFrame(next, { user = false, scroll = true } = {}) {
   if(scroll && thumb) { const strip=$('#timeline-filmstrip'); strip.scrollLeft=thumb.offsetLeft-strip.offsetLeft-(strip.clientWidth-thumb.offsetWidth)/2; }
   if(user) $('#timeline-status').textContent=stampLabel(frame.stamp);
   updateURL();
-  if(frames[current+1]) { const nextImage=new Image(); nextImage.src=imageURL(camera,frames[current+1].stamp,840); }
+  warmPreviews(current);
 }
 async function tick() { if(!playing)return; if(index>=frames.length-1){pause();return;} await selectFrame(index+1); if(playing)timer=setTimeout(tick,Number($('#timeline-speed').value)); }
 function filmstrip() {
   $('#timeline-filmstrip').innerHTML=`<div class="timeline-frames">${frames.map((frame,i)=>`<button class="timeline-thumb" data-index="${i}" aria-label="Show ${escape(stampLabel(frame.stamp))}"><img src="${escape(imageURL(camera,frame.stamp,400))}" width="180" height="135" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
 }
 async function loadDay() {
-  pause();controller?.abort();controller=new AbortController();const run=++generation;++selection;frames=[];controls();
+  pause();controller?.abort();controller=new AbortController();const run=++generation;++selection;++warmGeneration;frames=[];controls();
   $('#timeline-filmstrip').replaceChildren();$('#timeline-image').hidden=true;$('#timeline-original').hidden=true;$('#timeline-empty').hidden=false;$('#timeline-empty').textContent='Loading snapshots…';delete document.body.dataset.frame;
   try {
     const data=await request('archive',{signal:controller.signal,parameters:{camera,date:$('#timeline-day').value}});
@@ -55,14 +95,11 @@ $('sdou-preferences-center').addEventListener('focusin',pause);
 window.addEventListener('pagehide',pause);
 loadDay();
 
-let hoverTimer;
 $('#timeline-filmstrip').addEventListener('pointerover',event=>{
   if(event.pointerType!=='mouse')return;
   const button=event.target.closest('[data-index]');
-  clearTimeout(hoverTimer);
-  if(button)hoverTimer=setTimeout(()=>selectFrame(Number(button.dataset.index),{user:true,scroll:false}),180);
+  if(button && !button.contains(event.relatedTarget) && Number(button.dataset.index)!==index)selectFrame(Number(button.dataset.index),{user:true,scroll:false});
 });
-$('#timeline-filmstrip').addEventListener('pointerleave',()=>clearTimeout(hoverTimer));
 
 $('#timeline-filmstrip').addEventListener('keydown',event=>{
   if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;

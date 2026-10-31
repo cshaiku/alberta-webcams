@@ -1,17 +1,20 @@
 {
   "url": "https://sltd.ca/awc/timeline.php?camera=ab_128",
-  "backup": "domains/sltd.ca/private/deploy-backups/awc-filmstrip-20261031",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-cache-20261031",
   "checks": [
     "PHP and JavaScript syntax checks",
     "Local timeline browser test with live archive responses",
-    "Live timeline and archive browser tests"
+    "Live timeline and archive browser tests",
+    "Warm hover switches synchronously",
+    "Decoded preview works offline",
+    "Centered title and day picker inside 48px header at 1440/768/390/320"
   ],
   "files": {
     "index.php": "986543fd27a9de7da6432796bf90ddfd3c58c2e0ba0a38b5ba8f23d3d49021f3",
-    "timeline.php": "3659fe82c79565b6aa1a73bb6243d7871b6d6bb2705268dd2d7456b4bdaffd05",
+    "timeline.php": "69c7b1eb74af37a5275d62a3a737f9ca891e33262e91c9188f01546369ed311f",
     "assets/app.js": "22748d8231f446d0862ac7d6397d4ec3b473942dad3b21482f5ad0bfbb900a5a",
-    "assets/timeline.js": "34a1198e00e78459c59a42c2cdd3619486406b377612b01b51942abb5a3251f1",
-    "assets/timeline.css": "b1809d007fe0fdad061e839d5eedb28d29c47e33be3631e0b97f4f075230d101"
+    "assets/timeline.js": "10750966aa391f278ebec6e3bc0c170518a90e1fcabc9ab438f3425f5937212c",
+    "assets/timeline.css": "7de706ed43c7657779ced040881ef8659dd761c0e365b1c22b53f5fd16038e6c"
   },
   "indexing": "noindex, follow, excluded from sitemap",
   "presentation": {
@@ -22,6 +25,14 @@
     "slider": false,
     "externalTimestamps": false,
     "gapMarkers": false,
-    "visibleFooterStatus": false
+    "visibleFooterStatus": false,
+    "titleAndDayInMainHeader": true
+  },
+  "previewCache": {
+    "decodedLimit": 24,
+    "prefetchConcurrency": 3,
+    "hoverDelayMs": 0,
+    "reuseDecodedNodes": true,
+    "browserImageCache": "immutable, max-age=31536000"
   }
 }
