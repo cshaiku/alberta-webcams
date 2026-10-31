@@ -19,8 +19,8 @@ export function imageURL(id, stamp, width) {
 }
 
 export function pictureHTML(camera, stamp, priority = false) {
-  const sizes = '(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 46vw, (max-width: 1500px) 30vw, 25vw';
-  const resolvedSizes = `${priority ? '' : 'auto, '}${sizes}`;
+  const sizes = '(max-width: 540px) 100vw, (max-width: 920px) 50vw, (min-width: 1600px) 25vw, 33.333vw';
+  const resolvedSizes = sizes;
   const widths = [400, 640, 840].filter(width => width <= (camera.width ?? 840));
   if (!widths.length) widths.push(400);
   const srcset = widths.map(width => `${escape(imageURL(camera.id, stamp, width))} ${width}w`).join(', ');

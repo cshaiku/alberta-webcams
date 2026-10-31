@@ -242,3 +242,78 @@
     .brand span { max-inline-size: 140px; }
   }
 }
+
+/* Owner requested image workspace: no card chrome or decorative page spacing. */
+@layer workspace {
+  .header { min-block-size: 44px; padding: 0 6px; gap: 8px; border: 0; background: var(--page); backdrop-filter: none; }
+  .header-brand,.header-actions { flex: initial; gap: 4px; }
+  .brand { gap: 0; }
+  .brand span { font-size: .75em; }
+  .brand img,.brand small,.manual-label { display: none !important; }
+  .views { border: 0; border-radius: 0; padding: 0; gap: 0; background: transparent; }
+  .views a { padding: 6px 10px; border: 0; border-radius: 0; min-block-size: 44px; }
+  .views [aria-current="page"] { box-shadow: none; background: var(--panel); }
+  #app .primary { min-block-size: 36px; padding: 6px 9px; border: 0; border-radius: 3px; font-size: .7em; box-shadow: none; }
+  #app .icon-button { min-block-size: 40px; }
+  main { padding: 0; }
+  .workspace { min-block-size: calc(100dvh - var(--header-height)); }
+  .collection-intro,.collection-notes,.site-footer,.card-caption {
+    position: absolute; inline-size: 1px; block-size: 1px; padding: 0; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  /* Archive navigation remains in the drawer; hidden card links are not tab stops. */
+  .card-caption .archive-link { display: none; }
+  .collection-toolbar { padding: 0 6px; margin: 0; gap: 6px; border: 0; min-block-size: 40px; }
+  .filters { gap: 0; padding: 0; margin: 0; }
+  #app .filters button { padding: 5px 9px; border: 0; border-radius: 0; min-block-size: 36px; }
+  .toolbar-tools { gap: 6px; flex: 0 1 auto; }
+  .search { flex: 0 1 180px; }
+  #app .search input,#app .density select { min-block-size: 32px; border: 0; padding-block: 4px; }
+  .gallery,.gallery.compact,.gallery.large { gap: 0; }
+  .camera-card { border: 0; border-radius: 0; background: #080b0e; box-shadow: none; transition: none; }
+  .camera-card:has(.image-button:hover),.camera-card:focus-within { border: 0; box-shadow: none; }
+  #app .camera-card figure { margin: 0; padding: 0; border: 0; }
+  .image-expand { display: none; }
+  #app .image-button { border: 0; border-radius: 0; margin: 0; padding: 0; }
+  .status-row { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
+  .status-row.has-feedback { position: fixed; inset: auto 56px 8px 8px; z-index: 35; inline-size: fit-content; max-inline-size: calc(100vw - 72px); block-size: auto; padding: 6px 10px; clip-path: none; background: var(--panel); }
+  #capture-note { display: none; }
+  .control-strip { margin: 0; padding: 4px 6px; gap: 8px; border: 0; border-radius: 0; }
+  #app .control-strip :is(button,input,select) { min-block-size: 36px; padding: 4px 8px; border: 0; border-radius: 0; }
+  .unavailable { border: 0; border-radius: 0; }
+  #viewer { border: 0; border-radius: 0; }
+  .viewer-toolbar,.viewer-bottom { padding: 6px 10px; }
+  @media(max-width:760px) {
+    .header { padding: 0 4px; gap: 0; }
+    .header-brand { flex: 1 1 auto; }
+    .header-actions { flex: 0 1 auto; position: static; }
+    .views { inline-size: auto; order: initial; }
+    .views a { gap: 0; padding: 6px 10px; }
+    .views a .icon { display: none; }
+    .brand { display: none; }
+    .collection-toolbar { padding: 0 4px; }
+    .toolbar-tools { inline-size: auto; justify-content: start; }
+    .search { flex-basis: 150px; }
+    .sidebar { border: 0; }
+  }
+  @media(max-width:400px) {
+    .header-brand { flex: 0 0 auto; }
+    .header-actions { margin-inline-start: auto; }
+    .views a { padding: 6px 7px; font-size: .7em; }
+    #app .primary { font-size: .65em; }
+    #app .primary .icon { display: none; }
+  }
+}
+@layer workspace {
+  .collection-notes,.site-footer { display: none !important; }
+  /* Natural image ratios remove letterboxing without cropping source timestamps. */
+  .gallery { display: block; columns: 3; column-gap: 0; }
+  .gallery.compact { display: block; columns: 4; column-gap: 0; }
+  .gallery.large { display: block; columns: 2; column-gap: 0; }
+  .camera-card { break-inside: avoid; inline-size: 100%; }
+  #app .image-button picture { aspect-ratio: auto; }
+  #app .image-button img { block-size: auto; aspect-ratio: auto; }
+  .empty { column-span: all; }
+  @container collection (min-width:1600px) { .gallery { columns:4; }.gallery.compact { columns:5; } }
+  @container collection (max-width:920px) { .gallery { columns:2; }.gallery.compact { columns:3; } }
+  @container collection (max-width:540px) { .gallery,.gallery.large { columns:1; }.gallery.compact { columns:2; } }
+}

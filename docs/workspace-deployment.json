@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-31T08:21:36.233837+00:00",
+  "url": "https://sltd.ca/awc/",
+  "release": "domains/sltd.ca/private/awc/releases/20261031-workspace",
+  "runtime": "domains/sltd.ca/private/awc/runtime",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-workspace-20261031",
+  "publicDigests": "workspace-sha256.txt",
+  "layout": {
+    "outerPadding": 0,
+    "cardGap": 0,
+    "visibleCaptions": false,
+    "sidebarInitiallyClosed": true,
+    "imageRatios": "natural, uncropped"
+  },
+  "scheduler": {
+    "enabled": false,
+    "cliTest": {
+      "saved": 11,
+      "unavailable": 1
+    },
+    "schedule": "*/15 * * * *",
+    "command": "/opt/alt/php85/usr/bin/php /home/u394197407/domains/sltd.ca/private/awc/retrieve.php",
+    "blocker": "Shared SSH account has no crontab command. hPanel browser access is disabled in Work. No hosting API token is configured."
+  }
+}

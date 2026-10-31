@@ -42,3 +42,9 @@ DYWS is not integrated because this viewer has no ordering, booking or payment w
 The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, persistent image density, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
 
 PHP GD with WebP support is required for optimized derivatives. Original JPEGs remain available. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.
+
+## Dense image workspace and scheduler
+
+The owner requested an application style image wall. The default view now has no visible card labels, gaps, borders or outer padding. The camera drawer starts closed; compact controls and the enlarged viewer retain navigation and metadata. See [workspace update](docs/workspace-update.md).
+
+A shared private CLI collector is deployed and tested for a 15 minute schedule. **Automatic scheduling is not enabled yet** because the shared host has no crontab command and hPanel browser access was disabled. The exact command and schedule are ready in [scheduling setup](docs/scheduling.md).

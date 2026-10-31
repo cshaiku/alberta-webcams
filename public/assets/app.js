@@ -1,5 +1,5 @@
-import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-premium2';
-import { request } from './lib/api.js?v=20261031-premium2';
+import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-workspace2';
+import { request } from './lib/api.js?v=20261031-workspace2';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -10,7 +10,7 @@ const state = { catalog: [], snapshots: {}, csrf: '', selected: null, view: 'ove
 let archiveController;
 let viewerTrigger;
 
-function status(message) { $('#status').textContent = message; }
+function status(message, feedback = false) { $('#status').textContent = message; $('.status-row').classList.toggle('has-feedback', feedback); }
 function readURL() {
   const parameters = new URLSearchParams(location.search);
   state.view = ['archive', 'map'].includes(parameters.get('view')) ? parameters.get('view') : 'overview';
@@ -118,13 +118,13 @@ async function retrieve() {
   button.disabled = true;
   button.setAttribute('aria-busy', 'true');
   button.querySelector('span').textContent = 'Retrieving…';
-  status('Retrieving your camera collection…');
+  status('Retrieving your camera collection…', true);
   try {
     const data = await request('retrieve', { token: state.csrf });
     state.snapshots = data.state;
     await render();
-    status(`${data.saved} images saved${data.failed ? ` · ${data.failed} ${data.failed === 1 ? 'camera' : 'cameras'} unavailable` : ''}.`);
-  } catch (error) { status(error.message); }
+    status(`${data.saved} images saved${data.failed ? ` · ${data.failed} ${data.failed === 1 ? 'camera' : 'cameras'} unavailable` : ''}.`, true);
+  } catch (error) { status(error.message, true); }
   finally {
     state.retrieving = false;
     button.disabled = false;
@@ -255,7 +255,7 @@ try {
   readURL();
   await render();
   $('#retrieve').disabled = false;
-} catch (error) { status(`${error.message} Saved snapshots are still available below.`); }
+} catch (error) { status(`${error.message} Saved snapshots are still available below.`, true); }
 
 function renderMap(){
  const point=c=>({x:80+(c.lng+120)/10*600,y:650-(c.lat-49)/11*600});

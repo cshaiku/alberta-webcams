@@ -54,12 +54,12 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-premium2">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-workspace2">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-premium2"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-workspace2"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script>
 </head>
-<body id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
+<body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
 <a class="skip" href="#main">Skip to camera images</a>
 <header class="header">
     <div class="header-brand"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true" title="Toggle camera sidebar"><?= icon('rail') ?></button><a class="brand" href="/awc/"><img src="/awc/assets/brand/awc.svg" width="38" height="38" alt=""><span>Alberta Webcams<small>A different perspective.</small></span></a></div>
