@@ -15,8 +15,8 @@ class PreferencesCenter extends A11yComponent {
   render() {
     this.resetAll = true;
     this.mount(
-      "Your reading space",
-      "Make the page feel comfortable. Every setting is optional and stays on your device.",
+      "Accessibility Settings",
+      "",
       group("Appearance", appearance(), true) +
         group("Text and spacing", typography()) +
         group("Motion and media", motion()) +
@@ -28,6 +28,8 @@ class PreferencesCenter extends A11yComponent {
     this.q("[data-reset]").textContent = "Reset all preferences";
     // Canonical presentation, promoted from the existing sltd.ca full center.
     this.q(".kicker")?.remove();
+    this.q("#component-description")?.remove();
+    this.q("dialog").removeAttribute("aria-describedby");
     this.q("[data-pref=theme]")?.closest(".control").remove();
     this.q("[data-pref=font] option[value=studio]").textContent =
       "Studio default";
