@@ -9,7 +9,7 @@ The working example is intended for https://sltd.ca/awc/. Codex project folder: 
 ## Behaviour
 
 * Overview displays the latest collected snapshot from every camera.
-* The shared hosting scheduler saves a new set of JPEG images every 15 minutes, with previous images preserved when an individual camera fails. The manual retrieval button is removed.
+* The shared hosting scheduler saves a new set of WebP images every 15 minutes, with previous images preserved when an individual camera fails. The manual retrieval button is removed.
 * Front page image clicks open that camera’s full archive, newest first. The left rail groups images by month, day, hour and individual timestamp. The left rail filters the grid; individual timestamps open the enlarged viewer, while archive images open the separate timeline page at that snapshot.
 * Map shows a schematic province outline using official camera coordinates. Camera buttons provide an accessible alternative.
 * The camera rail collapses to give images more room. On phones it opens as a drawer. The desktop collection uses three equal columns.
@@ -41,7 +41,7 @@ DYWS is not integrated because this viewer has no ordering, booking or payment w
 
 The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, uniform image tiles, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
 
-PHP GD with WebP support is required for optimized derivatives. Original JPEGs remain available. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.
+PHP GD with WebP support is required for capture and optimized derivatives. Captures and responsive variants are WebP only; no JPEG or PNG capture copies are retained. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.
 
 ## Dense image workspace and scheduler
 
@@ -53,7 +53,7 @@ The existing SDOU accessibility gear lives at the top right of the control bar. 
 
 ## Camera timelines
 
-Each camera has a separate page at `/awc/timeline.php?camera=<camera-id>`, opened by clicking an image in its archive grid. The page defaults to the latest archived day. Its large preview preserves the complete image, with responsive WebP delivery and original JPEG access. A centered chronological filmstrip with larger adjacent thumbnails, centered previous, play and next buttons, and user initiated play/pause offer day by day exploration. The strip supports Arrow keys, Home and End. Speed choices are 1500ms, 750ms and 300ms between decoded images. Playback stops at the end, when the tab is hidden, or when accessibility preferences gain focus. Hover previews on desktop and touch scrolling on phones are supported.
+Each camera has a separate page at `/awc/timeline.php?camera=<camera-id>`, opened by clicking an image in its archive grid. The page defaults to the latest archived day. Its large preview preserves the complete image, with responsive WebP delivery and full-size WebP access. A centered chronological filmstrip with larger adjacent thumbnails, centered previous, play and next buttons, and user initiated play/pause offer day by day exploration. The strip supports Arrow keys, Home and End. Speed choices are 1500ms, 750ms and 300ms between decoded images. Playback stops at the end, when the tab is hidden, or when accessibility preferences gain focus. Hover previews on desktop and touch scrolling on phones are supported.
 
 The URL preserves the selected date and snapshot. The slider, gap markers, external timestamp labels and visible footer status copy are removed. Embedded camera timestamps remain visible; accessible image descriptions retain retrieval times. The existing private archive API is reused. Invalid cameras return 404, missing days show an empty state, and date changes cancel stale requests. Timeline pages have camera specific titles and descriptions and remain noindex, follow, outside the collection sitemap. No new collector or runtime storage is introduced.
 
@@ -64,3 +64,9 @@ Timeline hover switches have no deliberate delay. A bounded LRU cache retains up
 The archive toolbar row is removed from view. Its month, day and hour rail provides navigation; every archive image links directly to its timeline snapshot.
 
 Navigation terminology: Network is the collection of cameras, Grid is one camera’s archived image grid, and Timeline is that camera’s time strip. Timeline links preserve the selected camera. Click the empty left or right side of the large timeline image to move through cameras in catalog order, wrapping at the ends. The selected day and snapshot time are carried in the destination URL. Gutter links are native keyboard accessible links and show directional cues on hover or focus.
+
+## WebP only storage
+
+The provider returns JPEG bytes, which are decoded and converted directly to full-size WebP at quality 84 before saving. No JPEG file is written. A capture is published only after its WebP file decodes and retains the original dimensions. The collector prepares bounded display candidates before updating camera state. Candidates at or above the master width reuse the master, avoiding duplicate files and upscaling. JPEG and PNG fallbacks are intentionally unsupported by owner direction. All display and full-size links explicitly request WebP.
+
+The shared CLI enables its existing installed GD module through a one-time relaunch when needed. The hPanel cron command stays the same. `tools/migrate-webp.php --prune` verifies archived conversions, removes source JPEGs and removes redundant full-size variants, with no recovery image copies retained. The October 31 migration converted 99 hosted captures and removed 141 redundant WebP variants. A direct collector validation saved 11 additional captures with all 33 logical display candidates ready and zero incomplete conversions. The next scheduled run uses the same collector.

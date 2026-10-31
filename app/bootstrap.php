@@ -14,9 +14,9 @@ function json_response(array $value, int $status = 200): never { http_response_c
 function valid_date(string $date): bool { $d = DateTimeImmutable::createFromFormat('!Y-m-d', $date); return $d && $d->format('Y-m-d') === $date; }
 function frames(string $id, string $date): array {
     if (!camera($id) || !valid_date($date)) return [];
-    $files = glob(AWC_DATA . '/archive/' . $id . '/' . str_replace('-', '/', $date) . '/*.jpg') ?: [];
+    $files = glob(AWC_DATA . '/archive/' . $id . '/' . str_replace('-', '/', $date) . '/*.webp') ?: [];
     sort($files); $out = [];
-    foreach ($files as $file) { $stamp = basename($file, '.jpg'); $out[] = ['stamp' => $stamp, 'url' => 'image.php?camera=' . rawurlencode($id) . '&stamp=' . rawurlencode($stamp)]; }
+    foreach ($files as $file) { $stamp = basename($file, '.webp'); $out[] = ['stamp' => $stamp, 'url' => 'image.php?camera=' . rawurlencode($id) . '&stamp=' . rawurlencode($stamp)]; }
     return $out;
 }
 function dates(string $id): array {

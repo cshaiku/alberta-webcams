@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/media.php';
 
 final class RetrievalUnavailable extends RuntimeException
 {
@@ -18,6 +19,7 @@ try {
 $state = state();
 $wait = 60 - (time() - ($state['attemptedAt'] ?? 0));
 if ($wait > 0) throw new RetrievalUnavailable("Please wait $wait seconds before retrieving again.", 429, $wait);
+if (!function_exists('imagewebp')) throw new RetrievalUnavailable('WebP image capture needs the PHP GD extension.', 503);
 if (!extension_loaded('curl')) throw new RetrievalUnavailable('Image retrieval needs the PHP cURL extension.', 503);
 $state['attemptedAt'] = time();
 file_put_contents(AWC_DATA . '/state.json.pending', json_encode($state), LOCK_EX);
@@ -33,24 +35,26 @@ foreach (cameras() as $c) {
     curl_multi_add_handle($multi, $h);
 }
 do { $result = curl_multi_exec($multi, $running); if ($running) curl_multi_select($multi, 1); } while ($running && $result === CURLM_OK);
-$ok = 0; $failed = 0;
+$ok = 0; $failed = 0; $webpPrepared = 0; $webpIncomplete = 0;
 foreach ($jobs as $id => $job) {
     $h = $job['handle']; $image = @getimagesizefromstring($job['data']);
     if (curl_getinfo($h, CURLINFO_HTTP_CODE) === 200 && $image && ($image['mime'] ?? '') === 'image/jpeg' && $image[0] <= 10000 && $image[1] <= 10000) {
         $dir = AWC_DATA . '/archive/' . $id . '/' . $now->format('Y/m/d');
         if (!is_dir($dir)) mkdir($dir, 0700, true);
-        $path = $dir . '/' . $stamp . '.jpg';
-        $written = file_put_contents($path . '.tmp', $job['data'], LOCK_EX);
-        if ($written !== false && rename($path . '.tmp', $path)) {
+        $path = $dir . '/' . $stamp . '.webp';
+        if (store_webp_snapshot($job['data'], $path)) {
+            try { $prepared = prepare_webp_variants($path, $id, $stamp); } catch (Throwable $error) { $prepared = 0; }
+            $webpPrepared += $prepared;
+            if ($prepared < 3) $webpIncomplete++;
             $state['cameras'][$id] = ['stamp' => $stamp, 'retrievedAt' => $now->format(DateTimeInterface::ATOM), 'status' => 'ok']; $ok++;
         } else { $state['cameras'][$id]['status'] = 'unavailable'; $failed++; }
     } else { $state['cameras'][$id]['status'] = 'unavailable'; $failed++; }
     curl_multi_remove_handle($multi, $h);
 }
 curl_multi_close($multi);
-$state['lastResult'] = ['saved' => $ok, 'failed' => $failed, 'at' => $now->format(DateTimeInterface::ATOM), 'trigger' => $trigger];
+$state['lastResult'] = ['saved' => $ok, 'failed' => $failed, 'at' => $now->format(DateTimeInterface::ATOM), 'trigger' => $trigger, 'webpPrepared' => $webpPrepared, 'webpIncomplete' => $webpIncomplete];
 file_put_contents(AWC_DATA . '/state.json.tmp', json_encode($state, JSON_PRETTY_PRINT), LOCK_EX); rename(AWC_DATA . '/state.json.tmp', AWC_DATA . '/state.json');
-return ['saved' => $ok, 'failed' => $failed, 'state' => $state];
+return ['saved' => $ok, 'failed' => $failed, 'webpPrepared' => $webpPrepared, 'webpIncomplete' => $webpIncomplete, 'state' => $state];
 } finally { flock($lock, LOCK_UN); fclose($lock); }
 
 }

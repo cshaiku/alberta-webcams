@@ -24,8 +24,8 @@ header('X-Robots-Tag: noindex, follow');
 <meta name="description" content="Explore saved snapshots of <?= e($camera['title']) ?> with a thumbnail filmstrip and time lapse playback."><meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://sltd.ca/awc/timeline.php?camera=<?= e($id) ?>">
 <link rel="icon" type="image/svg+xml" href="/awc/assets/brand/awc.svg">
-<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-camera-nav1">
-<script type="module" src="/awc/assets/timeline.js?v=20261031-camera-nav1"></script>
+<link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1"><link rel="stylesheet" href="/awc/assets/timeline.css?v=20261031-webp1">
+<script type="module" src="/awc/assets/timeline.js?v=20261031-webp1"></script>
 <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body id="app" class="timeline-page" data-camera="<?= e($id) ?>" data-day="<?= e($day) ?>" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">

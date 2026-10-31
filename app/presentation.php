@@ -25,7 +25,7 @@ function icon(string $name): string
 }
 function image_url(string $id, string $stamp): string
 {
-    return '/awc/image.php?' . http_build_query(['camera' => $id, 'stamp' => $stamp]);
+    return '/awc/image.php?' . http_build_query(['camera' => $id, 'stamp' => $stamp, 'format' => 'webp']);
 }
 function picture_html(string $id, string $stamp, string $title, bool $priority = false): string
 {

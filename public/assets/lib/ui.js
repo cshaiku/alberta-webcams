@@ -14,7 +14,7 @@ export const stampISO = stamp => stamp ? `${stamp.slice(0, 10)}T${stamp.slice(11
 
 export function imageURL(id, stamp, width) {
   const url = new URL('/awc/image.php', location.origin);
-  url.search = new URLSearchParams({ camera: id, stamp, ...(width ? { format: 'webp', w: width } : {}) });
+  url.search = new URLSearchParams({ camera: id, stamp, format: 'webp', ...(width ? { w: width } : {}) });
   return `${url.pathname}${url.search}`;
 }
 

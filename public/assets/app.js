@@ -1,5 +1,5 @@
-import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-workspace2';
-import { request } from './lib/api.js?v=20261031-workspace2';
+import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-webp1';
+import { request } from './lib/api.js?v=20261031-webp1';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];

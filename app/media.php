@@ -8,19 +8,20 @@ function snapshot_path(string $id, string $stamp): ?string
         || !valid_date("$m[1]-$m[2]-$m[3]")) {
         return null;
     }
-    $file = AWC_DATA . "/archive/$id/$m[1]/$m[2]/$m[3]/$stamp.jpg";
+    $file = AWC_DATA . "/archive/$id/$m[1]/$m[2]/$m[3]/$stamp.webp";
     return is_file($file) ? $file : null;
 }
 
-/** Generate bounded WebP derivatives once, preserving the original JPEG. */
+/** Generate bounded WebP derivatives once, from the full-size WebP capture. */
 function webp_variant(string $source, string $id, string $stamp, int $width): ?string
 {
     if (!in_array($width, [400, 640, 840], true) || !function_exists('imagewebp')) return null;
     $target = AWC_DATA . "/variants/$id/$stamp-$width.webp";
-    if (is_file($target)) return $target;
     $info = @getimagesize($source);
     if (!$info || $info[0] * $info[1] > 16000000) return null;
-    $image = @imagecreatefromjpeg($source);
+    if ($width >= $info[0]) return $source;
+    if (is_file($target)) return $target;
+    $image = @imagecreatefromwebp($source);
     if (!$image) return null;
     $w = min($width, $info[0]);
     $h = max(1, (int)round($info[1] * $w / $info[0]));
@@ -32,4 +33,31 @@ function webp_variant(string $source, string $id, string $stamp, int $width): ?s
     $written = imagewebp($scaled, $temp, 84);
     if (!$written || !rename($temp, $target)) { @unlink($temp); return null; }
     return $target;
+}
+
+/** Prepare the default browser formats before a new capture becomes visible. */
+function prepare_webp_variants(string $source, string $id, string $stamp): int
+{
+    $prepared = 0;
+    foreach ([400, 640, 840] as $width) {
+        if (webp_variant($source, $id, $stamp, $width)) $prepared++;
+    }
+    return $prepared;
+}
+
+/** Convert provider bytes directly into an atomically verified WebP capture. */
+function store_webp_snapshot(string $bytes, string $target): bool
+{
+    if (!function_exists('imagewebp')) return false;
+    $info = @getimagesizefromstring($bytes);
+    if (!$info || ($info['mime'] ?? '') !== 'image/jpeg' || $info[0] * $info[1] > 16000000) return false;
+    $image = @imagecreatefromstring($bytes);
+    if (!$image) return false;
+    $temp = $target . '.' . bin2hex(random_bytes(6)) . '.tmp';
+    if (!imagewebp($image, $temp, 84)) { @unlink($temp); return false; }
+    $converted = @getimagesize($temp);
+    $decoded = @imagecreatefromwebp($temp);
+    if (!$decoded || !$converted || $converted[0] !== $info[0] || $converted[1] !== $info[1] || ($converted['mime'] ?? '') !== 'image/webp') { @unlink($temp); return false; }
+    if (!rename($temp, $target)) { @unlink($temp); return false; }
+    return true;
 }

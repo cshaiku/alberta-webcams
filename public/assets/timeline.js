@@ -1,5 +1,5 @@
-import { request } from './lib/api.js?v=20261031-workspace2';
-import { imageURL, stampLabel, escape } from './lib/ui.js?v=20261031-workspace2';
+import { request } from './lib/api.js?v=20261031-webp1';
+import { imageURL, stampLabel, escape } from './lib/ui.js?v=20261031-webp1';
 const $ = s => document.querySelector(s);
 const camera = document.body.dataset.camera;
 let frames = [], index = 0, playing = false, timer, controller, generation = 0, selection = 0;

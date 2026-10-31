@@ -1,0 +1,44 @@
+{
+  "url": "https://sltd.ca/awc/",
+  "storage": "WebP only, quality 84",
+  "jpegCaptureCopiesRetained": false,
+  "pngCaptureCopiesRetained": false,
+  "migration": {
+    "capturesConverted": 99,
+    "jpegBytesBefore": 3057493,
+    "webpMasterBytesAfter": 2345882,
+    "jpegCopiesRemoved": 99,
+    "redundantWebpFilesRemoved": 141,
+    "redundantWebpBytesRemoved": 3436208
+  },
+  "collectorValidation": {
+    "at": "2026-10-31T03:32:06-06:00",
+    "saved": 11,
+    "unavailable": 1,
+    "webpPrepared": 33,
+    "webpIncomplete": 0
+  },
+  "checks": [
+    "make test",
+    "Live network, grid and timeline browser suites passed",
+    "Archive capture enumeration uses WebP",
+    "No JPEG capture files written",
+    "Large candidates reuse master"
+  ],
+  "files": {
+    "app/bootstrap.php": "35d9148da9c9673ab465120ff12149cb60c27a31557387cdd88498d35e8b8bf6",
+    "app/media.php": "2a5cfe2d5a3db23f6981a3d930f3b951fc5d084dd3fa2bebbe8445a693766f1a",
+    "app/retrieval.php": "ba70e4ab4b6b876f9c6829d960ecf8b07e9aa90757bf6cda42645b13b7a53687",
+    "app/presentation.php": "7551d600ef045ddeadcea8767616403dd3c7ef3141de1c48d93a8d52b0a06d36",
+    "tools/retrieve.php": "5d5318c771c407c71a9396e7910ea0b4e98981c788d34f7d632800ebc19a0418",
+    "tools/migrate-webp.php": "b49e80df2ad5164f3b00b9292d33650b587db692b6c2542a66bb17202604c063",
+    "public/image.php": "acd610c49cc2b030d71b7265f3226ba008081d050fe315ef61284a9148694711",
+    "public/index.php": "59a01f81b1e9f83175a64ac6cd3f0984c3e960454b4479410de00020333e52aa",
+    "public/timeline.php": "320af9775d9130804146cf81aaf8b3b598d2450f5ff5f541336d79f0f6a935a1",
+    "public/assets/app.js": "94d90ad9e748346a3c11042c937561b0a2030590e0ae97c7e8101e919409ed56",
+    "public/assets/timeline.js": "f15f5b4e681b164319557856c833978ee7798c730dcbc6d8b330dbfaf70d001b",
+    "public/assets/lib/ui.js": "f42624cb54d5051ed254ea1cceabe461e12787bf0cf9e5ff9222e96de559eee5"
+  },
+  "defaultImageMime": "image/webp",
+  "legacyCaptureCount": 0
+}
