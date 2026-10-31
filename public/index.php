@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-rail-only1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-camera-nav1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-rail-only1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-camera-nav1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -66,8 +66,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <button id="menu-toggle" class="icon-button" aria-label="Open controls" aria-controls="header-controls" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     <div id="header-controls"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true" title="Toggle camera sidebar"><?= icon('rail') ?></button>
     <nav class="views" aria-label="Camera views">
-        <a href="/awc/" data-view="overview"<?= $view === 'overview' ? ' aria-current="page"' : '' ?>><?= icon('grid') ?><span>Grid view</span></a>
-        <a href="/awc/?view=archive" data-view="archive"<?= $view === 'archive' ? ' aria-current="page"' : '' ?>><?= icon('archive') ?><span>Archive</span></a>
+        <a href="/awc/" data-view="overview"<?= $view === 'overview' ? ' aria-current="page"' : '' ?>><?= icon('grid') ?><span>Network</span></a>
+        <a href="/awc/?view=archive" data-view="archive"<?= $view === 'archive' ? ' aria-current="page"' : '' ?>><?= icon('archive') ?><span>Grid</span></a>
+        <a id="header-timeline" href="/awc/timeline.php?camera=<?= e($catalog[0]['id']) ?>"><?= icon('clock') ?><span>Timeline</span></a>
         <a href="/awc/?view=map" data-view="map"<?= $view === 'map' ? ' aria-current="page"' : '' ?>><?= icon('map') ?><span>Map</span></a>
     </nav>
 

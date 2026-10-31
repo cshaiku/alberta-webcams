@@ -1,20 +1,21 @@
 {
   "url": "https://sltd.ca/awc/timeline.php?camera=ab_128",
-  "backup": "domains/sltd.ca/private/deploy-backups/awc-visible-title-20261031",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-camera-nav-20261031",
   "checks": [
     "PHP and JavaScript syntax checks",
     "Local timeline browser test with live archive responses",
     "Live timeline and archive browser tests",
     "Warm hover switches synchronously",
     "Decoded preview works offline",
-    "Centered title and day picker inside 48px header at 1440/768/390/320"
+    "Centered title and day picker inside 48px header at 1440/768/390/320",
+    "Live previous and next camera gutter navigation with selected day preserved"
   ],
   "files": {
-    "index.php": "986543fd27a9de7da6432796bf90ddfd3c58c2e0ba0a38b5ba8f23d3d49021f3",
-    "timeline.php": "0ece7dcf7dc9107ffa143f75071a8cacdbb215d882e4f55126dd61c0899e8383",
-    "assets/app.js": "22748d8231f446d0862ac7d6397d4ec3b473942dad3b21482f5ad0bfbb900a5a",
-    "assets/timeline.js": "10750966aa391f278ebec6e3bc0c170518a90e1fcabc9ab438f3425f5937212c",
-    "assets/timeline.css": "8e533897e744b65bd8de074c34464c978774871950f16f45ad109b90a2b89ea6"
+    "index.php": "d1c21f637f5ee1116aebbacf5910c741d8c14ec133b68a8818a5f0d2679c3597",
+    "timeline.php": "2a8422febd3bbf24981dac6d2663f1e7de0afa85551087745ea4bd32f9285248",
+    "assets/app.js": "261dabe434cca6247253d499e8ba5b5adb546b473578e7c7e3814ef4f9fa869f",
+    "assets/timeline.js": "863a75fa96e65eb8d4de27c62af272ace94b00d4be7568f2f4bef84718b83aad",
+    "assets/timeline.css": "3223b60e8b69a1f0d3ae0cd5298f3f4d3030af283033c46567a6b50af409ca11"
   },
   "indexing": "noindex, follow, excluded from sitemap",
   "presentation": {
@@ -28,7 +29,7 @@
     "visibleFooterStatus": false,
     "titleAndDayInMainHeader": true,
     "header": {
-      "left": "All cameras, Archive, camera icon and visible title, Day",
+      "left": "Network, Grid, Timeline, camera icon and visible title, Day",
       "center": "Previous, Play/Pause, Next, Speed",
       "right": "Accessibility Preferences",
       "desktopHeight": 48,
@@ -41,5 +42,6 @@
     "hoverDelayMs": 0,
     "reuseDecodedNodes": true,
     "browserImageCache": "immutable, max-age=31536000"
-  }
+  },
+  "cameraNavigation": "Left and right image gutters switch cameras in catalog order and preserve day and stamp"
 }

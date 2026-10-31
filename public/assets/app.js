@@ -96,6 +96,7 @@ async function render(historyMode = 'replace') {
   archiveController = new AbortController();
   cameraList();
   const camera = state.catalog.find(camera => camera.id === state.selected);
+  $('#header-timeline').href = `/awc/timeline.php?camera=${encodeURIComponent(camera?.id ?? state.catalog[0]?.id ?? '')}`;
   $$('[data-view]').forEach(link => {
     if (link.dataset.view === state.view) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');

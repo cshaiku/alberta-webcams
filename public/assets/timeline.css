@@ -108,3 +108,21 @@
     #app .timeline-header .camera-identity h1 { max-inline-size: 8vw; }
   }
 }
+
+@layer workspace {
+  .camera-edge { position: absolute; inset-block: 0; z-index: 2; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+  .camera-edge-previous { inset-inline-start: 0; }
+  .camera-edge-next { inset-inline-end: 0; }
+  .camera-edge span { font-size: 36px; opacity: 0; }
+  .camera-edge:hover span,.camera-edge:focus-visible span { opacity: 1; }
+  .camera-edge:hover { background: #ffffff06; }
+  #app #timeline-original { z-index: 3; }
+}
+@layer workspace {
+  .timeline-context .timeline-nav { flex: 0 0 auto; }
+  .timeline-context .timeline-heading { flex: 1 1 auto; min-inline-size: 0; }
+  .timeline-context .camera-identity { flex: 1 1 auto; min-inline-size: 20px; }
+  .timeline-context .camera-identity > span { flex: 0 0 auto; }
+  #app .timeline-context .camera-identity h1 { min-inline-size: 0; }
+  .timeline-context .day-picker { flex: 0 0 auto; }
+}

@@ -4,7 +4,9 @@ const $ = s => document.querySelector(s);
 const camera = document.body.dataset.camera;
 let frames = [], index = 0, playing = false, timer, controller, generation = 0, selection = 0;
 function pause() { playing = false; clearTimeout(timer); $('#timeline-play').textContent = 'Play'; $('#timeline-play').setAttribute('aria-label','Play snapshots'); }
-function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url); }
+function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url);
+  for(const link of document.querySelectorAll('.camera-edge')) { const target=new URL(link.href);target.searchParams.set('date',$('#timeline-day').value);if(frames[index])target.searchParams.set('stamp',frames[index].stamp);else target.searchParams.delete('stamp');link.href=target.href; }
+}
 function controls() { const disabled = !frames.length; $('#timeline-play').disabled=disabled || frames.length<2; $('#timeline-prev').disabled=disabled || index===0; $('#timeline-next').disabled=disabled || index===frames.length-1; }
 // Keep decoded image nodes, so a warm hover needs neither a request nor a decode.
 // 24 previews bound decoded memory; immutable snapshot URLs also use browser disk cache.
@@ -66,6 +68,7 @@ async function selectFrame(next, { user = false, scroll = true } = {}) {
   if(scroll && thumb) { const strip=$('#timeline-filmstrip'); strip.scrollLeft=thumb.offsetLeft-strip.offsetLeft-(strip.clientWidth-thumb.offsetWidth)/2; }
   if(user) $('#timeline-status').textContent=stampLabel(frame.stamp);
   updateURL();
+  cameraEdges();
   warmPreviews(current);
 }
 async function tick() { if(!playing)return; if(index>=frames.length-1){pause();return;} await selectFrame(index+1); if(playing)timer=setTimeout(tick,Number($('#timeline-speed').value)); }
@@ -108,3 +111,12 @@ $('#timeline-filmstrip').addEventListener('keydown',event=>{
   selectFrame(next,{user:true});
   $(`.timeline-thumb[data-index="${Math.max(0,Math.min(frames.length-1,next))}"]`)?.focus();
 });
+
+function cameraEdges() {
+  const image=$('#timeline-image'),stage=$('.timeline-stage');
+  const box=stage.getBoundingClientRect();
+  const fittedWidth=image.hidden || !image.naturalWidth ? 0 : Math.min(box.width,box.height*image.naturalWidth/image.naturalHeight);
+  const gutter=Math.max(0,(box.width-fittedWidth)/2);
+  for(const link of document.querySelectorAll('.camera-edge')) {link.style.width=`${gutter}px`;link.hidden=gutter<1;}
+}
+new ResizeObserver(cameraEdges).observe($('.timeline-stage'));
