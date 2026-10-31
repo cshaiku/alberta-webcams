@@ -107,7 +107,7 @@ async function render(historyMode = 'replace') {
     ? (camera?.title ?? 'Choose a camera and revisit a moment. Explore saved snapshots by date and hour.')
     : state.view === 'map' ? 'A province of perspectives. Choose a location to explore its saved snapshots.'
       : 'A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.';
-  $('#archive-controls').hidden = state.view !== 'archive';
+  $('#archive-controls').hidden = true;
   $('#grid-toolbar').hidden = state.view !== 'overview';
   $('#gallery').hidden = state.view === 'map';
   $('#map-panel').hidden = state.view !== 'map';

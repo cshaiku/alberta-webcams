@@ -1,7 +1,7 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1440,height:900}});const errors=[];p.on('pageerror',e=>errors.push(e.message));const base=process.env.AWC_TEST_URL||'http://127.0.0.1:8768/awc/';
 if(!process.env.AWC_TEST_URL)await p.route(/\/(api|image)\.php\?/,async route=>{const url=new URL(route.request().url());const response=await p.request.get('https://sltd.ca'+url.pathname+url.search);await route.fulfill({response});});
-await p.goto(base+'?view=archive&camera=ab_128');await p.waitForFunction(()=>document.body.dataset.ready);await p.locator('#timeline-link').click();await p.waitForFunction(()=>document.body.dataset.ready);assert.match(p.url(),/timeline.php\?camera=ab_128/);
+await p.goto(base+'?view=archive&camera=ab_128');await p.waitForFunction(()=>document.body.dataset.ready);await p.locator('.image-button').first().click();await p.waitForFunction(()=>document.body.dataset.ready);assert.match(p.url(),/timeline.php\?camera=ab_128/);
 const n=await p.locator('.timeline-thumb').count();assert(n>1);assert(await p.locator('#timeline-image').isVisible());assert.equal(await p.locator('#timeline-scrubber,.timeline-gap,.timeline-extents,.scrubber-label,#timeline-time').count(),0);assert.equal(await p.locator('.timeline-thumb').first().evaluate(e=>getComputedStyle(e).padding),'0px');assert.equal(await p.locator('.timeline-frames').evaluate(e=>getComputedStyle(e).gap),'0px');
 await p.waitForLoadState('networkidle');
 const hoverIndex=Math.min(n-1,10);

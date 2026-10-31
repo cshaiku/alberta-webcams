@@ -11,7 +11,7 @@ const assert=require('node:assert/strict');
  assert(await page.locator('#sidebar').isVisible());assert(await page.locator('#archive-heading').innerText());
  await page.locator('[data-period]').filter({hasText:'View hour'}).first().click();await page.waitForFunction(()=>!document.querySelector('#gallery').hasAttribute('aria-busy'));
  assert(await page.locator('.camera-card').count()>0);await page.locator('.timeline-image').first().click();assert(await page.locator('#viewer').evaluate(e=>e.open));await page.keyboard.press('Escape');
- await page.locator('#archive-all').click();await page.waitForFunction(()=>!document.querySelector('#gallery').hasAttribute('aria-busy'));assert.equal(await page.locator('.camera-card').count(),data.frames.length);
+ await page.locator('#archive-tree [data-period=""]').click();await page.waitForFunction(()=>!document.querySelector('#gallery').hasAttribute('aria-busy'));assert.equal(await page.locator('.camera-card').count(),data.frames.length);
  await page.reload();await page.waitForFunction(()=>document.body.dataset.ready==='true');assert.equal(await page.locator('.camera-card').count(),data.frames.length);
  for(const width of [1440,768,390,320]){await page.setViewportSize({width,height:900});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
  await page.locator('#menu-toggle').click();await page.locator('#rail-toggle').click();assert(await page.locator('#archive-tree').isVisible());await page.keyboard.press('Escape');
