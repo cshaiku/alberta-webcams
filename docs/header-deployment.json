@@ -1,0 +1,27 @@
+{
+  "url": "https://sltd.ca/awc/",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-scroll-20261031",
+  "changes": [
+    "Existing SDOU gear moved into header",
+    "Directional scroll visibility",
+    "Manual retrieval controls removed"
+  ],
+  "verifiedWidths": [
+    1440,
+    768,
+    390,
+    320
+  ],
+  "checks": [
+    "Gear position and modal open close",
+    "Down scroll hides and up scroll reveals header",
+    "No manual retrieval button",
+    "No horizontal overflow or console errors",
+    "Existing browser workflow suite passed"
+  ],
+  "files": {
+    "index.php": "d8cfba4d38eef75c1667dfdd509aa175e068e264c89bec3acd04f447125ab8ab",
+    "assets/site.css": "66e4ee32daf9d2cba34fb1640107813a1655c00e22745c2bf75cb8460b61f16d",
+    "assets/app.js": "1922ae681e8c528df055267efa776283a932f19a0db7b8b9dba152a48da1beeb"
+  }
+}

@@ -60,7 +60,7 @@ function card(item, index) {
 }
 function showGallery() { $('#gallery').innerHTML = state.items.map(card).join(''); }
 function empty(title, message, retrieve = true) {
-  $('#gallery').innerHTML = `<div class="empty">${icon('camera')}<h2>${escape(title)}</h2><p>${escape(message)}</p>${retrieve ? '<button data-action="retrieve">Retrieve images</button>' : '<button data-action="reset">Show all cameras</button>'}</div>`;
+  $('#gallery').innerHTML = `<div class="empty">${icon('camera')}<h2>${escape(title)}</h2><p>${escape(message)}</p>${retrieve ? '<p>Images are collected automatically every 15 minutes.</p>' : '<button data-action="reset">Show all cameras</button>'}</div>`;
 }
 async function render(historyMode = 'replace') {
   archiveController?.abort();
@@ -94,7 +94,7 @@ async function render(historyMode = 'replace') {
       const data = await request('archive', { signal: archiveController.signal, parameters: { camera: camera.id, date: $('#date').value } });
       state.items = data.frames.filter(frame => $('#hour').value === 'all' || frame.stamp.slice(11, 13) === $('#hour').value).map(frame => ({ camera, stamp: frame.stamp }));
       if (state.items.length) showGallery();
-      else empty('No snapshots for this time', 'Try another date or retrieve a new collection. New snapshots are saved under today’s date.');
+      else empty('No snapshots for this time', 'Try another date. New snapshots are collected automatically under today’s date.');
       status(`${state.items.length} ${state.items.length === 1 ? 'snapshot' : 'snapshots'} · ${$('#date').value} · ${data.dates.length} archived ${data.dates.length === 1 ? 'day' : 'days'}`);
     } catch (error) {
       if (error.name !== 'AbortError') { empty('Archive unavailable', 'Unable to load the archive. Please try again.'); status(error.message); }
@@ -108,28 +108,7 @@ async function render(historyMode = 'replace') {
     }).map(camera => ({ camera, stamp: state.snapshots.cameras?.[camera.id]?.stamp }));
     if (state.items.length) showGallery(); else empty('No cameras found', 'Try another place or clear your filters to see the full collection.', false);
     const last = state.snapshots.lastResult;
-    status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Edmonton', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Select Retrieve images to collect the first snapshots.');
-  }
-}
-async function retrieve() {
-  if (state.retrieving) return;
-  state.retrieving = true;
-  const button = $('#retrieve');
-  button.disabled = true;
-  button.setAttribute('aria-busy', 'true');
-  button.querySelector('span').textContent = 'Retrieving…';
-  status('Retrieving your camera collection…', true);
-  try {
-    const data = await request('retrieve', { token: state.csrf });
-    state.snapshots = data.state;
-    await render();
-    status(`${data.saved} images saved${data.failed ? ` · ${data.failed} ${data.failed === 1 ? 'camera' : 'cameras'} unavailable` : ''}.`, true);
-  } catch (error) { status(error.message, true); }
-  finally {
-    state.retrieving = false;
-    button.disabled = false;
-    button.removeAttribute('aria-busy');
-    button.querySelector('span').textContent = 'Retrieve images';
+    status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Edmonton', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Images are collected automatically every 15 minutes.');
   }
 }
 function openViewer(index, trigger) {
@@ -161,7 +140,7 @@ function closeRail() {
   $('#rail-backdrop').hidden = true;
   $('#main').inert = false;
   $('.views').inert = false;
-  $('.header-actions').inert = false;
+  $('#grid-toolbar').inert = false;
   $('#rail-toggle').setAttribute('aria-expanded', String(!mobile.matches && !document.body.classList.contains('rail-hidden')));
 }
 function toggleRail() {
@@ -171,7 +150,7 @@ function toggleRail() {
     $('#rail-backdrop').hidden = false;
     $('#main').inert = true;
     $('.views').inert = true;
-    $('.header-actions').inert = true;
+    $('#grid-toolbar').inert = true;
     $('#rail-toggle').setAttribute('aria-expanded', 'true');
     $('#rail-close').focus();
   } else {
@@ -190,7 +169,6 @@ document.addEventListener('click', event => {
   else if (target.matches('.image-button')) { event.preventDefault(); openViewer(Number(target.dataset.index), target); }
   else if (target.dataset.filter) { state.filter = target.dataset.filter; render('push'); }
   else if (target.id === 'all-cameras' || target.dataset.action === 'reset') resetFilters();
-  else if (target.id === 'retrieve' || target.dataset.action === 'retrieve') retrieve();
   else if (target.id === 'menu-toggle') setMenu(!document.body.classList.contains('controls-open'));
   else if (target.id === 'rail-toggle') toggleRail();
   else if (['rail-close','rail-backdrop'].includes(target.id)) { closeRail(); $('#rail-toggle').focus(); }
@@ -204,7 +182,7 @@ $('#gallery').addEventListener('error', event => {
     const picture = event.target.closest('picture');
     if (picture?.querySelector('source')) { picture.querySelector('source').remove(); return; }
     const link = event.target.closest('.image-button');
-    if (link) link.outerHTML = `<div class="unavailable">${icon('camera')}<strong>Image unavailable</strong><p>Please retrieve the collection again.</p></div>`;
+    if (link) link.outerHTML = `<div class="unavailable">${icon('camera')}<strong>Image unavailable</strong><p>The next automatic collection may restore this image.</p></div>`;
   }
 }, true);
 $('#search').addEventListener('input', () => render());
@@ -240,6 +218,24 @@ function setMenu(open) {
 }
 mobile.addEventListener('change', () => { closeRail(); setMenu(false); });
 document.addEventListener('click', event => { if (mobile.matches && !event.target.closest('.header')) setMenu(false); });
+// Direction threshold avoids flicker from small trackpad movements and elastic overscroll.
+const header = $('.header');
+let scrollAnchor = Math.max(0, window.scrollY);
+let scrollPending = false;
+function revealHeader() { header.classList.remove('scroll-hidden'); }
+window.addEventListener('scroll', () => {
+  if (scrollPending) return;
+  scrollPending = true;
+  requestAnimationFrame(() => {
+    const y = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - innerHeight));
+    const delta = y - scrollAnchor;
+    const interacting = document.body.matches('.controls-open,.rail-open') || header.matches(':focus-within') || header.querySelector('sdou-preferences-center')?.shadowRoot?.querySelector('dialog[open]');
+    if (y < header.offsetHeight || interacting) { revealHeader(); scrollAnchor = y; }
+    else if (Math.abs(delta) >= 8) { header.classList.toggle('scroll-hidden', delta > 0); scrollAnchor = y; }
+    scrollPending = false;
+  });
+}, { passive: true });
+header.addEventListener('focusin', revealHeader);
 new ResizeObserver(entries => { document.documentElement.style.setProperty('--header-height', `${Math.ceil(entries[0].target.getBoundingClientRect().height)}px`); }).observe($('.header'));
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && document.body.classList.contains('controls-open')) { setMenu(false); $('#menu-toggle').focus(); }
@@ -262,7 +258,7 @@ try {
   state.csrf = data.csrf;
   readURL();
   await render();
-  $('#retrieve').disabled = false;
+  document.body.dataset.ready = 'true';
 } catch (error) { status(`${error.message} Saved snapshots are still available below.`, true); }
 
 function renderMap(){

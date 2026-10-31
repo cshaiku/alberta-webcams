@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const base = process.env.AWC_TEST_URL || 'http://127.0.0.1:8768/awc/';
 (async()=>{
  const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base);await page.waitForFunction(()=>!document.querySelector('#retrieve').disabled);await page.waitForSelector('.camera-card');assert.equal(await page.locator('.camera-card').count(),12);
+ await page.goto(base);await page.waitForFunction(()=>document.body.dataset.ready === 'true');await page.waitForSelector('.camera-card');assert.equal(await page.locator('.camera-card').count(),12);
  await page.locator('[data-filter=edmonton]').click();assert.equal(await page.locator('.camera-card').count(),4);
  await page.locator('[data-filter=highways]').click();assert.equal(await page.locator('.camera-card').count(),8);
  await page.locator('[data-filter=all]').click();

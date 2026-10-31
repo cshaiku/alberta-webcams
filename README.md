@@ -8,8 +8,8 @@ The working example is intended for https://sltd.ca/awc/. Codex project folder: 
 
 ## Behaviour
 
-* Overview displays the latest manually retrieved snapshot from every camera.
-* The header’s Retrieve images button saves a new set of JPEG images, with individual failures reported and previous images preserved.
+* Overview displays the latest collected snapshot from every camera.
+* The shared hosting scheduler saves a new set of JPEG images every 15 minutes, with previous images preserved when an individual camera fails. The manual retrieval button is removed.
 * Archive browses one camera by date and hour, with an enlarged viewer and previous or next image controls.
 * Map shows a schematic province outline using official camera coordinates. Camera buttons provide an accessible alternative.
 * The camera rail collapses to give images more room. On phones it opens as a drawer. Large and compact image sizes are available.
@@ -48,3 +48,5 @@ PHP GD with WebP support is required for optimized derivatives. Original JPEGs r
 The owner requested an application style image wall. The default view now has no visible card labels, gaps, borders or outer padding. The camera drawer starts closed; compact controls and the enlarged viewer retain navigation and metadata. See [workspace update](docs/workspace-update.md).
 
 A shared private CLI collector is deployed and registered in Hostinger hPanel on a 15 minute schedule. See [scheduling setup](docs/scheduling.md). Camera tiles use uniform 4:3 slots to prevent layout shifts while retaining complete source images.
+
+The existing SDOU accessibility gear lives at the top right of the control bar. The bar hides while scrolling down and returns while scrolling up. Open menus, keyboard focus and the preferences dialog keep it visible. Reduced motion disables the transition.

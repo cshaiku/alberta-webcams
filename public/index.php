@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-uniform2">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-scroll1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-uniform1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-scroll1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -70,9 +70,10 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
         <a href="/awc/?view=archive" data-view="archive"<?= $view === 'archive' ? ' aria-current="page"' : '' ?>><?= icon('archive') ?><span>Archive</span></a>
         <a href="/awc/?view=map" data-view="map"<?= $view === 'map' ? ' aria-current="page"' : '' ?>><?= icon('map') ?><span>Map</span></a>
     </nav>
-    <div class="header-actions"><span class="manual-label"><i class="dot"></i> On your schedule</span><button id="retrieve" class="primary" disabled><?= icon('refresh') ?><span>Retrieve images</span></button></div>
+
     <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label><label class="density"><span class="sr-only">Image size</span><select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="large">Large images</option></select></label></div></div>
     </div>
+    <sdou-preferences-center target="#app" storage-key="awc.reading.v1"></sdou-preferences-center>
 </header>
 <div class="workspace">
     <aside id="sidebar" class="sidebar" aria-label="Camera collection">
@@ -86,8 +87,8 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
         <section class="collection-intro" aria-labelledby="page-title"><div class="page-heading"><p class="eyebrow" id="eyebrow">THE CAMERA COLLECTION</p><h1 id="page-title">Alberta, in view.</h1><p class="intro-copy" id="intro-copy">A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.</p></div><dl class="collection-stats"><div><dt>Cameras</dt><dd id="stat-cameras"><?= count($catalog) ?></dd></div><div><dt>Available</dt><dd id="stat-available"><?= $available ?></dd></div><div><dt>Time zone</dt><dd class="stat-zone">Mountain<small>Alberta, Canada</small></dd></div></dl></section>
 
         <form id="archive-controls" class="control-strip" hidden><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
-        <div class="status-row"><p id="status" role="status" aria-live="polite"><?= isset($snapshotState['lastResult']) ? 'Latest collection · ' . $available . ' cameras available' : 'Select Retrieve images to collect the first snapshots.' ?></p><span id="capture-note"><?= icon('info') ?> Times below record retrieval, not camera capture.</span></div>
-        <noscript><p class="notice">The camera grid is available below. Enable JavaScript to retrieve new images, use filters and open the archive controls.</p></noscript>
+        <div class="status-row"><p id="status" role="status" aria-live="polite"><?= isset($snapshotState['lastResult']) ? 'Latest collection · ' . $available . ' cameras available' : 'Images are collected automatically every 15 minutes.' ?></p><span id="capture-note"><?= icon('info') ?> Times below record retrieval, not camera capture.</span></div>
+        <noscript><p class="notice">The camera grid is available below. Enable JavaScript to use filters and open the archive controls.</p></noscript>
         <section id="gallery" class="gallery" aria-label="Camera snapshots"><?php foreach ($catalog as $index => $c) echo card_html($c, $snapshotState['cameras'][$c['id']] ?? [], $index); ?></section>
         <section id="map-panel" aria-label="Camera locations" hidden></section>
         <section class="collection-notes" aria-label="About this collection"><div><?= icon('camera') ?><h2>Snapshots, at your pace.</h2><p>Retrieve a fresh collection when you need it. Saved snapshots remain in the archive, ready to explore by camera, date and hour.</p></div><div><?= icon('clock') ?><h2>A moment, with context.</h2><p>Each image keeps the source’s original timestamp. The time beneath it tells you when it was retrieved. Source images may be older.</p></div><div><?= icon('map') ?><h2>Keep the wider view.</h2><p>Sources can be delayed or unavailable. For current travel advisories and road conditions, check <a href="https://511.alberta.ca/" target="_blank" rel="noopener">511 Alberta</a>.</p></div></section>
@@ -95,7 +96,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     </main>
 </div>
 <dialog id="viewer" aria-labelledby="viewer-title" aria-describedby="viewer-time"><div class="viewer-toolbar"><div><p class="eyebrow">A CLOSER LOOK</p><h2 id="viewer-title"></h2></div><button id="viewer-close" class="icon-button" aria-label="Close image"><?= icon('close') ?></button></div><img id="viewer-image" width="840" height="630" alt=""><div class="viewer-bottom"><button id="viewer-prev" aria-label="Previous image">←</button><p id="viewer-time"></p><a id="viewer-original" href="/awc/" target="_blank" rel="noopener">Original <?= icon('external') ?></a><button id="viewer-next" aria-label="Next image">→</button></div></dialog>
-<sdou-preferences-center target="#app" storage-key="awc.reading.v1"></sdou-preferences-center>
+
 <template id="ui-icons"><?php foreach (['camera','clock','arrow','expand','close','info','pin'] as $name): ?><span data-icon="<?= e($name) ?>"><?= icon($name) ?></span><?php endforeach; ?></template>
 </body>
 </html>

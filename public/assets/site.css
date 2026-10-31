@@ -355,3 +355,12 @@
     .gallery.compact { grid-template-columns: repeat(2,minmax(0,1fr)); }
   }
 }
+
+@layer workspace {
+  .header { transition: transform 180ms var(--ease); }
+  .header.scroll-hidden { transform: translateY(-100%); }
+  .header:focus-within { transform: none; }
+  .header sdou-preferences-center { position: static; inset: auto; flex: 0 0 44px; inline-size: 44px; block-size: 44px; margin-inline-start: auto; z-index: auto; }
+  .header #header-controls { flex: 1; }
+  .header .collection-toolbar { justify-content: space-between; }
+}
