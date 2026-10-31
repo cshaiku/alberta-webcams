@@ -43,6 +43,7 @@ async function render() {
  $('#archive-controls').hidden=view!=='archive';$('#gallery').hidden=view==='map';$('#map-panel').hidden=view!=='map';
  if(view==='map'){renderMap();setStatus(`${catalog.length} camera locations · Select a marker to browse its archive.`);return;}
  if(view==='archive'){
+  if(!c && selected){empty('Camera unavailable','This historical camera is not in the current catalog. Choose a camera from the sidebar.');setStatus('Historical camera not available.');return;}
   if(!c){selected=catalog[0]?.id;return render();}
   setStatus('Loading archive…');
   try{
@@ -59,7 +60,7 @@ async function render() {
 }
 async function retrieve(){
  const b=$('#retrieve');if(b.disabled)return;b.disabled=true;b.querySelector('span').textContent='Retrieving…';b.setAttribute('aria-busy','true');setStatus('Retrieving camera images…');
- try{const r=await fetch(`${endpoint}?action=retrieve`,{method:'POST',headers:{'X-CSRF-Token':csrf}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Retrieval failed.');state=data.state;await render();setStatus(`${data.saved} images saved${data.failed?`; ${data.failed} cameras unavailable`:''}.`);}
+ try{const r=await fetch(`${endpoint}?action=retrieve`,{method:'POST',headers:{'X-CSRF-Token':csrf}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Retrieval failed.');state=data.state;await render();setStatus(`${data.saved} images saved${data.failed?`; ${data.failed} ${data.failed===1?'camera':'cameras'} unavailable`:''}.`);}
  catch(e){setStatus(e.message||'Unable to retrieve images. Please try again.');}
  finally{b.disabled=false;b.removeAttribute('aria-busy');b.querySelector('span').textContent='Retrieve images';}
 }
@@ -85,4 +86,4 @@ $('#rail-toggle').onclick=()=>{if(matchMedia('(max-width:720px)').matches){docum
 if(matchMedia('(max-width:720px)').matches)$('#rail-toggle').setAttribute('aria-expanded','false');
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('rail-open');if(matchMedia('(max-width:720px)').matches)$('#rail-toggle').setAttribute('aria-expanded','false');}if($('#viewer').open){if(e.key==='ArrowLeft')stepViewer(-1);if(e.key==='ArrowRight')stepViewer(1);}});
 $('#viewer-close').onclick=()=>$('#viewer').close();$('#viewer-prev').onclick=()=>stepViewer(-1);$('#viewer-next').onclick=()=>stepViewer(1);
-try{const r=await fetch(endpoint);if(!r.ok)throw new Error('Unable to load cameras.');const data=await r.json();catalog=data.cameras;state=data.state;csrf=data.csrf;const p=new URLSearchParams(location.search);view=['overview','archive','map'].includes(p.get('view'))?p.get('view'):'overview';selected=catalog.some(c=>c.id===p.get('camera'))?p.get('camera'):null;if(/^\d{4}-\d{2}-\d{2}$/.test(p.get('date')||''))$('#date').value=p.get('date');if(p.get('hour')==='all'||/^([01]\d|2[0-3])$/.test(p.get('hour')||''))$('#hour').value=p.get('hour');await render();}catch(e){setStatus(e.message||'Unable to load cameras. Please reload.');}
+try{const r=await fetch(endpoint);if(!r.ok)throw new Error('Unable to load cameras.');const data=await r.json();catalog=data.cameras;state=data.state;csrf=data.csrf;const p=new URLSearchParams(location.search);view=['overview','archive','map'].includes(p.get('view'))?p.get('view'):'overview';selected=p.get('camera')||null;if(/^\d{4}-\d{2}-\d{2}$/.test(p.get('date')||''))$('#date').value=p.get('date');if(p.get('hour')==='all'||/^([01]\d|2[0-3])$/.test(p.get('hour')||''))$('#hour').value=p.get('hour');await render();}catch(e){setStatus(e.message||'Unable to load cameras. Please reload.');}

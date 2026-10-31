@@ -12,7 +12,7 @@ Overview is a responsive grid with Large and Compact options. Every card retains
 
 Camera names come from current provider metadata. A separate note explains that UI timestamps represent retrieval. Failed retrieval preserves an earlier image and marks it as previous. Empty archive dates show an honest empty state. No generated photographs or substituted scenery are used.
 
-The calendar is now a native date control with previous day, next day and Today controls, plus hour filtering. Old camera date URLs are accepted and redirected to the modern view. The map uses provider coordinates in a labelled schematic rather than embedding the obsolete Google Maps implementation or an old API key.
+The calendar is now a native date control with previous day, next day and Today controls, plus hour filtering. The original date URL structure is accepted and redirected to the modern view. Historical camera IDs absent from the new catalog show an explicit unavailable state. The map uses provider coordinates in a labelled schematic rather than embedding the obsolete Google Maps implementation or an old API key.
 
 ## Review evidence
 
