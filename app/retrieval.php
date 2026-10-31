@@ -17,7 +17,7 @@ $lock = fopen(AWC_DATA . '/retrieve.lock', 'c+');
 if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) { if ($lock) fclose($lock); throw new RetrievalUnavailable('A retrieval is already running. Please wait.', 409); }
 try {
 $state = state();
-$wait = 60 - (time() - ($state['attemptedAt'] ?? 0));
+$wait = app_settings()['retrieval']['cooldownSeconds'] - (time() - ($state['attemptedAt'] ?? 0));
 if ($wait > 0) throw new RetrievalUnavailable("Please wait $wait seconds before retrieving again.", 429, $wait);
 if (!function_exists('imagewebp')) throw new RetrievalUnavailable('WebP image capture needs the PHP GD extension.', 503);
 if (!extension_loaded('curl')) throw new RetrievalUnavailable('Image retrieval needs the PHP cURL extension.', 503);
@@ -31,7 +31,7 @@ foreach (cameras() as $c) {
     $h = curl_init($c['url']); $bytes = '';
     $jobs[$c['id']] = ['handle' => $h, 'data' => ''];
     $id = $c['id'];
-    curl_setopt_array($h, [CURLOPT_FOLLOWLOCATION => false, CURLOPT_CONNECTTIMEOUT => 6, CURLOPT_TIMEOUT => 18, CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_USERAGENT => 'AlbertaWebcams/1.0 (manual snapshot viewer)', CURLOPT_WRITEFUNCTION => function($h, $chunk) use (&$jobs, $id) { if (strlen($jobs[$id]['data']) + strlen($chunk) > 5 * 1024 * 1024) return 0; $jobs[$id]['data'] .= $chunk; return strlen($chunk); }]);
+    curl_setopt_array($h, [CURLOPT_FOLLOWLOCATION => false, CURLOPT_CONNECTTIMEOUT => app_settings()['retrieval']['connectTimeoutSeconds'], CURLOPT_TIMEOUT => app_settings()['retrieval']['requestTimeoutSeconds'], CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_USERAGENT => 'AlbertaWebcams/1.0 (manual snapshot viewer)', CURLOPT_WRITEFUNCTION => function($h, $chunk) use (&$jobs, $id) { if (strlen($jobs[$id]['data']) + strlen($chunk) > app_settings()['retrieval']['maxDownloadBytes']) return 0; $jobs[$id]['data'] .= $chunk; return strlen($chunk); }]);
     curl_multi_add_handle($multi, $h);
 }
 do { $result = curl_multi_exec($multi, $running); if ($running) curl_multi_select($multi, 1); } while ($running && $result === CURLM_OK);
@@ -45,7 +45,7 @@ foreach ($jobs as $id => $job) {
         if (store_webp_snapshot($job['data'], $path)) {
             try { $prepared = prepare_webp_variants($path, $id, $stamp); } catch (Throwable $error) { $prepared = 0; }
             $webpPrepared += $prepared;
-            if ($prepared < 3) $webpIncomplete++;
+            if ($prepared < count(app_settings()['media']['widths'])) $webpIncomplete++;
             $state['cameras'][$id] = ['stamp' => $stamp, 'retrievedAt' => $now->format(DateTimeInterface::ATOM), 'status' => 'ok']; $ok++;
         } else { $state['cameras'][$id]['status'] = 'unavailable'; $failed++; }
     } else { $state['cameras'][$id]['status'] = 'unavailable'; $failed++; }

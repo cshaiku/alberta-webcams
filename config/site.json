@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "site": {
+    "name": "Alberta Webcams",
+    "timezone": "America/Edmonton",
+    "canonicalUrl": "https://sltd.ca/awc/"
+  },
+  "retrieval": {
+    "intervalMinutes": 15,
+    "cooldownSeconds": 60,
+    "connectTimeoutSeconds": 6,
+    "requestTimeoutSeconds": 18,
+    "maxDownloadBytes": 5242880
+  },
+  "media": {
+    "format": "webp",
+    "quality": 84,
+    "widths": [
+      400,
+      640,
+      840
+    ],
+    "maxPixels": 16000000
+  },
+  "ui": {
+    "desktopColumns": 3,
+    "defaultTheme": "dark",
+    "preferencesStorageKey": "awc.reading.v1"
+  },
+  "timeline": {
+    "previewWidth": 840,
+    "thumbnailSourceWidth": 400,
+    "cacheLimit": 24,
+    "prefetchConcurrency": 3,
+    "defaultSpeedMs": 750,
+    "speeds": [
+      {
+        "label": "Slow",
+        "milliseconds": 1500
+      },
+      {
+        "label": "Normal",
+        "milliseconds": 750
+      },
+      {
+        "label": "Fast",
+        "milliseconds": 300
+      }
+    ]
+  },
+  "compare": {
+    "cacheLimit": 16
+  },
+  "map": {
+    "tileUrl": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "maxBounds": [
+      [
+        47,
+        -123
+      ],
+      [
+        62,
+        -108
+      ]
+    ],
+    "minZoom": 4,
+    "maxZoom": 19,
+    "clusterRadiusPixels": 44,
+    "clusterMaxZoom": 12,
+    "previewWidth": 400
+  },
+  "cameras": [
+    {
+      "id": "ab_128",
+      "title": "Hwy 43: East of Eagle Tower Road",
+      "region": "Two Creeks",
+      "lat": 54.2973,
+      "lng": -116.254,
+      "url": "https://511.alberta.ca/map/Cctv/128",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-128"
+    },
+    {
+      "id": "ab_131",
+      "title": "Hwy 43: East of Hwy 37 near Onoway",
+      "region": "Onoway",
+      "lat": 53.7162,
+      "lng": -114.238,
+      "url": "https://511.alberta.ca/map/Cctv/131",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-131"
+    },
+    {
+      "id": "ab_109",
+      "title": "Hwy 16 east of Century Rd. near Spruce Grove",
+      "region": "Highway 16 west",
+      "lat": 53.5706,
+      "lng": -113.875,
+      "url": "https://511.alberta.ca/map/Cctv/109",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-109"
+    },
+    {
+      "id": "ab_111",
+      "title": "Hwy 16: West of Hwy 834 near Elk Island National Park",
+      "region": "Highway 16 east",
+      "lat": 53.5706,
+      "lng": -112.731,
+      "url": "https://511.alberta.ca/map/Cctv/111",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-111"
+    },
+    {
+      "id": "ab_83",
+      "title": "Hwy 2: South of Hwy 2A overpass near Leduc",
+      "region": "Leduc",
+      "lat": 53.236,
+      "lng": -113.568,
+      "url": "https://511.alberta.ca/map/Cctv/83",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-83"
+    },
+    {
+      "id": "ab_80",
+      "title": "Hwy 2: North of Morningside Overpass near Ponoka",
+      "region": "Red Deer",
+      "lat": 52.6085,
+      "lng": -113.664,
+      "url": "https://511.alberta.ca/map/Cctv/80",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-80"
+    },
+    {
+      "id": "ab_77",
+      "title": "Hwy 2: North of Balzac Overpass south of Airdrie",
+      "region": "Calgary north",
+      "lat": 51.2316,
+      "lng": -114.001,
+      "url": "https://511.alberta.ca/map/Cctv/77",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-77"
+    },
+    {
+      "id": "ab_97",
+      "title": "Hwy 9: 10km west of Drumheller",
+      "region": "Drumheller",
+      "lat": 51.4162,
+      "lng": -112.817,
+      "url": "https://511.alberta.ca/map/Cctv/97",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-97"
+    },
+    {
+      "id": "ab_295",
+      "title": "Hwy 216: Anthony Henday Drive and 91 Street Overpass",
+      "region": "Edmonton south",
+      "lat": 53.4372,
+      "lng": -113.483,
+      "url": "https://511.alberta.ca/map/Cctv/533",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-295"
+    },
+    {
+      "id": "ab_59",
+      "title": "Hwy 216 & Hwy 16A Interchange (West)",
+      "region": "Edmonton west",
+      "lat": 53.5417,
+      "lng": -113.663,
+      "url": "https://511.alberta.ca/map/Cctv/59",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-59"
+    },
+    {
+      "id": "ab_57",
+      "title": "Hwy 216 at Hwy 15",
+      "region": "Edmonton north",
+      "lat": 53.6338,
+      "lng": -113.393,
+      "url": "https://511.alberta.ca/map/Cctv/57",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-57"
+    },
+    {
+      "id": "ab_58",
+      "title": "Hwy 216: Anthony Henday Drive and Highway 16 Interchange",
+      "region": "Edmonton east",
+      "lat": 53.5688,
+      "lng": -113.344,
+      "url": "https://511.alberta.ca/map/Cctv/58",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-58"
+    },
+    {
+      "id": "ab_104",
+      "title": "Hwy 16: East of the Jasper Park Gate",
+      "region": "Jasper park gate",
+      "lat": 53.2494,
+      "lng": -117.777,
+      "url": "https://511.alberta.ca/map/Cctv/258",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-104"
+    },
+    {
+      "id": "ab_134",
+      "title": "Hwy 63: approx. 94km S of Fort McMurray near Mariana Lake",
+      "region": "Fort McMurray south",
+      "lat": 55.9931,
+      "lng": -111.968,
+      "url": "https://511.alberta.ca/map/Cctv/325",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-134"
+    },
+    {
+      "id": "ab_71",
+      "title": "Hwy 1: 160m West of First St. SW in Medicine Hat",
+      "region": "Medicine Hat",
+      "lat": 50.0404,
+      "lng": -110.716,
+      "url": "https://511.alberta.ca/map/Cctv/164",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-71"
+    },
+    {
+      "id": "ab_24",
+      "title": "Lethbridge Whoop Up",
+      "region": "Lethbridge",
+      "lat": 49.6884,
+      "lng": -112.862,
+      "url": "https://511.alberta.ca/map/Cctv/24",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-24"
+    },
+    {
+      "id": "ab_96",
+      "title": "Hwy 6: North of Waterton National Park",
+      "region": "Waterton",
+      "lat": 49.1675,
+      "lng": -113.833,
+      "url": "https://511.alberta.ca/map/Cctv/237",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-96"
+    },
+    {
+      "id": "ab_281",
+      "title": "Lake Louise TCH",
+      "region": "Lake Louise",
+      "lat": 51.433175,
+      "lng": -116.190079,
+      "url": "https://511.alberta.ca/map/Cctv/508",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-281"
+    }
+  ]
+}

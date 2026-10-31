@@ -1,6 +1,7 @@
-import {liveRefresh} from './lib/live.js?v=20261031-live1';
-import { request } from './lib/api.js?v=20261031-webp1';
-import { imageURL, stampLabel, escape } from './lib/ui.js?v=20261031-webp1';
+import {settings} from './lib/config.js?v=20261031-config1';
+import {liveRefresh} from './lib/live.js?v=20261031-config1';
+import { request } from './lib/api.js?v=20261031-config1';
+import { imageURL, stampLabel, escape } from './lib/ui.js?v=20261031-config1';
 const $ = s => document.querySelector(s);
 const camera = document.body.dataset.camera;
 let frames = [], index = 0, playing = false, timer, controller, generation = 0, selection = 0;
@@ -13,14 +14,14 @@ function controls() { const disabled = !frames.length; $('#timeline-play').disab
 // Keep decoded image nodes, so a warm hover needs neither a request nor a decode.
 // 24 previews bound decoded memory; immutable snapshot URLs also use browser disk cache.
 const previewCache = new Map();
-const CACHE_LIMIT = 24;
+const CACHE_LIMIT = settings.timeline.cacheLimit;
 let warmGeneration = 0;
 function cachedPreview(stamp) {
   let entry=previewCache.get(stamp);
   if(entry) { previewCache.delete(stamp); previewCache.set(stamp,entry); return entry; }
   const image=new Image();
   image.decoding='sync';
-  image.src=imageURL(camera,stamp,840);
+  image.src=imageURL(camera,stamp,settings.timeline.previewWidth);
   entry={image,ready:false,promise:null};
   entry.promise=image.decode().then(()=>{entry.ready=true;trimCache();return image;}).catch(error=>{if(previewCache.get(stamp)===entry)previewCache.delete(stamp);throw error;});
   previewCache.set(stamp,entry);
@@ -45,7 +46,7 @@ function warmPreviews(center) {
       try { await cachedPreview(stamp).promise; } catch { /* A failed prefetch can retry on selection. */ }
     }
   }
-  for(let i=0;i<3;i++)worker();
+  for(let i=0;i<settings.timeline.prefetchConcurrency;i++)worker();
 }
 async function selectFrame(next, { user = false, scroll = true } = {}) {
   if(user) pause();
@@ -75,7 +76,7 @@ async function selectFrame(next, { user = false, scroll = true } = {}) {
 }
 async function tick() { if(!playing)return; if(index>=frames.length-1){pause();return;} await selectFrame(index+1); if(playing)timer=setTimeout(tick,Number($('#timeline-speed').value)); }
 function filmstrip() {
-  $('#timeline-filmstrip').innerHTML=`<div class="timeline-frames">${frames.map((frame,i)=>`<button class="timeline-thumb" data-index="${i}" aria-label="Show ${escape(stampLabel(frame.stamp))}"><img src="${escape(imageURL(camera,frame.stamp,400))}" width="180" height="135" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
+  $('#timeline-filmstrip').innerHTML=`<div class="timeline-frames">${frames.map((frame,i)=>`<button class="timeline-thumb" data-index="${i}" aria-label="Show ${escape(stampLabel(frame.stamp))}"><img src="${escape(imageURL(camera,frame.stamp,settings.timeline.thumbnailSourceWidth))}" width="180" height="135" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
 }
 async function loadDay(followLatest=false,quiet=false) {
   pause();controller?.abort();controller=new AbortController();const run=++generation;++selection;++warmGeneration;frames=[];controls();

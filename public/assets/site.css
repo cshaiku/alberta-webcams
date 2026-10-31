@@ -88,11 +88,11 @@
   #app .status-row p { color: var(--muted); line-height: 1.6; }
   #capture-note { display: flex; align-items: start; gap: 6px; text-align: end; }
   #capture-note .icon { inline-size: 14px; block-size: 18px; }
-  .gallery { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 26px 20px; align-items: stretch; }
+  .gallery { display: grid; grid-template-columns: repeat(var(--camera-columns,3),minmax(0,1fr)); gap: 26px 20px; align-items: stretch; }
   .gallery.compact { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 20px 16px; }
   .gallery.large { grid-template-columns: repeat(2,minmax(0,1fr)); }
   @container collection (min-width: 1600px) { .gallery { grid-template-columns: repeat(4,minmax(0,1fr)); } .gallery.compact { grid-template-columns: repeat(5,minmax(0,1fr)); } }
-  @container collection (max-width: 920px) { .collection-intro { align-items: start; } .collection-stats { gap: 16px; } .collection-stats > div { padding-inline-start: 16px; } .collection-stats > div:last-child { display: none; } .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); } .gallery.compact { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+  @container collection (max-width: 920px) { .collection-intro { align-items: start; } .collection-stats { gap: 16px; } .collection-stats > div { padding-inline-start: 16px; } .collection-stats > div:last-child { display: none; } .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); } .gallery.compact { grid-template-columns: repeat(var(--camera-columns,3),minmax(0,1fr)); } }
   @container collection (max-width: 540px) { .gallery, .gallery.large { grid-template-columns: minmax(0,1fr); } .gallery.compact { grid-template-columns: repeat(2,minmax(0,1fr)); } .collection-intro { display: block; } .collection-stats { margin-block-start: 24px; } .collection-stats > div { display: flex; align-items: baseline; gap: 10px; padding-inline: 0 20px; border-inline-start: 0; border-inline-end: 1px solid var(--rule); } .collection-stats > div:last-child { display: flex; border: 0; padding: 0; } .collection-stats dd { font-size: 1.25em; } .collection-stats dt { margin: 0; } #app .stat-zone { font-size: .75em; } #app .stat-zone small { display: none; } }
   @media (max-width: 1100px) { .manual-label { display: none !important; } .header { gap: 18px; } .header-brand,.header-actions { flex: initial; } }
   @media (max-width: 760px) {
@@ -188,7 +188,7 @@
   .control-strip .time-zone { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .65em; }
   #app .control-strip :is(input,select,button) { font-size: inherit; }
   .control-strip .icon { inline-size: 15px; block-size: 15px; }
-  .collection-notes { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 32px; padding-block: 38px; margin-block-start: 38px; border-block: 1px solid var(--rule); }
+  .collection-notes { display: grid; grid-template-columns: repeat(var(--camera-columns,3),minmax(0,1fr)); gap: 32px; padding-block: 38px; margin-block-start: 38px; border-block: 1px solid var(--rule); }
   .collection-notes .icon { inline-size: 22px; block-size: 22px; color: var(--muted); margin-block-end: 16px; }
   #app .collection-notes h2 { font-size: .8em; font-weight: 550; line-height: 1.5; margin-block-end: 8px; }
   #app .collection-notes p { font-size: .7em; line-height: 1.8; color: var(--muted); }
@@ -328,7 +328,7 @@
   .header .filters button { white-space: nowrap; }
   .header .toolbar-tools { min-inline-size: 0; }
   .header .search { min-inline-size: 70px; }
-  .gallery,.gallery.compact,.gallery.large { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .gallery,.gallery.compact,.gallery.large { grid-template-columns: repeat(var(--camera-columns,3),minmax(0,1fr)); }
   @media (min-width: 761px) and (max-width: 1250px) {
     .header .brand { display: none; }
     .header .views a { padding-inline: 6px; }
@@ -348,7 +348,7 @@
     .header .toolbar-tools { inline-size: 100%; }
     .header .search { flex: 1; }
     .gallery,.gallery.large { grid-template-columns: repeat(2,minmax(0,1fr)); }
-    .gallery.compact { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .gallery.compact { grid-template-columns: repeat(var(--camera-columns,3),minmax(0,1fr)); }
   }
   @media (max-width: 540px) {
     .gallery,.gallery.large { grid-template-columns: minmax(0,1fr); }

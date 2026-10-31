@@ -13,9 +13,9 @@ $view = in_array($_GET['view'] ?? '', ['archive','map'], true) ? $_GET['view'] :
 $catalog = cameras();
 $snapshotState = state();
 $available = count(array_filter($snapshotState['cameras'] ?? [], fn($s) => ($s['status'] ?? '') === 'ok'));
-$canonical = 'https://sltd.ca/awc/';
+$canonical = app_settings()['site']['canonicalUrl'];
 $isCanonical = $view === 'overview' && !$_GET;
-$title = 'Alberta Webcams | Highway Cameras & Snapshot Archive';
+$title = app_settings()['site']['name'] . ' | Highway Cameras & Snapshot Archive';
 $description = 'Explore Alberta highway camera snapshots from Edmonton, Leduc, Red Deer, Calgary and beyond. Browse the camera grid and revisit saved images by date and hour.';
 header("Content-Security-Policy: default-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
 header('Cache-Control: no-store');
@@ -35,12 +35,12 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <meta name="robots" content="<?= $isCanonical ? 'index,follow,max-image-preview:large' : 'noindex,follow' ?>">
     <title><?= e($title) ?></title>
     <meta name="description" content="<?= e($description) ?>">
-    <link rel="canonical" href="https://sltd.ca/awc/">
+    <link rel="canonical" href="<?= e($canonical) ?>">
     <meta property="og:site_name" content="Alberta Webcams">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Alberta Webcams | Alberta, in view.">
     <meta property="og:description" content="Highway camera snapshots. A clearer view of Alberta, one place at a time.">
-    <meta property="og:url" content="https://sltd.ca/awc/">
+    <meta property="og:url" content="<?= e($canonical) ?>">
     <meta property="og:locale" content="en_CA">
     <meta property="og:image" content="https://sltd.ca/awc/assets/brand/social-card.png">
     <meta property="og:image:width" content="1200">
@@ -55,16 +55,17 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
     <link rel="stylesheet" href="/awc/assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="/awc/assets/map.css?v=20261031-map1">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-map1">
+    <link rel="stylesheet" href="/awc/assets/map.css?v=20261031-config1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-config1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-map1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-config1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
+<script type="application/json" id="awc-settings"><?= json_encode(public_settings(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) ?></script>
 </head>
-<body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
+<body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="<?= e(app_settings()['ui']['defaultTheme']) ?>" data-default-font="sans">
 <a class="skip" href="#main">Skip to camera images</a>
 <header class="header">
-    <a class="brand" href="/awc/"><img src="/awc/assets/brand/awc.svg" width="38" height="38" alt=""><span>Alberta Webcams<small>A different perspective.</small></span></a>
+    <a class="brand" href="/awc/"><img src="/awc/assets/brand/awc.svg" width="38" height="38" alt=""><span><?= e(app_settings()['site']['name']) ?><small>A different perspective.</small></span></a>
     <button id="menu-toggle" class="icon-button" aria-label="Open controls" aria-controls="header-controls" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     <div id="header-controls"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true" title="Toggle camera sidebar"><?= icon('rail') ?></button>
     <nav class="views" aria-label="Camera views">
@@ -77,7 +78,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
 
     <div class="collection-toolbar" id="grid-toolbar"><div class="filters" role="group" aria-label="Filter camera collection"><button data-filter="all" aria-pressed="true">All cameras</button><button data-filter="edmonton" aria-pressed="false">Edmonton</button><button data-filter="highways" aria-pressed="false">Highways</button><button data-filter="unavailable" aria-pressed="false">Unavailable</button></div><div class="toolbar-tools"><label class="search"><?= icon('search') ?><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Find a camera" autocomplete="off"></label></div></div>
     </div>
-    <sdou-preferences-center target="#app" storage-key="awc.reading.v1"></sdou-preferences-center>
+    <sdou-preferences-center target="#app" storage-key="<?= e(app_settings()['ui']['preferencesStorageKey']) ?>"></sdou-preferences-center>
 </header>
 <div class="workspace">
     <aside id="sidebar" class="sidebar" aria-label="Camera collection">

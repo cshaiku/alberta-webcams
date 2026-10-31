@@ -1,0 +1,50 @@
+{
+  "url": "https://sltd.ca/awc/",
+  "configuration": "config/site.json",
+  "privateOverrides": "config/local.json, excluded from Git",
+  "cameraCount": 18,
+  "desktopLayout": "Six rows of three",
+  "added": [
+    "Jasper park gate",
+    "Fort McMurray south",
+    "Medicine Hat",
+    "Lethbridge",
+    "Waterton",
+    "Lake Louise"
+  ],
+  "omitted": "Bow Trail, west Calgary",
+  "collectorValidation": {
+    "at": "2026-10-31T04:07:33-06:00",
+    "saved": 18,
+    "unavailable": 0,
+    "webpPrepared": 54,
+    "webpIncomplete": 0
+  },
+  "checks": [
+    "make test with JSON configuration validation",
+    "Live browser, map, timeline, compare and refresh browser suites",
+    "All eighteen WebP tiles decoded and exactly six row positions verified",
+    "Superseded active cameras.json and local.php removed",
+    "Existing private runtime archive preserved"
+  ],
+  "files": {
+    "app/bootstrap.php": "25480b5c2e8714e5bb8e9d578b2bcd983e2eb87734491b224bdeae26fb129bf4",
+    "app/media.php": "10d4918ad1525e9c586e24b107377ea468128b75ac09bae9f9d3e322686ac7f5",
+    "app/retrieval.php": "2c060f7d480c472665958e644fc363118903431ea6601615055f9095a86cb64f",
+    "app/presentation.php": "9fe9fe424990f4431617ca51c30c12c38d0ade94821a3e3a7726a8e38e13c943",
+    "config/site.json": "0554b917a2e40a90ce055b9454379456015e5c125acbb9d8babe82c69a0b6f61",
+    "public/api.php": "402ba013fe8c8bdce9e08993a91d0e724f3327bb4033324425cea78c29f61233",
+    "public/image.php": "3d78973cca481cb410c0c957d6bcaa219a2c1da71330ffb3fcde1aa9393578d7",
+    "public/index.php": "102bd2afb0c48182612c9f1ae048ef5963eaab91b055e327766ae60a6c81a865",
+    "public/timeline.php": "6651ec330832aa9c5a724f90eb0263931d9febe996b84a98160060cfd5da2551",
+    "public/compare.php": "280ffb4bc92172294de8939296de27764e1951b6a860b38ce66a9158435d35a4",
+    "public/assets/app.js": "d6d0ce951c615bb649daa0bd7a1458cf406a87cd02f6752bda496ebae626488b",
+    "public/assets/timeline.js": "e823e012cd2988fc20bd3e4e2dcc5e92c97a0993216b71d4fcd4612e7a604ad6",
+    "public/assets/compare.js": "4352d34b4d3dde36c0324c8310ad9bdd542c1893da49d8531ffad6cb396efff3",
+    "public/assets/map.js": "48068531e9b8ec30dd44a567383ec3f824a28b5976ad09c607599fb557af6076",
+    "public/assets/site.css": "5b2de46e27e76dce27add75a97f054f07824f73052649c6d30c598f841b3dd09",
+    "public/assets/lib/ui.js": "56a284159b07cf4ddf046b79891d13af12a6b67e280a71d5d80aea92e69cba2c",
+    "public/assets/lib/live.js": "788fd82b33c50bfc71f08e716c22c7f1a233a7248ae91ceefecc7912814eb8f6",
+    "public/assets/lib/config.js": "0472c9fe33c9bf4502c13e6f8c7d64a28f4537fbb90bf342de84f1c2683dfa69"
+  }
+}

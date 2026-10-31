@@ -1,7 +1,8 @@
-import {renderCameraMap} from './map.js?v=20261031-map1';
-import {liveRefresh} from './lib/live.js?v=20261031-live1';
-import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-webp1';
-import { request } from './lib/api.js?v=20261031-webp1';
+import {settings} from './lib/config.js?v=20261031-config1';
+import {renderCameraMap} from './map.js?v=20261031-config1';
+import {liveRefresh} from './lib/live.js?v=20261031-config1';
+import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-config1';
+import { request } from './lib/api.js?v=20261031-config1';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -146,7 +147,7 @@ async function render(historyMode = 'replace') {
     }).map(camera => ({ camera, stamp: state.snapshots.cameras?.[camera.id]?.stamp }));
     if (state.items.length) showGallery(); else empty('No cameras found', 'Try another place or clear your filters to see the full collection.', false);
     const last = state.snapshots.lastResult;
-    status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Edmonton', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Images are collected automatically every 15 minutes.');
+    status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: settings.site.timezone, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Images are collected automatically every 15 minutes.');
   }
 }
 function openViewer(index, trigger) {

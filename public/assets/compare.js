@@ -1,10 +1,11 @@
-import {liveRefresh} from './lib/live.js?v=20261031-live1';
-import {request} from './lib/api.js?v=20261031-webp1';
-import {imageURL,stampLabel,escape} from './lib/ui.js?v=20261031-webp1';
+import {settings} from './lib/config.js?v=20261031-config1';
+import {liveRefresh} from './lib/live.js?v=20261031-config1';
+import {request} from './lib/api.js?v=20261031-config1';
+import {imageURL,stampLabel,escape} from './lib/ui.js?v=20261031-config1';
 const $=selector=>document.querySelector(selector), camera=document.body.dataset.camera;
 let frames=[],token=0;
 const cache=new Map();
-function preview(stamp){if(cache.has(stamp))return cache.get(stamp);const image=new Image();image.src=imageURL(camera,stamp,840);const pending=image.decode().then(()=>image).catch(error=>{cache.delete(stamp);throw error;});cache.set(stamp,pending);if(cache.size>16)cache.delete(cache.keys().next().value);return pending;}
+function preview(stamp){if(cache.has(stamp))return cache.get(stamp);const image=new Image();image.src=imageURL(camera,stamp,settings.timeline.previewWidth);const pending=image.decode().then(()=>image).catch(error=>{cache.delete(stamp);throw error;});cache.set(stamp,pending);if(cache.size>settings.compare.cacheLimit)cache.delete(cache.keys().next().value);return pending;}
 function split(value){const bounded=Math.max(0,Math.min(100,Number(value)));$('#compare-stage').style.setProperty('--split',bounded+'%');$('#compare-split').value=bounded;$('#compare-split').setAttribute('aria-valuetext',`${Math.round(bounded)} percent before, ${Math.round(100-bounded)} percent after`);}
 function updateURL(){const url=new URL(location.href);url.searchParams.set('before',$('#compare-before').value);url.searchParams.set('after',$('#compare-after').value);history.replaceState(null,'',url);$('#compare-share-url').value=url.href;}
 async function show(){const run=++token,before=$('#compare-before').value,after=$('#compare-after').value;$('#compare-status').textContent='Loading comparison…';$('#compare-share').disabled=true;

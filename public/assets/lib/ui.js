@@ -1,9 +1,10 @@
+import {settings} from './config.js?v=20261031-config1';
 export const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[character]));
 
 export const mountainDate = () => new Intl.DateTimeFormat('en-CA', {
-  timeZone: 'America/Edmonton', year: 'numeric', month: '2-digit', day: '2-digit',
+  timeZone: settings.site.timezone, year: 'numeric', month: '2-digit', day: '2-digit',
 }).format(new Date());
 
 export const stampTime = stamp => stamp
@@ -21,8 +22,8 @@ export function imageURL(id, stamp, width) {
 export function pictureHTML(camera, stamp, priority = false) {
   const sizes = '(max-width: 540px) 100vw, (max-width: 920px) 50vw, (min-width: 1600px) 25vw, 33.333vw';
   const resolvedSizes = sizes;
-  const widths = [400, 640, 840].filter(width => width <= (camera.width ?? 840));
-  if (!widths.length) widths.push(400);
+  const widths = settings.media.widths.filter(width => width <= (camera.width ?? 840));
+  if (!widths.length) widths.push(settings.media.widths[0]);
   const srcset = widths.map(width => `${escape(imageURL(camera.id, stamp, width))} ${width}w`).join(', ');
   return `<picture><source type="image/webp" srcset="${srcset}" sizes="${resolvedSizes}"><img src="${escape(imageURL(camera.id, stamp))}" width="${camera.width ?? 840}" height="${camera.height ?? 630}" alt="${escape(camera.title)} camera snapshot" loading="${priority ? 'eager' : 'lazy'}" decoding="async" sizes="${resolvedSizes}" ${priority ? 'fetchpriority="high"' : ''}></picture>`;
 }

@@ -1,6 +1,7 @@
+import {settings} from './config.js?v=20261031-config1';
 // Refresh data in place, at most once per fifteen minutes. Catch up after a hidden tab returns.
 export function liveRefresh(refresh) {
-  const interval=15*60*1000;
+  const interval=settings.retrieval.intervalMinutes*60*1000;
   let last=Date.now(),busy=false;
   async function check(){
     if(busy||document.hidden||Date.now()-last<interval)return;

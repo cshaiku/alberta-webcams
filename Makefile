@@ -7,6 +7,7 @@ serve:
 test:
 	find app public tests -name '*.php' -exec php -l {} \;
 	php tests/contracts.php
+	php tests/settings.php
 	php tests/media.php
 	php tests/retrieval.php
 	node --check public/assets/app.js
@@ -16,3 +17,4 @@ test:
 	node --check public/assets/lib/ui.js
 	node --check public/assets/lib/api.js
 	node --check public/assets/lib/live.js
+	node --check public/assets/lib/config.js

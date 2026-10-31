@@ -34,8 +34,8 @@ function picture_html(string $id, string $stamp, string $title, bool $priority =
     $dimensions = $source ? @getimagesize($source) : false;
     $width = $dimensions[0] ?? 840;
     $height = $dimensions[1] ?? 630;
-    $widths = array_values(array_filter([400,640,840], fn($w) => $w <= $width));
-    if (!$widths) $widths = [400];
+    $widths = array_values(array_filter(app_settings()['media']['widths'], fn($w) => $w <= $width));
+    if (!$widths) $widths = [app_settings()['media']['widths'][0]];
     $sizes = '(max-width: 540px) 100vw, (max-width: 920px) 50vw, (min-width: 1600px) 25vw, 33.333vw';
     $set = implode(', ', array_map(fn($w) => e($src . '&format=webp&w=' . $w) . " {$w}w", $widths));
     return '<picture><source type="image/webp" srcset="' . $set . '" sizes="' . $sizes . '"><img src="' . e($src) . '" width="' . $width . '" height="' . $height . '" alt="' . e($title . ' camera snapshot') . '" loading="' . ($priority ? 'eager' : 'lazy') . '" decoding="async"' . ($priority ? ' fetchpriority="high"' : '') . ' sizes="' . $sizes . '"></picture>';

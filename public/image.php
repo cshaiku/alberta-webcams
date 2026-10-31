@@ -11,7 +11,7 @@ $format = (string)($_GET['format'] ?? 'webp');
 if ($format !== 'webp') { http_response_code(400); exit; }
 if (isset($_GET['w'])) {
     $width = filter_var($_GET['w'] ?? 840, FILTER_VALIDATE_INT);
-    if (!in_array($width, [400, 640, 840], true)) { http_response_code(400); exit; }
+    if (!in_array($width, app_settings()['media']['widths'], true)) { http_response_code(400); exit; }
     $file = webp_variant($file, $id, $stamp, $width);
     if (!$file) { http_response_code(503); exit; }
 }

@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-10-31T10:00:42.996237+00:00",
-  "status": "Verified candidates, not in active catalog",
+  "status": "Six candidates activated; Bow Trail omitted to retain 18 cameras in rows of three",
   "evidence": "Official 511 Alberta camera list metadata and successful JPEG responses, visually inspected as temporary WebP samples. Provider timestamps were current on October 31, 2026.",
   "candidates": [
     {
@@ -16,7 +16,8 @@
         840,
         630
       ],
-      "imageViewId": 621
+      "imageViewId": 621,
+      "status": "omitted by owner direction"
     },
     {
       "id": "ab_104",
@@ -31,7 +32,8 @@
         640,
         388
       ],
-      "imageViewId": 258
+      "imageViewId": 258,
+      "status": "active"
     },
     {
       "id": "ab_134",
@@ -46,7 +48,8 @@
         704,
         518
       ],
-      "imageViewId": 325
+      "imageViewId": 325,
+      "status": "active"
     },
     {
       "id": "ab_71",
@@ -61,7 +64,8 @@
         640,
         388
       ],
-      "imageViewId": 164
+      "imageViewId": 164,
+      "status": "active"
     },
     {
       "id": "ab_24",
@@ -76,7 +80,8 @@
         720,
         518
       ],
-      "imageViewId": 24
+      "imageViewId": 24,
+      "status": "active"
     },
     {
       "id": "ab_96",
@@ -91,7 +96,8 @@
         640,
         388
       ],
-      "imageViewId": 237
+      "imageViewId": 237,
+      "status": "active"
     },
     {
       "id": "ab_281",
@@ -106,7 +112,8 @@
         704,
         480
       ],
-      "imageViewId": 508
+      "imageViewId": 508,
+      "status": "active"
     }
   ],
   "excluded": [
