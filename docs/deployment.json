@@ -7,22 +7,6 @@
   "privateRuntime": "domains/sltd.ca/private/awc/runtime",
   "backup": "domains/sltd.ca/private/deploy-backups/awc-20261031-0052",
   "previousPublicPath": "absent",
-  "publicDigests": {
-    "index.php": "d88d5173f41e95665b572f7cade54199dae5639d0dc053c5c461a1c5a5bf7e90",
-    "api.php": "0cbb2b3671d5c4dc3c3992b44fcb2e0015fd2bcc9a9e78ace91a84a5e9b5dfae",
-    "image.php": "1838a5d0ada440247446f63dcf92eb3978ba14ca5031d58444ad407c9ebb7761",
-    ".htaccess": "9677253de9cd71b7ac908aac45c71d69f71e4e695cb9c7b1bef2b03e9eb5328d",
-    "assets/site.css": "0bf2d22d9069a564c4e02049d51af008eb2e9e1d210d5f6ccdd69cb7abb5fee7",
-    "assets/app.js": "62714aaa7f95c1c3239c716d501995b3007b2203133e34cc5e6b137451ead13e",
-    "assets/accessibility/shared/content.css": "9b630e24a9f7df71e20d3590be6f55623c3eba298041332fe990e6641405b4a7",
-    "assets/accessibility/shared/preferences.js": "fad4cc7358afa1f657595745ca578b1eb97bf894ee96abb51e3781d3e55a6247",
-    "assets/accessibility/shared/ui.css": "228b364361c45c1099a5cecf01a6e888b73dcb4040403bbff9ce2d421789570d",
-    "assets/accessibility/shared/base.js": "63909d98c7e51db1bdcd7bc9c1144ed28b5d20d3da5ce786420932b528c2fd75",
-    "assets/accessibility/shared/large-pointer.svg": "4d252470680dacd664ff7d7c9f140c80b5ff29ed011439e264c3c9ed53175136",
-    "assets/accessibility/components/preferences-center/index.js": "ac12f4aabb6318d9d90dbd5f8f780621bbcd9489d0a52f64fbb5f42b06ae55c4",
-    "assets/accessibility/components/preferences-center/README.md": "9763aa1eab2ce82d24a69dee00009273a2358d2845072cfe27db6ca9239d03bd",
-    "assets/accessibility/components/preferences-center/component.css": "ae11d076d15bf42828f60626d29d0d22cb56ced8fa513b078d443def6d742a19"
-  },
   "bootstrap": "Production only wrapper points to private release. Intentionally differs from local development wrapper.",
   "retrieval": {
     "saved": 11,
@@ -31,5 +15,6 @@
     "sourceResponse": "Provider placeholder: No live camera feed at this time"
   },
   "scheduledJobs": "none",
-  "githubVisibility": "private"
+  "githubVisibility": "private",
+  "publicDigestManifest": "deployed-sha256.txt"
 }
