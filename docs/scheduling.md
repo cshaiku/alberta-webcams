@@ -1,6 +1,6 @@
 # Fifteen minute retrieval
 
-The CLI collector is deployed and tested on the shared Hostinger account. **The recurring job has not been registered.** This account does not expose the crontab command, and browser access to hPanel is disabled in the current Work environment. No VPS job or local Mac background process was substituted.
+The recurring job was registered in Hostinger hPanel for sltd.ca on October 31, 2026 at approximately 02:38 America/Edmonton. hPanel confirmed creation and listed the exact command and schedule below. The collector previously saved 11 images in its CLI test. The first automatic execution is pending verification, with the next boundary at 02:45. This runs on shared hosting.
 
 In Hostinger hPanel, select sltd.ca, open Cron Jobs, choose Custom, and use:
 
