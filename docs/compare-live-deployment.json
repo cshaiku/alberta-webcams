@@ -1,0 +1,35 @@
+{
+  "url": "https://sltd.ca/awc/compare.php?camera=ab_128",
+  "features": [
+    "Two archived moments from the same camera",
+    "Pointer draggable divider and keyboard accessible range",
+    "Independent snapshot selectors across archived days",
+    "Swap selections and copy shareable comparison link",
+    "Existing WebP image delivery and Accessibility Preferences",
+    "15 minute in place refresh across Network, Grid, Timeline and Compare"
+  ],
+  "liveRefresh": {
+    "intervalMs": 900000,
+    "preservesHistoricalSelections": true,
+    "followsLatestWhenAlreadySelected": true,
+    "catchUpAfterHiddenTab": true,
+    "doesNotTriggerCapture": true
+  },
+  "checks": [
+    "make test",
+    "Local and live Compare browser suite",
+    "Local and live 15 minute refresh clock test",
+    "Existing browser and Timeline browser suites"
+  ],
+  "files": {
+    "index.php": "8901425064d9ac187b149562ee727ae81f7797e6ed13e416d8de395ce058b912",
+    "timeline.php": "05581ebc9b9382e2e0254f39de78885f1ae79f2dd3de802801eceae259ba48dd",
+    "compare.php": "f21f13662163e3e60f89d9d4d8d10454839741b8e9193933872cff9665832764",
+    "assets/app.js": "3623542bae7ebbe39f13aef54a17057ceb84f8ae5d16908e7feea93c8313150b",
+    "assets/timeline.js": "df516cb9571d40f40cf60b85e67be4951815ce9065c070761952efabf1cec1fb",
+    "assets/compare.js": "9e685d956e723f4dab5ca581b6d4250a52305920cb046bd1a18f8258d8683e26",
+    "assets/compare.css": "e9473316f767547fa4d94889ab78b0b45630459c568a17571f13e76036305f68",
+    "assets/lib/live.js": "0d228b4d81138f1461b4941f84e426f371c398d9a95b6b73a0a60447f84c164d"
+  },
+  "indexing": "noindex, follow, excluded from sitemap"
+}

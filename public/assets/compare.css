@@ -1,0 +1,45 @@
+@layer workspace {
+  .compare-header { block-size: 48px; min-block-size: 48px; gap: 16px; }
+  .compare-header nav { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+  .compare-header nav a { display: inline-flex; align-items: center; min-block-size: 44px; padding: 6px 8px; font-size: .85rem; }
+  .compare-header [aria-current] { background: var(--panel); }
+  #app .compare-header h1 { font-size: .9rem; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-inline-size: 0; }
+  .compare-header sdou-preferences-center { margin-inline-start: auto; }
+  #compare-main { display: grid; grid-template-rows: auto minmax(240px,1fr) auto; block-size: calc(100dvh - 48px); min-inline-size: 0; }
+  .compare-pickers { display: flex; align-items: end; justify-content: center; gap: 12px; padding: 8px 12px; }
+  .compare-pickers label { display: grid; gap: 4px; font-size: .75rem; min-inline-size: 0; }
+  #app .compare-pickers select { inline-size: 250px; max-inline-size: 100%; font-size: .8rem; }
+  #app .compare-pickers button { font-size: .8rem; }
+  #compare-stage { position: relative; overflow: hidden; min-block-size: 0; background: #030608; touch-action: pan-y; user-select: none; cursor: col-resize; --split: 50%; }
+  #app #compare-stage img { position: absolute; inset: 0; display: block; inline-size: 100%; block-size: 100%; object-fit: contain; border-radius: 0; pointer-events: none; }
+  #compare-before-image { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
+  #compare-divider { position: absolute; inset-block: 0; inset-inline-start: var(--split); inline-size: 2px; background: #fff; transform: translateX(-1px); pointer-events: none; }
+  #compare-divider span { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; transform: translate(-50%,-50%); display: grid; place-items: center; inline-size: 38px; block-size: 38px; border-radius: 50%; background: #09151fe8; color: #fff; border: 2px solid #fff; font-size: 22px; }
+  #compare-empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; font-size: .9rem; color: var(--muted); }
+  .compare-controls { padding: 8px 16px; max-inline-size: 720px; inline-size: 100%; margin-inline: auto; }
+  .compare-controls label { font-size: .75rem; }
+  #app #compare-split { inline-size: 100%; accent-color: var(--accent); margin: 0; padding: 0; min-block-size: 32px; border: 0; background: transparent; }
+  #compare-help,#compare-status { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+  #compare-status:empty { display: none; }
+  #compare-share-url { inline-size: 100%; }
+  @media(max-width:650px) {
+    .compare-header { gap: 4px; }
+    .compare-header nav { gap: 0; }
+    .compare-header nav a { padding-inline: 5px; font-size: .75rem; }
+    #app .compare-header h1 { display: none; }
+    .compare-pickers { display: grid; grid-template-columns: minmax(0,1fr) 40px minmax(0,1fr); gap: 6px; padding: 6px; }
+    #app .compare-pickers select { inline-size: 100%; padding: 6px 4px; font-size: .7rem; }
+    #app #compare-swap { padding: 6px; }
+    #compare-share { grid-column: 1 / -1; justify-self: center; }
+    #compare-main { min-block-size: calc(100dvh - 48px); block-size: auto; grid-template-rows: auto minmax(45dvh,1fr) auto; }
+  }
+}
+
+@layer workspace {
+  .compare-header nav a { gap: 6px; }
+  .compare-header nav .icon { inline-size: 17px; block-size: 17px; }
+  @media(max-width:650px) {
+    .compare-header nav a { padding-inline: 10px; }
+    .compare-header nav a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  }
+}

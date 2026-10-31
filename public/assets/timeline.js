@@ -1,3 +1,4 @@
+import {liveRefresh} from './lib/live.js?v=20261031-live1';
 import { request } from './lib/api.js?v=20261031-webp1';
 import { imageURL, stampLabel, escape } from './lib/ui.js?v=20261031-webp1';
 const $ = s => document.querySelector(s);
@@ -5,6 +6,7 @@ const camera = document.body.dataset.camera;
 let frames = [], index = 0, playing = false, timer, controller, generation = 0, selection = 0;
 function pause() { playing = false; clearTimeout(timer); $('#timeline-play').textContent = 'Play'; $('#timeline-play').setAttribute('aria-label','Play snapshots'); }
 function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url);
+  const compare=$('.comparison-link');if(compare&&frames[index])compare.href=`/awc/compare.php?camera=${encodeURIComponent(camera)}&after=${encodeURIComponent(frames[index].stamp)}`;
   for(const link of document.querySelectorAll('.camera-edge')) { const target=new URL(link.href);target.searchParams.set('date',$('#timeline-day').value);if(frames[index])target.searchParams.set('stamp',frames[index].stamp);else target.searchParams.delete('stamp');link.href=target.href; }
 }
 function controls() { const disabled = !frames.length; $('#timeline-play').disabled=disabled || frames.length<2; $('#timeline-prev').disabled=disabled || index===0; $('#timeline-next').disabled=disabled || index===frames.length-1; }
@@ -75,16 +77,16 @@ async function tick() { if(!playing)return; if(index>=frames.length-1){pause();r
 function filmstrip() {
   $('#timeline-filmstrip').innerHTML=`<div class="timeline-frames">${frames.map((frame,i)=>`<button class="timeline-thumb" data-index="${i}" aria-label="Show ${escape(stampLabel(frame.stamp))}"><img src="${escape(imageURL(camera,frame.stamp,400))}" width="180" height="135" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
 }
-async function loadDay() {
+async function loadDay(followLatest=false,quiet=false) {
   pause();controller?.abort();controller=new AbortController();const run=++generation;++selection;++warmGeneration;frames=[];controls();
-  $('#timeline-filmstrip').replaceChildren();$('#timeline-image').hidden=true;$('#timeline-original').hidden=true;$('#timeline-empty').hidden=false;$('#timeline-empty').textContent='Loading snapshots…';delete document.body.dataset.frame;
+  if(!quiet){$('#timeline-filmstrip').replaceChildren();$('#timeline-image').hidden=true;$('#timeline-original').hidden=true;$('#timeline-empty').hidden=false;$('#timeline-empty').textContent='Loading snapshots…';delete document.body.dataset.frame;}
   try {
     const data=await request('archive',{signal:controller.signal,parameters:{camera,date:$('#timeline-day').value}});
     if(run!==generation)return;
     frames=data.frames.sort((a,b)=>a.stamp.localeCompare(b.stamp));index=0;
     if(!frames.length){$('#timeline-empty').textContent='No snapshots saved for this day. Choose another day.';$('#timeline-status').textContent='New images are collected every 15 minutes when the camera is available.';updateURL();return;}
     filmstrip();
-    const stamp=new URL(location.href).searchParams.get('stamp');const saved=frames.findIndex(frame=>frame.stamp===stamp);await selectFrame(saved>=0?saved:0);controls();
+    const stamp=new URL(location.href).searchParams.get('stamp');const saved=frames.findIndex(frame=>frame.stamp===stamp);await selectFrame(followLatest?frames.length-1:(saved>=0?saved:0));controls();
   } catch(error){if(error.name!=='AbortError' && run===generation){$('#timeline-empty').textContent='Unable to load this day. Choose a day to retry.';$('#timeline-status').textContent=error.message;}}
   finally {if(run===generation)document.body.dataset.ready='true';}
 }
@@ -120,3 +122,17 @@ function cameraEdges() {
   for(const link of document.querySelectorAll('.camera-edge')) {link.style.width=`${gutter}px`;link.hidden=gutter<1;}
 }
 new ResizeObserver(cameraEdges).observe($('.timeline-stage'));
+
+liveRefresh(async()=>{
+  if(playing||document.querySelector('sdou-preferences-center').shadowRoot?.querySelector('dialog[open]'))return false;
+  const follow=frames.length>0&&index===frames.length-1;
+  const selectedDay=$('#timeline-day').value;
+  const days=[...$('#timeline-day').options].map(option=>option.value);
+  const data=await request('archive',{parameters:{camera,date:selectedDay}});
+  const latest=data.dates[0];
+  const wasLatestDay=selectedDay===days[0];
+  for(const day of data.dates)if(!days.includes(day))$('#timeline-day').add(new Option(day,day),0);
+  if(follow&&wasLatestDay&&latest)$('#timeline-day').value=latest;
+  const changed=JSON.stringify(data.frames.map(frame=>frame.stamp).sort())!==JSON.stringify(frames.map(frame=>frame.stamp).sort());
+  if(changed||$('#timeline-day').value!==selectedDay)await loadDay(follow,true);
+});

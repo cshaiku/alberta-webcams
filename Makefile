@@ -11,5 +11,7 @@ test:
 	php tests/retrieval.php
 	node --check public/assets/app.js
 	node --check public/assets/timeline.js
+	node --check public/assets/compare.js
 	node --check public/assets/lib/ui.js
 	node --check public/assets/lib/api.js
+	node --check public/assets/lib/live.js
