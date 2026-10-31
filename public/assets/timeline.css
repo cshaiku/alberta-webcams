@@ -84,3 +84,27 @@
     .timeline-nav a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
   }
 }
+
+@layer workspace {
+  .camera-identity { gap: 8px; }
+  #app .timeline-header .camera-identity h1 { max-inline-size: clamp(100px,18vw,320px); margin: 0; }
+  .timeline-context { position: relative; z-index: 1; }
+  @media(min-width:651px) and (max-width:1250px) {
+    .timeline-context { gap: 10px; }
+    .timeline-nav { gap: 10px; }
+    .timeline-nav a span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+    #app .timeline-header .camera-identity h1 { max-inline-size: clamp(110px,22vw,300px); }
+  }
+  @media(max-width:650px) {
+    #app .timeline-header .camera-identity h1 { max-inline-size: clamp(65px,20vw,150px); }
+    .camera-identity { gap: 4px; }
+    .timeline-context { gap: 6px; }
+  }
+}
+
+@layer workspace {
+  @media(min-width:651px) and (max-width:1000px) {
+    .timeline-nav .timeline-home { display: none; }
+    #app .timeline-header .camera-identity h1 { max-inline-size: 8vw; }
+  }
+}
