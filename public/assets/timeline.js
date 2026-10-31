@@ -1,3 +1,4 @@
+import {personal,savePersonal,recordVisit} from './lib/personal.js?v=20261031-personal1';
 import {settings} from './lib/config.js?v=20261031-config1';
 import {liveRefresh} from './lib/live.js?v=20261031-config1';
 import { request } from './lib/api.js?v=20261031-config1';
@@ -6,7 +7,7 @@ const $ = s => document.querySelector(s);
 const camera = document.body.dataset.camera;
 let frames = [], index = 0, playing = false, timer, controller, generation = 0, selection = 0;
 function pause() { playing = false; clearTimeout(timer); $('#timeline-play').textContent = 'Play'; $('#timeline-play').setAttribute('aria-label','Play snapshots'); }
-function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url);
+function updateURL() { const url = new URL(location.href); url.searchParams.set('date',$('#timeline-day').value); if(frames[index]) url.searchParams.set('stamp',frames[index].stamp); else url.searchParams.delete('stamp'); history.replaceState(null,'',url);recordVisit('timeline',camera);
   const compare=$('.comparison-link');if(compare&&frames[index])compare.href=`/awc/compare.php?camera=${encodeURIComponent(camera)}&after=${encodeURIComponent(frames[index].stamp)}`;
   for(const link of document.querySelectorAll('.camera-edge')) { const target=new URL(link.href);target.searchParams.set('date',$('#timeline-day').value);if(frames[index])target.searchParams.set('stamp',frames[index].stamp);else target.searchParams.delete('stamp');link.href=target.href; }
 }
@@ -72,6 +73,7 @@ async function selectFrame(next, { user = false, scroll = true } = {}) {
   if(user) $('#timeline-status').textContent=stampLabel(frame.stamp);
   updateURL();
   cameraEdges();
+  let label=document.querySelector('.timeline-retrieved');if(!label){label=document.createElement('span');label.className='timeline-retrieved user-retrieved';$('.timeline-stage').append(label);}label.hidden=personal().timestamps!=='retrieved';label.textContent='Retrieved '+stampLabel(frame.stamp);
   warmPreviews(current);
 }
 async function tick() { if(!playing)return; if(index>=frames.length-1){pause();return;} await selectFrame(index+1); if(playing)timer=setTimeout(tick,Number($('#timeline-speed').value)); }
@@ -94,7 +96,8 @@ async function loadDay(followLatest=false,quiet=false) {
 $('#timeline-day').addEventListener('change',()=>{const url=new URL(location.href);url.searchParams.delete('stamp');history.replaceState(null,'',url);loadDay();});
 $('#timeline-prev').addEventListener('click',()=>selectFrame(index-1,{user:true}));$('#timeline-next').addEventListener('click',()=>selectFrame(index+1,{user:true}));
 $('#timeline-play').addEventListener('click',async()=>{if(playing){pause();return;}playing=true;$('#timeline-play').textContent='Pause';$('#timeline-play').setAttribute('aria-label','Pause snapshots');if(index===frames.length-1)await selectFrame(0);if(playing)timer=setTimeout(tick,Number($('#timeline-speed').value));});
-$('#timeline-speed').addEventListener('change',()=>{if(playing){clearTimeout(timer);timer=setTimeout(tick,Number($('#timeline-speed').value));}});
+$('#timeline-speed').value=personal().speed;
+$('#timeline-speed').addEventListener('change',()=>{savePersonal({speed:Number($('#timeline-speed').value)},{notify:false});if(playing){clearTimeout(timer);timer=setTimeout(tick,Number($('#timeline-speed').value));}});
 $('#timeline-filmstrip').addEventListener('click',event=>{const button=event.target.closest('[data-index]');if(button)selectFrame(Number(button.dataset.index),{user:true,scroll:false});});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
 $('sdou-preferences-center').addEventListener('focusin',pause);
@@ -126,7 +129,7 @@ new ResizeObserver(cameraEdges).observe($('.timeline-stage'));
 
 liveRefresh(async()=>{
   if(playing||document.querySelector('sdou-preferences-center').shadowRoot?.querySelector('dialog[open]'))return false;
-  const follow=frames.length>0&&index===frames.length-1;
+  const follow=personal().followLatest&&frames.length>0&&index===frames.length-1;
   const selectedDay=$('#timeline-day').value;
   const days=[...$('#timeline-day').options].map(option=>option.value);
   const data=await request('archive',{parameters:{camera,date:selectedDay}});
@@ -137,3 +140,5 @@ liveRefresh(async()=>{
   const changed=JSON.stringify(data.frames.map(frame=>frame.stamp).sort())!==JSON.stringify(frames.map(frame=>frame.stamp).sort());
   if(changed||$('#timeline-day').value!==selectedDay)await loadDay(follow,true);
 });
+
+window.addEventListener('awc:personal',()=>{$('#timeline-speed').value=personal().speed;const label=document.querySelector('.timeline-retrieved');if(label)label.hidden=personal().timestamps!=='retrieved';});

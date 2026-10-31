@@ -1,0 +1,52 @@
+{
+  "url": "https://sltd.ca/awc/?view=overview",
+  "gateway": "Existing gear, accessible name Settings",
+  "layout": {
+    "desktop": "My Network left, Accessibility Preferences right",
+    "mobile": "Accessibility Preferences first, My Network second",
+    "dialog": "Full viewport native modal, Escape and focus restoration preserved"
+  },
+  "personalStorage": {
+    "key": "awc.user.v1",
+    "format": "Versioned validated JSON",
+    "scope": "Device and browser only; no account or server upload",
+    "blockedStorage": "Preferences work for visit with explicit unsaved notice"
+  },
+  "features": [
+    "Favourite cameras",
+    "Custom camera order with keyboard friendly up/down controls",
+    "Saved routes with named camera groups",
+    "Personal Network filter for all, favourites or route",
+    "Arrival view preference",
+    "Remembered camera and last view",
+    "Remembered map center and zoom",
+    "Remembered timeline speed",
+    "Follow latest toggle",
+    "3, 4 or 6 desktop grid columns",
+    "Camera only or labelled retrieval timestamps",
+    "Independent My Network and accessibility resets"
+  ],
+  "checks": [
+    "make test",
+    "Live full personal preference browser suite including reload persistence and blocked storage",
+    "Live Network, Map, Timeline, Compare and refresh browser suites",
+    "Desktop/right and mobile/first accessibility placement verified",
+    "Native dialog visually inspected in Chrome",
+    "Remembered map zoom verified after reload",
+    "Clock test confirms follow latest off prevents Network refresh",
+    "Accessibility reset preserves My Network preferences"
+  ],
+  "files": {
+    "public/assets/lib/personal.js": "e03dbfdd3ff527964c43e048bcb06724238178e62884d49f297dc42b316169b3",
+    "public/assets/accessibility/components/preferences-center/index.js": "3788b6ce934582520e7abdd855f40fa08e96551c46ee54f454305df16aa7ea39",
+    "public/assets/accessibility/components/preferences-center/component.css": "58680278c1a2a5992fa92059af511141c2d3a771c9389c8c9b495257e916f41e",
+    "public/assets/app.js": "e5a6644f3cdbafad8fcb7203b0eeee748c8734c6922e13b3df07b70380959312",
+    "public/assets/timeline.js": "43db4d8f7daba62fb42a99fabdd5019ff67ec3fdf4951318d5ee0d7a9776bf8c",
+    "public/assets/compare.js": "1d6342566066a33b56503ff1d1df2aa8d59c39e20133111ded7759f0b21b832e",
+    "public/assets/map.js": "89a382d97f26aafe3b20480a001bc6410f13021dd0642cde72e420fa7214b400",
+    "public/assets/site.css": "b4dc9948ee30574e41015657f355076f14beab1be636806ed6ca9b023de76c95",
+    "public/index.php": "a45b2f936dc81e10aac7f01848bd1172854b8298c53f84259dfe86aa670879ca",
+    "public/timeline.php": "d0db22c5e5cf5927afe9278b7cad9291298cfbf8b2e9d0209a1a9934d9a4c29c",
+    "public/compare.php": "e4c7570ec29f15b57059f7cc33723745901adc849093660894e092d186706f57"
+  }
+}

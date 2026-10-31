@@ -18,3 +18,4 @@ test:
 	node --check public/assets/lib/api.js
 	node --check public/assets/lib/live.js
 	node --check public/assets/lib/config.js
+	node --check public/assets/lib/personal.js

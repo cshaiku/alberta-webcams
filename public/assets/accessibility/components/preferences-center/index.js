@@ -1,3 +1,4 @@
+import {mountPersonalPanel} from '../../../lib/personal.js?v=20261031-personal1';
 import {
   A11yComponent,
   group,
@@ -9,13 +10,13 @@ import {
 } from "../../shared/base.js?v=sdou20261029b";
 class PreferencesCenter extends A11yComponent {
   static styles = new URL(
-    "./component.css?v=sdou20261029b",
+    "./component.css?v=20261031-personal1",
     import.meta.url,
   ).href;
   render() {
     this.resetAll = true;
     this.mount(
-      "Accessibility Preferences",
+      "Settings",
       "",
       group("Appearance", appearance(), true) +
         group("Text and spacing", typography()) +
@@ -25,17 +26,25 @@ class PreferencesCenter extends A11yComponent {
         '<p class="hint">Reading text contrast: <strong class="number" data-contrast-ratio></strong>. Our minimum is 5:1.</p>',
       { dialog: true },
     );
-    this.q("[data-reset]").textContent = "Reset all preferences";
+    this.q("[data-reset]").textContent = "Reset accessibility preferences";
     // Canonical presentation, promoted from the existing sltd.ca full center.
     this.q(".kicker")?.remove();
+    const body=this.q('.panel-body'),footer=this.q('.panel-footer');
+    const accessibility=document.createElement('section');accessibility.className='accessibility-column';accessibility.setAttribute('aria-label','Accessibility Preferences');
+    const heading=document.createElement('h3');heading.textContent='Accessibility Preferences';accessibility.append(heading);
+    while(body.firstChild)accessibility.append(body.firstChild);
+    accessibility.append(footer);
+    const personal=document.createElement('section');personal.className='personal-column';personal.setAttribute('aria-label','My Network');
+    body.append(accessibility,personal);mountPersonalPanel(this);
+
     this.q("#component-description")?.remove();
     this.q("dialog").removeAttribute("aria-describedby");
     this.q("[data-pref=theme]")?.closest(".control").remove();
     this.q("[data-pref=font] option[value=studio]").textContent =
       "Studio default";
     const button = this.q("[data-open]");
-    button.setAttribute("aria-label", "Accessibility preferences");
-    button.title = "Accessibility preferences";
+    button.setAttribute("aria-label", "Settings");
+    button.title = "Settings: accessibility and My Network";
     const motionGroup = this.qa("details").find(
       (el) => el.querySelector("summary").textContent === "Motion and media",
     );

@@ -1,3 +1,4 @@
+import {personal,savePersonal,networkCameras,recordVisit,restoreLanding} from './lib/personal.js?v=20261031-personal1';
 import {settings} from './lib/config.js?v=20261031-config1';
 import {renderCameraMap} from './map.js?v=20261031-config1';
 import {liveRefresh} from './lib/live.js?v=20261031-config1';
@@ -38,6 +39,7 @@ function writeURL(mode = 'replace') {
     if ($('#search').value) url.searchParams.set('q', $('#search').value);
   }
   if (url.href !== location.href) history[mode === 'push' ? 'pushState' : 'replaceState'](null, '', url);
+  recordVisit(state.view,state.selected);
 }
 function chooseCamera(id) {
   state.selected = id;
@@ -69,9 +71,9 @@ function card(item, index) {
   const overview = state.view === 'overview';
   const destination = overview ? `/awc/?view=archive&camera=${encodeURIComponent(camera.id)}` : `/awc/timeline.php?camera=${encodeURIComponent(camera.id)}&date=${stamp.slice(0,10)}&stamp=${encodeURIComponent(stamp)}`;
   const visual = stamp
-    ? `<a class="image-button" href="${escape(destination)}" ${overview ? `data-camera="${escape(camera.id)}"` : ''} data-index="${index}" aria-label="${overview ? 'View archive for' : 'Open timeline for'} ${escape(camera.title)} at ${escape(stampTime(stamp))}">${pictureHTML(camera, stamp, index === 0)}</a>`
+    ? `<a class="image-button" href="${escape(destination)}" ${overview ? `data-camera="${escape(camera.id)}"` : ''} data-index="${index}" aria-label="${overview ? 'View archive for' : 'Open timeline for'} ${escape(camera.title)} at ${escape(stampTime(stamp))}">${pictureHTML(camera, stamp, index === 0)}${personal().timestamps==='retrieved'?`<span class="user-retrieved">Retrieved ${escape(stampLabel(stamp))}</span>`:''}</a>`
     : `<div class="unavailable">${icon('camera')}<strong>Camera unavailable</strong><p>The source has no image right now.</p></div>`;
-  return `<article class="camera-card"><figure>${visual}<figcaption class="card-caption"><div class="card-topline"><span class="region">${escape(camera.region)}</span><span class="feed-state"><i class="feed-dot${available ? '' : ' offline'}"></i>${available ? 'Snapshot' : stamp ? 'Previous image' : 'Unavailable'}</span></div><h2>${escape(camera.title)}</h2><div class="caption-meta"><time${stamp ? ` datetime="${stampISO(stamp)}"` : ''}>${icon('clock')}<span>${escape(stampTime(stamp))}<small>${stamp ? stamp.slice(0, 10) : ''}</small></span></time><a class="archive-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}">Archive ${icon('arrow')}</a></div></figcaption></figure></article>`;
+  return `<article class="camera-card"><button class="camera-favourite" data-favourite="${escape(camera.id)}" aria-label="Favourite ${escape(camera.title)}" aria-pressed="${personal().favourites.includes(camera.id)}">${personal().favourites.includes(camera.id)?'★':'☆'}</button><figure>${visual}<figcaption class="card-caption"><div class="card-topline"><span class="region">${escape(camera.region)}</span><span class="feed-state"><i class="feed-dot${available ? '' : ' offline'}"></i>${available ? 'Snapshot' : stamp ? 'Previous image' : 'Unavailable'}</span></div><h2>${escape(camera.title)}</h2><div class="caption-meta"><time${stamp ? ` datetime="${stampISO(stamp)}"` : ''}>${icon('clock')}<span>${escape(stampTime(stamp))}<small>${stamp ? stamp.slice(0, 10) : ''}</small></span></time><a class="archive-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}">Archive ${icon('arrow')}</a></div></figcaption></figure></article>`;
 }
 function renderArchiveTree(camera) {
   const months = new Map();
@@ -140,12 +142,12 @@ async function render(historyMode = 'replace') {
     } finally { if (!archiveController.signal.aborted) $('#gallery').removeAttribute('aria-busy'); }
   } else {
     const query = $('#search').value.trim().toLowerCase();
-    state.items = state.catalog.filter(camera => {
+    state.items = networkCameras(state.catalog).filter(camera => {
       const group = camera.region.startsWith('Edmonton') ? 'edmonton' : 'highways';
       const matches = state.filter === 'all' || state.filter === group || (state.filter === 'unavailable' && state.snapshots.cameras?.[camera.id]?.status !== 'ok');
       return matches && `${camera.title} ${camera.region}`.toLowerCase().includes(query);
     }).map(camera => ({ camera, stamp: state.snapshots.cameras?.[camera.id]?.stamp }));
-    if (state.items.length) showGallery(); else empty('No cameras found', 'Try another place or clear your filters to see the full collection.', false);
+    if (state.items.length) showGallery(); else if(personal().network!=='all')empty('Your Network has no matching cameras','Choose favourites or route cameras in Settings, or show all cameras.',false);else empty('No cameras found', 'Try another place or clear your filters to see the full collection.', false);
     const last = state.snapshots.lastResult;
     status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: settings.site.timezone, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Images are collected automatically every 15 minutes.');
   }
@@ -197,13 +199,14 @@ function toggleRail() {
     $('#rail-toggle').setAttribute('aria-expanded', String(!document.body.classList.contains('rail-hidden')));
   }
 }
-function resetFilters() { state.view = 'overview'; state.selected = null; state.filter = 'all'; $('#search').value = ''; closeRail(); render('push'); }
+function resetFilters() { if(personal().network!=='all')savePersonal({network:'all'},{notify:false});state.view = 'overview'; state.selected = null; state.filter = 'all'; $('#search').value = ''; closeRail(); render('push'); }
 
 // One delegated handler keeps server rendered and refreshed cards on the same path.
 document.addEventListener('click', async event => {
   const target = event.target.closest('a,button');
   if (!target || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  if (target.dataset.view) { event.preventDefault(); state.view = target.dataset.view; if (state.view === 'overview') state.selected = null; render('push'); }
+  if (target.dataset.favourite) { const p=personal(),id=target.dataset.favourite;savePersonal({favourites:p.favourites.includes(id)?p.favourites.filter(value=>value!==id):[...p.favourites,id]}); }
+  else if (target.dataset.view) { event.preventDefault(); state.view = target.dataset.view; if (state.view === 'overview') state.selected = null; render('push'); }
   else if (target.dataset.period !== undefined) { archivePeriod = target.dataset.period; closeRail(); render('push'); }
   else if (target.dataset.stamp) {
     const stamp = target.dataset.stamp;
@@ -296,17 +299,17 @@ try {
   state.catalog = data.cameras;
   state.snapshots = data.state;
   state.csrf = data.csrf;
-  readURL();
-  await render();
-  document.body.dataset.ready = 'true';
+  if(!restoreLanding(state.catalog)){readURL();await render();document.body.dataset.ready = 'true';}
 } catch (error) { status(`${error.message} Saved snapshots are still available below.`, true); }
 
 function renderMap(){renderCameraMap($('#map-panel'),{catalog:state.catalog,snapshots:state.snapshots});}
 
 liveRefresh(async()=>{
-  if($('#viewer').open || $('#gallery').hasAttribute('aria-busy'))return false;
+  if(!personal().followLatest || $('#viewer').open || $('#gallery').hasAttribute('aria-busy'))return false;
   const data=await request();
   const changed=JSON.stringify(data.state)!==JSON.stringify(state.snapshots)||JSON.stringify(data.cameras)!==JSON.stringify(state.catalog);
   state.csrf=data.csrf;state.snapshots=data.state;state.catalog=data.cameras;
   if(changed){const y=scrollY;await render();scrollTo({top:y,behavior:'instant'});}
 });
+
+window.addEventListener('awc:personal',()=>{if(state.catalog.length)render();});

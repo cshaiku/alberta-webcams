@@ -403,3 +403,11 @@
   .camera-archive .control-strip { flex-wrap: wrap; }
   .camera-archive .rail-foot { display: none; }
 }
+
+@layer workspace {
+ .camera-card { position: relative; }
+ #app .camera-favourite { position: absolute; inset: 4px 4px auto auto; z-index: 3; display: grid; place-items: center; inline-size: 32px; block-size: 32px; min-block-size: 32px; padding: 0; border: 0; border-radius: 50%; background: #09151fbb; color: #fff; font-size: 22px; opacity: 0; }
+ .camera-card:hover .camera-favourite,.camera-card:focus-within .camera-favourite,#app .camera-favourite[aria-pressed=true] { opacity: 1; }
+ .user-retrieved { position: absolute; inset: 4px auto auto 4px; z-index: 2; padding: 3px 6px; background: #09151fe8; color: #fff; font: 11px/1.5 system-ui,sans-serif; pointer-events: none; }
+ @media(hover:none) { #app .camera-favourite { opacity: 1; } }
+}
