@@ -1,0 +1,66 @@
+/* Camera map surface, intentionally scoped above the vendored Leaflet defaults. */
+.map-view .workspace { display: block; }
+.map-view .sidebar,.map-view #rail-toggle { display: none !important; }
+#map-panel { min-inline-size: 0; }
+.camera-map-shell { position: relative; block-size: calc(100dvh - var(--header-height,48px)); min-block-size: 440px; overflow: hidden; background: #dce2dd; }
+#camera-map { position: absolute; inset: 0; z-index: 0; font-family: inherit; background: #dce2dd; }
+.map-surface { background: var(--panel); color: var(--ink); border: 1px solid var(--rule); border-radius: 16px; box-shadow: 0 8px 28px #0002; }
+@supports(backdrop-filter:blur(18px)) { .map-surface { background: color-mix(in srgb,var(--panel) 94%,transparent); backdrop-filter: blur(18px); } }
+.map-browser { position: absolute; z-index: 5; inset: 14px auto auto 14px; inline-size: 310px; padding: 14px; }
+.map-browser-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-block-end: 10px; }
+#app .map-browser-title h2 { font-size: 1rem; }
+.map-result-count { font-size: .7rem; color: var(--muted); }
+#app .map-search input { inline-size: 100%; border-radius: 9px; background: var(--page); min-block-size: 40px; font-size: .85rem; padding: 8px 10px; }
+.map-regions { display: flex; margin-block: 10px 4px; gap: 3px; padding: 3px; border-radius: 8px; background: var(--page); }
+#app .map-regions button { flex: 1; padding: 6px 5px; min-block-size: 32px; font-size: .72rem; background: transparent; border: 0; }
+#app .map-regions [aria-pressed=true] { background: var(--panel); box-shadow: 0 1px 4px #0003; }
+#app .map-results-toggle { display: flex; justify-content: space-between; inline-size: 100%; border: 0; padding: 6px 2px; font-size: .75rem; min-block-size: 36px; background: transparent; }
+#map-results { max-block-size: min(24dvh,230px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+#app .map-camera-result { display: flex; gap: 10px; align-items: center; inline-size: 100%; padding: 9px 4px; border: 0; border-radius: 6px; background: transparent; text-align: start; }
+#app .map-camera-result[aria-pressed=true] { background: var(--hover); }
+.map-result-icon { flex: 0 0 22px; color: var(--accent); }
+.map-result-icon svg { inline-size: 22px; block-size: 22px; }
+.map-camera-result > span:nth-child(2) { flex: 1; min-inline-size: 0; }
+.map-camera-result strong { display: block; font-size: .75rem; font-weight: 600; }
+.map-camera-result small { display: block; color: var(--muted); font-size: .66rem; line-height: 1.5; }
+.map-result-dot { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--muted); }
+.map-result-dot.is-online { background: var(--accent); }
+.map-no-results { padding: 12px 2px; font-size: .8rem; color: var(--muted); }
+#app .map-fit { position: absolute; z-index: 5; inset: 14px 14px auto auto; inline-size: 44px; block-size: 44px; padding: 0; font-size: 27px; border-radius: 12px; }
+#camera-map .leaflet-top.leaflet-right { top: 66px; right: 4px; }
+#camera-map .leaflet-control-zoom { overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; box-shadow: 0 5px 20px #0002; }
+#camera-map .leaflet-control-zoom a { inline-size: 42px; block-size: 42px; line-height: 42px; background: var(--panel); color: var(--ink); border-color: var(--rule); }
+#camera-map .leaflet-control-attribution { font-size: 10px; background: #fffffff0; color: #27352c; padding: 3px 7px; }
+#camera-map .leaflet-control-attribution a { color: #254d71; }
+#camera-map .map-camera-pin { display: grid; place-items: center; border-radius: 50%; background: #183240; color: #f2e7d4; border: 2px solid #fff; box-shadow: 0 3px 10px #0004; }
+.map-camera-pin svg { inline-size: 20px; block-size: 20px; }
+#camera-map .map-camera-pin.is-selected { background: #e8c58e; color: #09151f; box-shadow: 0 0 0 5px #e8c58e55,0 3px 12px #0004; }
+#camera-map .map-camera-cluster { background: #f5efe5; color: #183240; font-size: 14px; font-weight: 700; border: 3px solid #183240; }
+.map-camera-card { position: absolute; z-index: 6; inset: auto auto 32px 14px; inline-size: 310px; overflow: hidden; }
+#app .map-card-close { position: absolute; z-index: 2; inset: 6px 6px auto auto; inline-size: 32px; block-size: 32px; min-block-size: 32px; padding: 0; font-size: 23px; border: 0; background: #09151fe8; color: #fff; border-radius: 50%; }
+.map-preview { display: block; background: #030608; }
+#app .map-preview img { display: block; inline-size: 100%; block-size: 145px; object-fit: cover; border-radius: 0; }
+.map-card-body { padding: 12px; }
+.map-card-region { color: var(--muted); font-size: .7rem; }
+#app .map-card-body h3 { font-size: .9rem; line-height: 1.4; margin-block: 4px; }
+.map-card-time { color: var(--muted); font-size: .65rem; }
+.map-card-body nav { display: flex; gap: 4px; margin-block-start: 10px; }
+.map-card-body nav a { display: inline-flex; align-items: center; justify-content: center; flex: 1; min-block-size: 36px; background: var(--page); border-radius: 7px; font-size: .7rem; }
+.map-no-preview { padding: 24px; color: var(--muted); font-size: .8rem; }
+.map-feedback { position: absolute; z-index: 7; inset: auto 72px 30px auto; max-inline-size: 330px; padding: 10px; font-size: .75rem; }
+@media(max-width:760px) {
+ .map-browser { inset: 8px 64px auto 8px; inline-size: auto; padding: 10px; border-radius: 12px; }
+ .map-browser-title { padding-block-end: 6px; }
+ #app .map-browser-title h2 { font-size: .9rem; }
+ .map-regions { margin-block: 6px 0; }
+ .map-camera-card { inset: auto 8px 34px 8px; inline-size: auto; border-radius: 14px; display: grid; grid-template-columns: 100px minmax(0,1fr); }
+ #app .map-preview img { inline-size: 100%; block-size: 100%; min-block-size: 160px; object-fit: cover; }
+ .map-card-body { padding: 10px; }
+ .map-card-body nav { flex-wrap: wrap; }
+ .map-card-body nav a { flex: 1 0 40%; }
+ #app .map-fit { inset: 8px 8px auto auto; }
+ #camera-map .leaflet-top.leaflet-right { top: 60px; right: -2px; }
+ .map-feedback { inset: auto 8px 210px 8px; max-inline-size: none; }
+ #map-results { max-block-size: 190px; }
+}
+@media(prefers-reduced-transparency:reduce) { .map-surface { background: var(--panel); backdrop-filter: none; } }

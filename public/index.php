@@ -17,7 +17,7 @@ $canonical = 'https://sltd.ca/awc/';
 $isCanonical = $view === 'overview' && !$_GET;
 $title = 'Alberta Webcams | Highway Cameras & Snapshot Archive';
 $description = 'Explore Alberta highway camera snapshots from Edmonton, Leduc, Red Deer, Calgary and beyond. Browse the camera grid and revisit saved images by date and hour.';
-header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+header("Content-Security-Policy: default-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
 header('Cache-Control: no-store');
 header('X-Robots-Tag: ' . ($isCanonical ? 'index, follow' : 'noindex, follow'));
 $schema = ['@context' => 'https://schema.org', '@graph' => [
@@ -54,9 +54,11 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-live1">
+    <link rel="stylesheet" href="/awc/assets/vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/awc/assets/map.css?v=20261031-map1">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-map1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-live1"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-map1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">

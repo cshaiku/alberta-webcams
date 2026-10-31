@@ -1,3 +1,4 @@
+import {renderCameraMap} from './map.js?v=20261031-map1';
 import {liveRefresh} from './lib/live.js?v=20261031-live1';
 import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-webp1';
 import { request } from './lib/api.js?v=20261031-webp1';
@@ -114,6 +115,7 @@ async function render(historyMode = 'replace') {
   $('#grid-toolbar').hidden = state.view !== 'overview';
   $('#gallery').hidden = state.view === 'map';
   $('#map-panel').hidden = state.view !== 'map';
+  document.body.classList.toggle('map-view',state.view==='map');
   $('.collection-notes').hidden = state.view !== 'overview';
   writeURL(historyMode);
   if (state.view === 'map') { renderMap(); status(`${state.catalog.length} camera locations. Select a marker to browse its archive.`); return; }
@@ -298,11 +300,7 @@ try {
   document.body.dataset.ready = 'true';
 } catch (error) { status(`${error.message} Saved snapshots are still available below.`, true); }
 
-function renderMap(){
- const point=c=>({x:80+(c.lng+120)/10*600,y:650-(c.lat-49)/11*600});
- $('#map-panel').innerHTML=`<div class="map-wrap"><svg viewBox="0 0 760 720" role="img" aria-labelledby="map-title map-desc"><title id="map-title">Alberta camera locations</title><desc id="map-desc">A schematic province outline with camera locations from 511 Alberta. The camera buttons below provide the same navigation.</desc><path class="map-region" d="M80 50H680V650H240L230 590 205 550 200 505 160 460 140 400 110 360 80 310Z"/>${[50,200,350,500,650].map(y=>`<path class="map-grid" d="M80 ${y}H680"/>`).join('')}${state.catalog.map(c=>{const p=point(c);return `<a class="map-marker-link" href="?view=archive&amp;camera=${c.id}" data-camera="${c.id}" aria-label="${escape(c.title)}"><circle class="map-marker" cx="${p.x}" cy="${p.y}" r="7"><title>${escape(c.title)}</title></circle></a>`;}).join('')}<text class="map-label" x="470" y="70">ALBERTA</text><text class="map-label" x="480" y="400">Edmonton</text><text class="map-label" x="440" y="550">Calgary</text></svg><p class="map-note">Schematic map · Locations from 511 Alberta. Use the camera list below for individual locations.</p></div><div class="map-legend">${state.catalog.map(c=>`<button data-camera="${c.id}">${escape(c.region)}</button>`).join('')}</div>`;
-
-}
+function renderMap(){renderCameraMap($('#map-panel'),{catalog:state.catalog,snapshots:state.snapshots});}
 
 liveRefresh(async()=>{
   if($('#viewer').open || $('#gallery').hasAttribute('aria-busy'))return false;

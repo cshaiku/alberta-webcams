@@ -1,0 +1,33 @@
+{
+  "url": "https://sltd.ca/awc/?view=map",
+  "provider": "OpenStreetMap Standard raster tiles",
+  "library": "Leaflet 1.9.4, BSD 2-Clause license retained",
+  "features": [
+    "Full viewport interactive map",
+    "Pixel proximity clustering",
+    "Camera search and region filters",
+    "Camera preview card with Grid Timeline Compare links",
+    "Fit cameras and zoom controls",
+    "Responsive camera list and detail sheet",
+    "15 minute refresh preserves current map viewport"
+  ],
+  "checks": [
+    "Local and live map browser tests with mocked community tiles",
+    "Local and live existing browser suite",
+    "Real OpenStreetMap tiles loaded in logged in Chrome",
+    "Visible attribution and keyboard camera list",
+    "Tile failure keeps camera list available"
+  ],
+  "files": {
+    "public/index.php": "661fdf0f017be90318eada638cca48e3a351d9b15fa42aba7c8b3d2a39df2764",
+    "public/.htaccess": "2d9765c4cbfb96476aaa9de7ed784bddde99016c966dab9ee4fa9fdd55a4210b",
+    "public/assets/app.js": "d2b3686ee8203290873467641563e56e32b8f63e4edc8da436542e339a5472d1",
+    "public/assets/map.js": "941aad6e60f2af38a74d7d5900f06953e40d4e4c93812152349bf712942026c7",
+    "public/assets/map.css": "b1dc6ce336a51c85a469fd871c32a56af491599d2037987ecd1f7b9eea8c0a0b",
+    "public/assets/vendor/leaflet/leaflet.js": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
+    "public/assets/vendor/leaflet/leaflet.css": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6",
+    "public/assets/vendor/leaflet/LICENSE": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb",
+    "public/assets/vendor/leaflet/images/layers.png": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6",
+    "public/assets/vendor/leaflet/images/layers-2x.png": "066daca850d8ffbef007af00b06eac0015728dee279c51f3cb6c716df7c42edf"
+  }
+}
