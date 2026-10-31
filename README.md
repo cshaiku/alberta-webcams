@@ -35,3 +35,10 @@ The original ZIP files remain unchanged in Google Drive. Selected originals are 
 The original historical sources are largely obsolete. The first draft uses twelve current 511 Alberta camera feeds around the original highway areas and Edmonton. Their exact names and coordinates come from the provider. These are current replacements, not claims that the original urban cameras survived. The camera catalog is operator controlled in config/cameras.json. Remote URLs cannot be supplied through the browser.
 
 DYWS is not integrated because this viewer has no ordering, booking or payment workflow. The design follows the recovered AWC Overview, Archive and Map structure instead of replacing it with a marketing template. The canonical Starlit preferences center is copied with its shared runtime. Local adaptations: default system sans typography and host colour tokens. The UI is reviewed using the installed Apple HIG skill’s accessibility, layout, typography, color, dark mode and buttons guidance, translated to native web controls. This is a web design review, not an Apple or accessibility certification.
+
+
+## Premium modernization
+
+The grid now uses the SiteCraft Studio compositions gallery reference, with a compact header, collapsible camera rail, regional filters, persistent image density, responsive WebP delivery and a native image viewer. The canonical collection has server rendered camera content, SEO metadata, structured data, sharing artwork and a sitemap. Archive and filtered URLs remain excluded from indexing. See [modernization details](docs/modernization.md) and [verification](docs/modernization-verification.md).
+
+PHP GD with WebP support is required for optimized derivatives. Original JPEGs remain available. The private runtime persists across releases. The repository is still private, and any future public release remains an owner decision.

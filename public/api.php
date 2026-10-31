@@ -1,11 +1,18 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/_bootstrap.php';
+require AWC_ROOT . '/app/media.php';
 header('X-Content-Type-Options: nosniff');
 session_name('awc_session'); session_set_cookie_params(['path' => '/awc/', 'httponly' => true, 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', 'samesite' => 'Strict']); session_start();
 $_SESSION['csrf'] ??= bin2hex(random_bytes(24));
 $action = $_GET['action'] ?? 'catalog';
-if ($action === 'catalog') { json_response(['cameras' => array_map(function($c) { unset($c['url']); return $c; }, cameras()), 'state' => state(), 'csrf' => $_SESSION['csrf'], 'timezone' => 'America/Edmonton']); }
+if ($action === 'catalog') { json_response(['cameras' => array_map(function($c) { unset($c['url']);
+    $saved = state()['cameras'][$c['id']]['stamp'] ?? '';
+    $path = snapshot_path($c['id'], $saved);
+    $dimensions = $path ? @getimagesize($path) : false;
+    $c['width'] = $dimensions[0] ?? 840;
+    $c['height'] = $dimensions[1] ?? 630;
+    return $c; }, cameras()), 'state' => state(), 'csrf' => $_SESSION['csrf'], 'timezone' => 'America/Edmonton']); }
 if ($action === 'archive') {
     $id = (string)($_GET['camera'] ?? ''); $date = (string)($_GET['date'] ?? date('Y-m-d'));
     if (!camera($id) || !valid_date($date)) json_response(['error' => 'Choose a valid camera and date.'], 400);

@@ -1,0 +1,60 @@
+{
+  "verifiedAt": "2026-10-31T07:18:17.639385+00:00",
+  "url": "https://sltd.ca/awc/",
+  "host": "pct-hostinger",
+  "publicRoot": "domains/sltd.ca/public_html/awc",
+  "privateRelease": "domains/sltd.ca/private/awc/releases/20261031-premium",
+  "privateRuntime": "domains/sltd.ca/private/awc/runtime",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-premium-20261031",
+  "publicDigestManifest": "modernization-sha256.txt",
+  "publicFileCount": 22,
+  "runtimePreserved": true,
+  "hostRobotsChange": "Added only Sitemap: https://sltd.ca/awc/sitemap.xml",
+  "seo": {
+    "issueCounts": {},
+    "internalLinkIssues": 0,
+    "siteIssues": []
+  },
+  "imageExample": {
+    "camera": "ab_128",
+    "stamp": "2026-10-31_005318",
+    "originalJPEGBytes": 36087,
+    "webp400Bytes": 12528,
+    "webpContentType": "image/webp",
+    "savedPercent": 65.3
+  },
+  "performanceLab": [
+    {
+      "device": "desktop",
+      "width": 1440,
+      "network": "Unthrottled desktop",
+      "lcp": 740,
+      "cls": 0.0023734264483667696,
+      "ttfb": 361.30000019073486,
+      "transferBytes": 358533
+    },
+    {
+      "device": "mobile",
+      "width": 390,
+      "network": "1.6 Mbps down, 100 ms latency, CPU 4x",
+      "lcp": 612,
+      "cls": 0.013206692188983855,
+      "ttfb": 256.80000019073486,
+      "transferBytes": 116435
+    }
+  ],
+  "pageShadeChecks": 32,
+  "pageShadeFailures": 0,
+  "retrieval": {
+    "saved": 11,
+    "unavailable": 1
+  },
+  "repositoryVisibility": "private",
+  "scheduledJobs": "none",
+  "limits": [
+    "Lab performance is not field Core Web Vitals.",
+    "Search Console, indexing and rankings were not verified.",
+    "Manual screen reader and physical device tests are pending.",
+    "Firefox browser binary was unavailable."
+  ]
+}

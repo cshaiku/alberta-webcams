@@ -3,7 +3,10 @@ DirectoryIndex index.php
 <IfModule mod_headers.c>
 Header always set X-Content-Type-Options "nosniff"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Robots-Tag "noindex, follow" "expr=%{QUERY_STRING} != ''"
+<FilesMatch "^(api|image|_bootstrap)\.php$">
 Header always set X-Robots-Tag "noindex, nofollow"
+</FilesMatch>
 </IfModule>
 RewriteEngine On
 RewriteRule ^archive/([^/]+)/([0-9]{4})/([0-9]{2})/([0-9]{2})/([0-9]{2}):([0-9]{2})/?$ index.php?view=archive&camera=$1&date=$2-$3-$4&hour=$5 [L,QSA]

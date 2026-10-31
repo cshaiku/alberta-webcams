@@ -1,89 +1,264 @@
-const $ = s => document.querySelector(s);
-const endpoint = '/awc/api.php';
-let catalog = [], state = {}, csrf = '', selected = null, view = 'overview', items = [], viewerIndex = 0, activeController;
-const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const localDate = () => new Intl.DateTimeFormat('en-CA', {timeZone:'America/Edmonton',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const stampText = stamp => stamp ? `${stamp.slice(0,10)} · ${stamp.slice(11,13)}:${stamp.slice(13,15)}:${stamp.slice(15,17)} MT` : 'Not retrieved yet';
-const imageUrl = (id, stamp) => `/awc/image.php?camera=${encodeURIComponent(id)}&stamp=${encodeURIComponent(stamp)}`;
-function setStatus(text) { $('#status').textContent = text; }
-function writeUrl() { const u = new URL(location.href); u.pathname='/awc/'; u.search=''; if(view!=='overview') u.searchParams.set('view',view); if(selected)u.searchParams.set('camera',selected); if(view==='archive'){u.searchParams.set('date',$('#date').value);u.searchParams.set('hour',$('#hour').value);} history.replaceState(null,'',u); }
+import { escape, mountainDate, stampTime, stampLabel, stampISO, imageURL, pictureHTML, validDate } from './lib/ui.js?v=20261031-premium2';
+import { request } from './lib/api.js?v=20261031-premium2';
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const icons = new Map([...$('#ui-icons').content.querySelectorAll('[data-icon]')].map(node => [node.dataset.icon, node.innerHTML]));
+const icon = name => icons.get(name) ?? '';
+const mobile = matchMedia('(max-width: 760px)');
+const state = { catalog: [], snapshots: {}, csrf: '', selected: null, view: 'overview', filter: 'all', items: [], viewerIndex: 0, retrieving: false };
+let archiveController;
+let viewerTrigger;
+
+function status(message) { $('#status').textContent = message; }
+function readURL() {
+  const parameters = new URLSearchParams(location.search);
+  state.view = ['archive', 'map'].includes(parameters.get('view')) ? parameters.get('view') : 'overview';
+  state.selected = parameters.get('camera');
+  state.filter = ['edmonton', 'highways', 'unavailable'].includes(parameters.get('filter')) ? parameters.get('filter') : 'all';
+  $('#date').value = validDate(parameters.get('date')) ? parameters.get('date') : mountainDate();
+  $('#hour').value = /^(all|[01]\d|2[0-3])$/.test(parameters.get('hour') ?? '') ? parameters.get('hour') : 'all';
+  $('#search').value = parameters.get('q') ?? '';
+}
+function writeURL(mode = 'replace') {
+  const url = new URL('/awc/', location.origin);
+  if (state.view !== 'overview') url.searchParams.set('view', state.view);
+  if (state.selected) url.searchParams.set('camera', state.selected);
+  if (state.view === 'archive') {
+    url.searchParams.set('date', $('#date').value);
+    url.searchParams.set('hour', $('#hour').value);
+  } else if (state.view === 'overview') {
+    if (state.filter !== 'all') url.searchParams.set('filter', state.filter);
+    if ($('#search').value) url.searchParams.set('q', $('#search').value);
+  }
+  if (url.href !== location.href) history[mode === 'push' ? 'pushState' : 'replaceState'](null, '', url);
+}
+function chooseCamera(id) {
+  state.selected = id;
+  state.view = 'archive';
+  closeRail();
+  render('push');
+  if (mobile.matches) $('#main').focus({ preventScroll: true });
+}
 function cameraList() {
- const q = $('#search').value.trim().toLowerCase();
- const filtered = catalog.filter(c => `${c.title} ${c.region}`.toLowerCase().includes(q));
- $('#camera-count').textContent = catalog.length;
- $('#camera-list').replaceChildren();
- for (const group of ['Edmonton','Highways']) {
-  const cs = filtered.filter(c => (c.region.startsWith('Edmonton')?'Edmonton':'Highways')===group);
-  if(!cs.length) continue;
-  const title=document.createElement('p');title.className='group-title';title.textContent=group;$('#camera-list').append(title);
-  for(const c of cs){const b=document.createElement('button');b.className=`camera-link ${selected===c.id?'selected':''}`;b.setAttribute('aria-pressed',String(selected===c.id));b.innerHTML=`<span>${escape(c.title)}</span><small>${escape(c.region)}</small>`;b.onclick=()=>{selected=c.id;view='archive';document.body.classList.remove('rail-open');render();};$('#camera-list').append(b);}
- }
- if(!filtered.length)$('#camera-list').textContent='No cameras match your search.';
- $('#all-cameras').classList.toggle('selected',!selected);
+  $('#camera-count').textContent = state.catalog.length;
+  $('#camera-list').innerHTML = ['Edmonton', 'Highways'].map(group => {
+    const cameras = state.catalog.filter(camera => (camera.region.startsWith('Edmonton') ? 'Edmonton' : 'Highways') === group);
+    return `<h2 class="group-title">${group}</h2>${cameras.map(camera => `<a class="camera-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}" ${state.selected === camera.id ? 'aria-current="page"' : ''}><span>${escape(camera.region)}</span><small>${escape(camera.title)}</small></a>`).join('')}`;
+  }).join('');
+  $('#all-cameras').classList.toggle('selected', state.view === 'overview');
+  $('#stat-cameras').textContent = state.catalog.length;
+  $('#stat-available').textContent = state.catalog.filter(camera => state.snapshots.cameras?.[camera.id]?.status === 'ok').length;
 }
 function card(item, index) {
- const c=item.camera, cs=state.cameras?.[c.id];
- const el=document.createElement('article');el.className='camera-card';
- const visual=item.stamp?`<button class="image-button" data-index="${index}" aria-label="Enlarge ${escape(c.title)} at ${escape(stampText(item.stamp))}"><img src="${imageUrl(c.id,item.stamp)}" width="840" height="630" alt="${escape(c.title)} camera snapshot" loading="lazy" decoding="async"></button>`:`<div class="unavailable"><span class="camera-glyph" aria-hidden="true">▣</span><p>${cs?.status==='unavailable'?'Camera unavailable. Try retrieving again.':'Ready for the first snapshot.'}</p></div>`;
- el.innerHTML=`${visual}<div class="card-caption"><h2>${escape(c.title)}</h2><div class="caption-meta"><time>${escape(stampText(item.stamp))}</time>${view==='overview'?`<button class="archive-link" data-camera="${escape(c.id)}">Archive ↗</button>`:`<span>${escape(c.region)}</span>`}</div>${cs?.status==='unavailable'&&item.stamp&&view==='overview'?'<span class="badge">Last retrieval failed · previous snapshot shown</span>':''}</div>`;
- el.querySelector('.image-button')?.addEventListener('click',()=>openViewer(index));
- el.querySelector('.archive-link')?.addEventListener('click',()=>{selected=c.id;view='archive';render();});
- el.querySelector('img')?.addEventListener('error',e=>{e.target.closest('button').outerHTML='<div class="unavailable"><p>This saved image is unavailable.</p></div>';});
- return el;
+  const { camera, stamp } = item;
+  const available = state.snapshots.cameras?.[camera.id]?.status === 'ok';
+  const visual = stamp
+    ? `<a class="image-button" href="${escape(imageURL(camera.id, stamp))}" data-index="${index}" aria-label="Enlarge ${escape(camera.title)} at ${escape(stampTime(stamp))}">${pictureHTML(camera, stamp, index === 0)}<span class="image-expand">${icon('expand')}</span></a>`
+    : `<div class="unavailable">${icon('camera')}<strong>Camera unavailable</strong><p>The source has no image right now.</p></div>`;
+  return `<article class="camera-card"><figure>${visual}<figcaption class="card-caption"><div class="card-topline"><span class="region">${escape(camera.region)}</span><span class="feed-state"><i class="feed-dot${available ? '' : ' offline'}"></i>${available ? 'Snapshot' : stamp ? 'Previous image' : 'Unavailable'}</span></div><h2>${escape(camera.title)}</h2><div class="caption-meta"><time${stamp ? ` datetime="${stampISO(stamp)}"` : ''}>${icon('clock')}<span>${escape(stampTime(stamp))}<small>${stamp ? stamp.slice(0, 10) : ''}</small></span></time><a class="archive-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}">Archive ${icon('arrow')}</a></div></figcaption></figure></article>`;
 }
-function showGallery() { $('#gallery').replaceChildren(...items.map(card)); }
-function empty(title,text) { $('#gallery').innerHTML=`<div class="empty"><h2>${escape(title)}</h2><p>${escape(text)}</p><button id="empty-retrieve">Retrieve images</button></div>`;$('#empty-retrieve').onclick=retrieve; }
-async function render() {
- activeController?.abort();activeController=new AbortController();
- cameraList();writeUrl();
- const c=catalog.find(c=>c.id===selected);
- document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));
- $('#page-title').textContent=view==='map'?'Camera locations':view==='archive'?(c?.title||'Camera archive'):'All cameras';
- $('#eyebrow').textContent=view==='archive'?'IMAGE ARCHIVE':'ALBERTA, CANADA';
- $('#archive-controls').hidden=view!=='archive';$('#gallery').hidden=view==='map';$('#map-panel').hidden=view!=='map';
- if(view==='map'){renderMap();setStatus(`${catalog.length} camera locations · Select a marker to browse its archive.`);return;}
- if(view==='archive'){
-  if(!c && selected){empty('Camera unavailable','This historical camera is not in the current catalog. Choose a camera from the sidebar.');setStatus('Historical camera not available.');return;}
-  if(!c){selected=catalog[0]?.id;return render();}
-  setStatus('Loading archive…');
-  try{
-   const response=await fetch(`${endpoint}?action=archive&camera=${encodeURIComponent(c.id)}&date=${$('#date').value}`,{signal:activeController.signal});const data=await response.json();if(!response.ok)throw new Error(data.error);
-   items=data.frames.filter(f=>$('#hour').value==='all'||f.stamp.slice(11,13)===$('#hour').value).map(f=>({camera:c,stamp:f.stamp}));
-   setStatus(`${items.length} ${items.length===1?'snapshot':'snapshots'} · ${$('#date').value} · ${data.dates.length} archived ${data.dates.length===1?'day':'days'}`);
-   if(items.length)showGallery();else empty('No snapshots for this time','Choose another date or retrieve a new set of images. New snapshots are stored under today’s date.');
-  }catch(e){if(e.name!=='AbortError')setStatus(e.message||'Unable to load the archive.');}
- } else {
-  const q=$('#search').value.toLowerCase();items=catalog.filter(c=>`${c.title} ${c.region}`.toLowerCase().includes(q)).map(c=>({camera:c,stamp:state.cameras?.[c.id]?.stamp}));showGallery();
-  const result=state.lastResult;setStatus(result?`Last retrieval: ${result.saved} saved${result.failed?`, ${result.failed} unavailable`:''}.`:'Select Retrieve images to collect the first snapshots.');
-  if(!items.length)empty('No matching cameras','Try a different camera name or location.');
- }
+function showGallery() { $('#gallery').innerHTML = state.items.map(card).join(''); }
+function empty(title, message, retrieve = true) {
+  $('#gallery').innerHTML = `<div class="empty">${icon('camera')}<h2>${escape(title)}</h2><p>${escape(message)}</p>${retrieve ? '<button data-action="retrieve">Retrieve images</button>' : '<button data-action="reset">Show all cameras</button>'}</div>`;
 }
-async function retrieve(){
- const b=$('#retrieve');if(b.disabled)return;b.disabled=true;b.querySelector('span').textContent='Retrieving…';b.setAttribute('aria-busy','true');setStatus('Retrieving camera images…');
- try{const r=await fetch(`${endpoint}?action=retrieve`,{method:'POST',headers:{'X-CSRF-Token':csrf}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Retrieval failed.');state=data.state;await render();setStatus(`${data.saved} images saved${data.failed?`; ${data.failed} ${data.failed===1?'camera':'cameras'} unavailable`:''}.`);}
- catch(e){setStatus(e.message||'Unable to retrieve images. Please try again.');}
- finally{b.disabled=false;b.removeAttribute('aria-busy');b.querySelector('span').textContent='Retrieve images';}
+async function render(historyMode = 'replace') {
+  archiveController?.abort();
+  archiveController = new AbortController();
+  cameraList();
+  const camera = state.catalog.find(camera => camera.id === state.selected);
+  $$('[data-view]').forEach(link => {
+    if (link.dataset.view === state.view) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+  $$('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === state.filter)));
+  $('#page-title').textContent = state.view === 'map' ? 'The wider view.' : state.view === 'archive' ? (camera?.region ?? 'The image archive.') : 'Alberta, in view.';
+  $('#eyebrow').textContent = state.view === 'archive' ? 'THE IMAGE ARCHIVE' : state.view === 'map' ? 'EXPLORE THE LOCATIONS' : 'THE CAMERA COLLECTION';
+  $('#intro-copy').textContent = state.view === 'archive'
+    ? (camera?.title ?? 'Choose a camera and revisit a moment. Explore saved snapshots by date and hour.')
+    : state.view === 'map' ? 'A province of perspectives. Choose a location to explore its saved snapshots.'
+      : 'A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.';
+  $('#archive-controls').hidden = state.view !== 'archive';
+  $('#grid-toolbar').hidden = state.view !== 'overview';
+  $('#gallery').hidden = state.view === 'map';
+  $('#map-panel').hidden = state.view !== 'map';
+  $('.collection-notes').hidden = state.view !== 'overview';
+  writeURL(historyMode);
+  if (state.view === 'map') { renderMap(); status(`${state.catalog.length} camera locations. Select a marker to browse its archive.`); return; }
+  if (state.view === 'archive') {
+    if (!camera && state.selected) { empty('Camera unavailable', 'This historical camera is not in the current catalog. Choose a camera from the sidebar.', false); status('Historical camera not available.'); return; }
+    if (!camera) { state.selected = state.catalog[0]?.id; return render(); }
+    $('#gallery').setAttribute('aria-busy', 'true');
+    status('Loading the image archive…');
+    try {
+      const data = await request('archive', { signal: archiveController.signal, parameters: { camera: camera.id, date: $('#date').value } });
+      state.items = data.frames.filter(frame => $('#hour').value === 'all' || frame.stamp.slice(11, 13) === $('#hour').value).map(frame => ({ camera, stamp: frame.stamp }));
+      if (state.items.length) showGallery();
+      else empty('No snapshots for this time', 'Try another date or retrieve a new collection. New snapshots are saved under today’s date.');
+      status(`${state.items.length} ${state.items.length === 1 ? 'snapshot' : 'snapshots'} · ${$('#date').value} · ${data.dates.length} archived ${data.dates.length === 1 ? 'day' : 'days'}`);
+    } catch (error) {
+      if (error.name !== 'AbortError') { empty('Archive unavailable', 'Unable to load the archive. Please try again.'); status(error.message); }
+    } finally { if (!archiveController.signal.aborted) $('#gallery').removeAttribute('aria-busy'); }
+  } else {
+    const query = $('#search').value.trim().toLowerCase();
+    state.items = state.catalog.filter(camera => {
+      const group = camera.region.startsWith('Edmonton') ? 'edmonton' : 'highways';
+      const matches = state.filter === 'all' || state.filter === group || (state.filter === 'unavailable' && state.snapshots.cameras?.[camera.id]?.status !== 'ok');
+      return matches && `${camera.title} ${camera.region}`.toLowerCase().includes(query);
+    }).map(camera => ({ camera, stamp: state.snapshots.cameras?.[camera.id]?.stamp }));
+    if (state.items.length) showGallery(); else empty('No cameras found', 'Try another place or clear your filters to see the full collection.', false);
+    const last = state.snapshots.lastResult;
+    status(last ? `${state.items.length} cameras in view · Last retrieved ${new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Edmonton', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(last.at))} MT` : 'Select Retrieve images to collect the first snapshots.');
+  }
 }
-function openViewer(index){viewerIndex=index;updateViewer();$('#viewer').showModal();}
-function updateViewer(){const i=items[viewerIndex];if(!i?.stamp)return;$('#viewer-title').textContent=i.camera.title;$('#viewer-image').src=imageUrl(i.camera.id,i.stamp);$('#viewer-image').alt=i.camera.title;$('#viewer-time').textContent=`${stampText(i.stamp)} · ${viewerIndex+1} of ${items.length}`;$('#viewer-prev').disabled=!items.slice(0,viewerIndex).some(i=>i.stamp);$('#viewer-next').disabled=!items.slice(viewerIndex+1).some(i=>i.stamp);}
-function stepViewer(dir){let n=viewerIndex+dir;while(n>=0&&n<items.length&&!items[n].stamp)n+=dir;if(n>=0&&n<items.length){viewerIndex=n;updateViewer();}}
+async function retrieve() {
+  if (state.retrieving) return;
+  state.retrieving = true;
+  const button = $('#retrieve');
+  button.disabled = true;
+  button.setAttribute('aria-busy', 'true');
+  button.querySelector('span').textContent = 'Retrieving…';
+  status('Retrieving your camera collection…');
+  try {
+    const data = await request('retrieve', { token: state.csrf });
+    state.snapshots = data.state;
+    await render();
+    status(`${data.saved} images saved${data.failed ? ` · ${data.failed} ${data.failed === 1 ? 'camera' : 'cameras'} unavailable` : ''}.`);
+  } catch (error) { status(error.message); }
+  finally {
+    state.retrieving = false;
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    button.querySelector('span').textContent = 'Retrieve images';
+  }
+}
+function openViewer(index, trigger) {
+  state.viewerIndex = index;
+  viewerTrigger = trigger;
+  updateViewer();
+  $('#viewer').showModal();
+}
+function updateViewer() {
+  const item = state.items[state.viewerIndex];
+  if (!item?.stamp) return;
+  $('#viewer-title').textContent = item.camera.title;
+  $('#viewer-image').width = item.camera.width ?? 840;
+  $('#viewer-image').height = item.camera.height ?? 630;
+  $('#viewer-image').src = imageURL(item.camera.id, item.stamp);
+  $('#viewer-image').alt = `${item.camera.title} camera snapshot`;
+  $('#viewer-original').href = imageURL(item.camera.id, item.stamp);
+  $('#viewer-time').textContent = `${stampLabel(item.stamp)} · ${state.items.filter(item => item.stamp).indexOf(item) + 1} of ${state.items.filter(item => item.stamp).length}`;
+  $('#viewer-prev').disabled = !state.items.slice(0, state.viewerIndex).some(item => item.stamp);
+  $('#viewer-next').disabled = !state.items.slice(state.viewerIndex + 1).some(item => item.stamp);
+}
+function stepViewer(direction) {
+  let index = state.viewerIndex + direction;
+  while (index >= 0 && index < state.items.length && !state.items[index].stamp) index += direction;
+  if (index >= 0 && index < state.items.length) { state.viewerIndex = index; updateViewer(); }
+}
+function closeRail() {
+  document.body.classList.remove('rail-open');
+  $('#rail-backdrop').hidden = true;
+  $('#main').inert = false;
+  $('.views').inert = false;
+  $('.header-actions').inert = false;
+  $('#rail-toggle').setAttribute('aria-expanded', String(!mobile.matches && !document.body.classList.contains('rail-hidden')));
+}
+function toggleRail() {
+  if (mobile.matches) {
+    if (document.body.classList.contains('rail-open')) { closeRail(); return; }
+    document.body.classList.add('rail-open');
+    $('#rail-backdrop').hidden = false;
+    $('#main').inert = true;
+    $('.views').inert = true;
+    $('.header-actions').inert = true;
+    $('#rail-toggle').setAttribute('aria-expanded', 'true');
+    $('#rail-close').focus();
+  } else {
+    document.body.classList.toggle('rail-hidden');
+    $('#rail-toggle').setAttribute('aria-expanded', String(!document.body.classList.contains('rail-hidden')));
+  }
+}
+function resetFilters() { state.view = 'overview'; state.selected = null; state.filter = 'all'; $('#search').value = ''; closeRail(); render('push'); }
+
+// One delegated handler keeps server rendered and refreshed cards on the same path.
+document.addEventListener('click', event => {
+  const target = event.target.closest('a,button');
+  if (!target || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (target.dataset.view) { event.preventDefault(); state.view = target.dataset.view; if (state.view === 'overview') state.selected = null; render('push'); }
+  else if (target.dataset.camera) { event.preventDefault(); chooseCamera(target.dataset.camera); }
+  else if (target.matches('.image-button')) { event.preventDefault(); openViewer(Number(target.dataset.index), target); }
+  else if (target.dataset.filter) { state.filter = target.dataset.filter; render('push'); }
+  else if (target.id === 'all-cameras' || target.dataset.action === 'reset') resetFilters();
+  else if (target.id === 'retrieve' || target.dataset.action === 'retrieve') retrieve();
+  else if (target.id === 'rail-toggle') toggleRail();
+  else if (['rail-close','rail-backdrop'].includes(target.id)) { closeRail(); $('#rail-toggle').focus(); }
+  else if (target.id === 'viewer-close') $('#viewer').close();
+  else if (target.id === 'viewer-prev') stepViewer(-1);
+  else if (target.id === 'viewer-next') stepViewer(1);
+});
+$('#viewer').addEventListener('close', () => viewerTrigger?.isConnected && viewerTrigger.focus());
+$('#gallery').addEventListener('error', event => {
+  if (event.target instanceof HTMLImageElement) {
+    const picture = event.target.closest('picture');
+    if (picture?.querySelector('source')) { picture.querySelector('source').remove(); return; }
+    const link = event.target.closest('.image-button');
+    if (link) link.outerHTML = `<div class="unavailable">${icon('camera')}<strong>Image unavailable</strong><p>Please retrieve the collection again.</p></div>`;
+  }
+}, true);
+$('#search').addEventListener('input', () => render());
+$('#archive-controls').addEventListener('submit', event => event.preventDefault());
+$('#date').max = mountainDate();
+for (let hour = 0; hour < 24; hour++) {
+  const value = String(hour).padStart(2, '0');
+  $('#hour').add(new Option(`${value}:00`, value));
+}
+$('#date').addEventListener('change', () => validDate($('#date').value) && render('push'));
+$('#hour').addEventListener('change', () => render('push'));
+for (const [id, direction] of [['prev-day', -1], ['next-day', 1]]) {
+  $(`#${id}`).addEventListener('click', () => {
+    const date = new Date(`${$('#date').value}T12:00:00Z`);
+    date.setUTCDate(date.getUTCDate() + direction);
+    const value = date.toISOString().slice(0, 10);
+    if (value <= mountainDate()) { $('#date').value = value; render('push'); }
+  });
+}
+$('#today').addEventListener('click', () => { $('#date').value = mountainDate(); $('#hour').value = 'all'; render('push'); });
+function density(value) {
+  $('#gallery').classList.toggle('compact', value === 'compact');
+  $('#gallery').classList.toggle('large', value === 'large');
+  $('#density').value = value;
+}
+try { const saved = localStorage.getItem('awc.grid.density'); if (['comfortable','compact','large'].includes(saved)) density(saved); } catch { /* Preferences remain usable for this visit. */ }
+$('#density').addEventListener('change', () => { density($('#density').value); try { localStorage.setItem('awc.grid.density', $('#density').value); } catch { /* Storage is optional. */ } });
+window.addEventListener('popstate', () => { readURL(); render(); });
+mobile.addEventListener('change', closeRail);
+new ResizeObserver(entries => { document.documentElement.style.setProperty('--header-height', `${Math.ceil(entries[0].target.getBoundingClientRect().height)}px`); }).observe($('.header'));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.body.classList.contains('rail-open')) { closeRail(); $('#rail-toggle').focus(); }
+  if ($('#viewer').open) {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); stepViewer(-1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); stepViewer(1); }
+  }
+  if (event.key === 'Tab' && mobile.matches && document.body.classList.contains('rail-open')) {
+    const elements = [...$('#sidebar').querySelectorAll('a,button')].filter(element => element.getClientRects().length);
+    if (event.shiftKey && document.activeElement === elements[0]) { event.preventDefault(); elements.at(-1).focus(); }
+    else if (!event.shiftKey && document.activeElement === elements.at(-1)) { event.preventDefault(); elements[0].focus(); }
+  }
+});
+closeRail();
+try {
+  const data = await request();
+  state.catalog = data.cameras;
+  state.snapshots = data.state;
+  state.csrf = data.csrf;
+  readURL();
+  await render();
+  $('#retrieve').disabled = false;
+} catch (error) { status(`${error.message} Saved snapshots are still available below.`); }
+
 function renderMap(){
  const point=c=>({x:80+(c.lng+120)/10*600,y:650-(c.lat-49)/11*600});
- $('#map-panel').innerHTML=`<div class="map-wrap"><svg viewBox="0 0 760 720" role="img" aria-labelledby="map-title map-desc"><title id="map-title">Alberta camera locations</title><desc id="map-desc">A schematic province outline with camera locations from 511 Alberta. The camera buttons below provide the same navigation.</desc><path class="map-region" d="M80 50H680V650H240L230 590 205 550 200 505 160 460 140 400 110 360 80 310Z"/>${[50,200,350,500,650].map(y=>`<path class="map-grid" d="M80 ${y}H680"/>`).join('')}${catalog.map(c=>{const p=point(c);return `<a class="map-marker-link" href="?view=archive&amp;camera=${c.id}" data-camera="${c.id}" aria-label="${escape(c.title)}"><circle class="map-marker" cx="${p.x}" cy="${p.y}" r="7"><title>${escape(c.title)}</title></circle></a>`;}).join('')}<text class="map-label" x="470" y="70">ALBERTA</text><text class="map-label" x="480" y="400">Edmonton</text><text class="map-label" x="440" y="550">Calgary</text></svg><p class="map-note">Schematic map · Locations from 511 Alberta. Use the camera list below for individual locations.</p></div><div class="map-legend">${catalog.map(c=>`<button data-camera="${c.id}">${escape(c.region)}</button>`).join('')}</div>`;
- $('#map-panel').querySelectorAll('[data-camera]').forEach(b=>b.onclick=e=>{e.preventDefault();selected=b.dataset.camera;view='archive';render();});
+ $('#map-panel').innerHTML=`<div class="map-wrap"><svg viewBox="0 0 760 720" role="img" aria-labelledby="map-title map-desc"><title id="map-title">Alberta camera locations</title><desc id="map-desc">A schematic province outline with camera locations from 511 Alberta. The camera buttons below provide the same navigation.</desc><path class="map-region" d="M80 50H680V650H240L230 590 205 550 200 505 160 460 140 400 110 360 80 310Z"/>${[50,200,350,500,650].map(y=>`<path class="map-grid" d="M80 ${y}H680"/>`).join('')}${state.catalog.map(c=>{const p=point(c);return `<a class="map-marker-link" href="?view=archive&amp;camera=${c.id}" data-camera="${c.id}" aria-label="${escape(c.title)}"><circle class="map-marker" cx="${p.x}" cy="${p.y}" r="7"><title>${escape(c.title)}</title></circle></a>`;}).join('')}<text class="map-label" x="470" y="70">ALBERTA</text><text class="map-label" x="480" y="400">Edmonton</text><text class="map-label" x="440" y="550">Calgary</text></svg><p class="map-note">Schematic map · Locations from 511 Alberta. Use the camera list below for individual locations.</p></div><div class="map-legend">${state.catalog.map(c=>`<button data-camera="${c.id}">${escape(c.region)}</button>`).join('')}</div>`;
+
 }
-$('#retrieve').onclick=retrieve;
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;if(view==='overview')selected=null;render();});
-$('#all-cameras').onclick=()=>{selected=null;view='overview';render();};
-$('#search').oninput=()=>view==='overview'?render():cameraList();
-$('#date').value=localDate();$('#date').max=localDate();
-for(let h=0;h<24;h++){const o=document.createElement('option');o.value=String(h).padStart(2,'0');o.textContent=`${o.value}:00`;$('#hour').append(o);}
-$('#date').onchange=()=>{if($('#date').value)render();};$('#hour').onchange=render;
-for(const [id,dir] of [['#prev-day',-1],['#next-day',1]])$(id).onclick=()=>{const d=new Date(`${$('#date').value}T12:00:00Z`);d.setUTCDate(d.getUTCDate()+dir);const next=d.toISOString().slice(0,10);if(next<=localDate()){$('#date').value=next;render();}};
-$('#today').onclick=()=>{$('#date').value=localDate();$('#hour').value='all';render();};
-$('#density').onchange=()=>$('#gallery').classList.toggle('compact',$('#density').value==='compact');
-$('#rail-toggle').onclick=()=>{if(matchMedia('(max-width:720px)').matches){document.body.classList.toggle('rail-open');$('#rail-toggle').setAttribute('aria-expanded',String(document.body.classList.contains('rail-open')));}else{document.body.classList.toggle('rail-hidden');$('#rail-toggle').setAttribute('aria-expanded',String(!document.body.classList.contains('rail-hidden')));}};
-if(matchMedia('(max-width:720px)').matches)$('#rail-toggle').setAttribute('aria-expanded','false');
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('rail-open');if(matchMedia('(max-width:720px)').matches)$('#rail-toggle').setAttribute('aria-expanded','false');}if($('#viewer').open){if(e.key==='ArrowLeft')stepViewer(-1);if(e.key==='ArrowRight')stepViewer(1);}});
-$('#viewer-close').onclick=()=>$('#viewer').close();$('#viewer-prev').onclick=()=>stepViewer(-1);$('#viewer-next').onclick=()=>stepViewer(1);
-try{const r=await fetch(endpoint);if(!r.ok)throw new Error('Unable to load cameras.');const data=await r.json();catalog=data.cameras;state=data.state;csrf=data.csrf;const p=new URLSearchParams(location.search);view=['overview','archive','map'].includes(p.get('view'))?p.get('view'):'overview';selected=p.get('camera')||null;if(/^\d{4}-\d{2}-\d{2}$/.test(p.get('date')||''))$('#date').value=p.get('date');if(p.get('hour')==='all'||/^([01]\d|2[0-3])$/.test(p.get('hour')||''))$('#hour').value=p.get('hour');await render();}catch(e){setStatus(e.message||'Unable to load cameras. Please reload.');}

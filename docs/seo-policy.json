@@ -1,0 +1,6 @@
+{
+  "public_urls": ["https://sltd.ca/awc/"],
+  "excluded_prefixes": ["/awc/api.php", "/awc/image.php", "/awc/?"],
+  "source_skip_prefixes": ["assets/", "_bootstrap.php", "api.php", "image.php"],
+  "no_fetch_patterns": ["api\\.php", "image\\.php"]
+}

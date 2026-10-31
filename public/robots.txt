@@ -1,0 +1,5 @@
+# The host-level robots policy is https://sltd.ca/robots.txt.
+# This subdirectory copy documents AWC discovery for site audit tooling.
+User-agent: *
+Allow: /awc/
+Sitemap: https://sltd.ca/awc/sitemap.xml
