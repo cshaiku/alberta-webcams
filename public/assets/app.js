@@ -9,15 +9,19 @@ const mobile = matchMedia('(max-width: 760px)');
 const state = { catalog: [], snapshots: {}, csrf: '', selected: null, view: 'overview', filter: 'all', items: [], viewerIndex: 0, retrieving: false };
 let archiveController;
 let viewerTrigger;
+let archivePeriod = '';
+let archiveFrames = [];
 
 function status(message, feedback = false) { $('#status').textContent = message; $('.status-row').classList.toggle('has-feedback', feedback); }
 function readURL() {
   const parameters = new URLSearchParams(location.search);
   state.view = ['archive', 'map'].includes(parameters.get('view')) ? parameters.get('view') : 'overview';
   state.selected = parameters.get('camera');
+  archivePeriod = parameters.get('period') ?? (validDate(parameters.get('date')) ? parameters.get('date') : '');
+  if (!/^$|^\d{4}-\d{2}(?:-\d{2}(?:_[0-2]\d)?)?$/.test(archivePeriod)) archivePeriod = '';
   state.filter = ['edmonton', 'highways', 'unavailable'].includes(parameters.get('filter')) ? parameters.get('filter') : 'all';
-  $('#date').value = validDate(parameters.get('date')) ? parameters.get('date') : mountainDate();
-  $('#hour').value = /^(all|[01]\d|2[0-3])$/.test(parameters.get('hour') ?? '') ? parameters.get('hour') : 'all';
+  $('#date').value = archivePeriod.length >= 10 && validDate(archivePeriod.slice(0,10)) ? archivePeriod.slice(0,10) : (validDate(parameters.get('date')) ? parameters.get('date') : mountainDate());
+  $('#hour').value = archivePeriod.includes('_') ? archivePeriod.slice(11,13) : (/^(all|[01]\d|2[0-3])$/.test(parameters.get('hour') ?? '') ? parameters.get('hour') : 'all');
   $('#search').value = parameters.get('q') ?? '';
 }
 function writeURL(mode = 'replace') {
@@ -25,8 +29,7 @@ function writeURL(mode = 'replace') {
   if (state.view !== 'overview') url.searchParams.set('view', state.view);
   if (state.selected) url.searchParams.set('camera', state.selected);
   if (state.view === 'archive') {
-    url.searchParams.set('date', $('#date').value);
-    url.searchParams.set('hour', $('#hour').value);
+    if (archivePeriod) url.searchParams.set('period', archivePeriod);
   } else if (state.view === 'overview') {
     if (state.filter !== 'all') url.searchParams.set('filter', state.filter);
     if ($('#search').value) url.searchParams.set('q', $('#search').value);
@@ -36,12 +39,19 @@ function writeURL(mode = 'replace') {
 function chooseCamera(id) {
   state.selected = id;
   state.view = 'archive';
+  archivePeriod = '';
   closeRail();
+  if (!mobile.matches) document.body.classList.remove('rail-hidden');
   render('push');
   if (mobile.matches) $('#main').focus({ preventScroll: true });
 }
 function cameraList() {
   $('#camera-count').textContent = state.catalog.length;
+  const isArchive = state.view === 'archive';
+  $('#camera-list').hidden = isArchive;
+  $('#archive-tree').hidden = !isArchive;
+  document.body.classList.toggle('camera-archive', isArchive);
+  if (isArchive && !mobile.matches) document.body.classList.remove('rail-hidden');
   $('#camera-list').innerHTML = ['Edmonton', 'Highways'].map(group => {
     const cameras = state.catalog.filter(camera => (camera.region.startsWith('Edmonton') ? 'Edmonton' : 'Highways') === group);
     return `<h2 class="group-title">${group}</h2>${cameras.map(camera => `<a class="camera-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}" ${state.selected === camera.id ? 'aria-current="page"' : ''}><span>${escape(camera.region)}</span><small>${escape(camera.title)}</small></a>`).join('')}`;
@@ -53,10 +63,29 @@ function cameraList() {
 function card(item, index) {
   const { camera, stamp } = item;
   const available = state.snapshots.cameras?.[camera.id]?.status === 'ok';
+  const overview = state.view === 'overview';
+  const destination = overview ? `/awc/?view=archive&camera=${encodeURIComponent(camera.id)}` : imageURL(camera.id, stamp);
   const visual = stamp
-    ? `<a class="image-button" href="${escape(imageURL(camera.id, stamp))}" data-index="${index}" aria-label="Enlarge ${escape(camera.title)} at ${escape(stampTime(stamp))}">${pictureHTML(camera, stamp, index === 0)}<span class="image-expand">${icon('expand')}</span></a>`
+    ? `<a class="image-button" href="${escape(destination)}" ${overview ? `data-camera="${escape(camera.id)}"` : ''} data-index="${index}" aria-label="${overview ? 'View archive for' : 'Enlarge'} ${escape(camera.title)} at ${escape(stampTime(stamp))}">${pictureHTML(camera, stamp, index === 0)}${overview ? '' : `<span class="archive-time">${escape(stampLabel(stamp))}</span>`}</a>`
     : `<div class="unavailable">${icon('camera')}<strong>Camera unavailable</strong><p>The source has no image right now.</p></div>`;
   return `<article class="camera-card"><figure>${visual}<figcaption class="card-caption"><div class="card-topline"><span class="region">${escape(camera.region)}</span><span class="feed-state"><i class="feed-dot${available ? '' : ' offline'}"></i>${available ? 'Snapshot' : stamp ? 'Previous image' : 'Unavailable'}</span></div><h2>${escape(camera.title)}</h2><div class="caption-meta"><time${stamp ? ` datetime="${stampISO(stamp)}"` : ''}>${icon('clock')}<span>${escape(stampTime(stamp))}<small>${stamp ? stamp.slice(0, 10) : ''}</small></span></time><a class="archive-link" href="/awc/?view=archive&amp;camera=${escape(camera.id)}" data-camera="${escape(camera.id)}">Archive ${icon('arrow')}</a></div></figcaption></figure></article>`;
+}
+function renderArchiveTree(camera) {
+  const months = new Map();
+  for (const { stamp } of archiveFrames) {
+    const month = stamp.slice(0, 7), day = stamp.slice(0, 10), hour = stamp.slice(11, 13);
+    if (!months.has(month)) months.set(month, new Map());
+    const days = months.get(month);
+    if (!days.has(day)) days.set(day, new Map());
+    const hours = days.get(day);
+    if (!hours.has(hour)) hours.set(hour, []);
+    hours.get(hour).push(stamp);
+  }
+  const button = (period, label) => `<button class="timeline-period" data-period="${escape(period)}" aria-pressed="${archivePeriod === period}">${escape(label)}</button>`;
+  $('#archive-tree').innerHTML = `<h2 class="archive-camera-title">${escape(camera.title)}</h2>${button('', `All images (${archiveFrames.length})`)}${[...months].map(([month, days], mi) => {
+    const label = new Intl.DateTimeFormat('en-CA', {month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month + '-01T12:00:00Z'));
+    return `<details ${archivePeriod.startsWith(month) || (!archivePeriod && mi === 0) ? 'open' : ''}><summary>${escape(label)}</summary>${button(month, 'View month')}${[...days].map(([day,hours],di) => `<details ${archivePeriod.startsWith(day) || (!archivePeriod && mi === 0 && di === 0) ? 'open' : ''}><summary>${escape(day.slice(8))} ${escape(label)}</summary>${button(day,'View day')}${[...hours].map(([hour,stamps],hi) => `<details ${archivePeriod === day+'_'+hour || (!archivePeriod && mi === 0 && di === 0 && hi === 0) ? 'open' : ''}><summary>${hour}:00 <span>${stamps.length} images</span></summary>${button(day+'_'+hour,'View hour')}${stamps.map(stamp => `<button class="timeline-image" data-stamp="${escape(stamp)}" aria-label="Open snapshot ${escape(stampLabel(stamp))}">${escape(stamp.slice(11,13)+':'+stamp.slice(13,15)+':'+stamp.slice(15,17))}</button>`).join('')}</details>`).join('')}</details>`).join('')}</details>`;
+  }).join('')}${archiveFrames.length ? '' : '<p class="timeline-empty">No saved images yet.</p>'}`;
 }
 function showGallery() { $('#gallery').innerHTML = state.items.map(card).join(''); }
 function empty(title, message, retrieve = true) {
@@ -91,11 +120,14 @@ async function render(historyMode = 'replace') {
     $('#gallery').setAttribute('aria-busy', 'true');
     status('Loading the image archive…');
     try {
-      const data = await request('archive', { signal: archiveController.signal, parameters: { camera: camera.id, date: $('#date').value } });
-      state.items = data.frames.filter(frame => $('#hour').value === 'all' || frame.stamp.slice(11, 13) === $('#hour').value).map(frame => ({ camera, stamp: frame.stamp }));
+      const data = await request('archive', { signal: archiveController.signal, parameters: { camera: camera.id, date: 'all' } });
+      archiveFrames = data.frames;
+      $('#archive-heading').textContent = camera.title;
+      state.items = data.frames.filter(frame => !archivePeriod || frame.stamp.startsWith(archivePeriod)).map(frame => ({ camera, stamp: frame.stamp }));
+      renderArchiveTree(camera);
       if (state.items.length) showGallery();
       else empty('No snapshots for this time', 'Try another date. New snapshots are collected automatically under today’s date.');
-      status(`${state.items.length} ${state.items.length === 1 ? 'snapshot' : 'snapshots'} · ${$('#date').value} · ${data.dates.length} archived ${data.dates.length === 1 ? 'day' : 'days'}`);
+      status(`${state.items.length} ${state.items.length === 1 ? 'snapshot' : 'snapshots'} · ${archivePeriod || 'All dates'} · ${data.dates.length} archived ${data.dates.length === 1 ? 'day' : 'days'}`);
     } catch (error) {
       if (error.name !== 'AbortError') { empty('Archive unavailable', 'Unable to load the archive. Please try again.'); status(error.message); }
     } finally { if (!archiveController.signal.aborted) $('#gallery').removeAttribute('aria-busy'); }
@@ -161,10 +193,17 @@ function toggleRail() {
 function resetFilters() { state.view = 'overview'; state.selected = null; state.filter = 'all'; $('#search').value = ''; closeRail(); render('push'); }
 
 // One delegated handler keeps server rendered and refreshed cards on the same path.
-document.addEventListener('click', event => {
+document.addEventListener('click', async event => {
   const target = event.target.closest('a,button');
   if (!target || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   if (target.dataset.view) { event.preventDefault(); state.view = target.dataset.view; if (state.view === 'overview') state.selected = null; render('push'); }
+  else if (target.dataset.period !== undefined) { archivePeriod = target.dataset.period; closeRail(); render('push'); }
+  else if (target.dataset.stamp) {
+    const stamp = target.dataset.stamp;
+    if (!state.items.some(item => item.stamp === stamp)) { archivePeriod = ''; await render('push'); }
+    const index = state.items.findIndex(item => item.stamp === stamp);
+    if (index >= 0) openViewer(index, $('#archive-tree').querySelector(`[data-stamp="${stamp}"]`));
+  }
   else if (target.dataset.camera) { event.preventDefault(); chooseCamera(target.dataset.camera); }
   else if (target.matches('.image-button')) { event.preventDefault(); openViewer(Number(target.dataset.index), target); }
   else if (target.dataset.filter) { state.filter = target.dataset.filter; render('push'); }
@@ -192,17 +231,18 @@ for (let hour = 0; hour < 24; hour++) {
   const value = String(hour).padStart(2, '0');
   $('#hour').add(new Option(`${value}:00`, value));
 }
-$('#date').addEventListener('change', () => validDate($('#date').value) && render('push'));
-$('#hour').addEventListener('change', () => render('push'));
+$('#archive-all').addEventListener('click', () => { archivePeriod = ''; render('push'); });
+$('#date').addEventListener('change', () => { if (validDate($('#date').value)) { archivePeriod = $('#date').value; $('#hour').value = 'all'; render('push'); } });
+$('#hour').addEventListener('change', () => { archivePeriod = $('#date').value + ($('#hour').value === 'all' ? '' : '_' + $('#hour').value); render('push'); });
 for (const [id, direction] of [['prev-day', -1], ['next-day', 1]]) {
   $(`#${id}`).addEventListener('click', () => {
     const date = new Date(`${$('#date').value}T12:00:00Z`);
     date.setUTCDate(date.getUTCDate() + direction);
     const value = date.toISOString().slice(0, 10);
-    if (value <= mountainDate()) { $('#date').value = value; render('push'); }
+    if (value <= mountainDate()) { $('#date').value = value; archivePeriod = value; $('#hour').value = 'all'; render('push'); }
   });
 }
-$('#today').addEventListener('click', () => { $('#date').value = mountainDate(); $('#hour').value = 'all'; render('push'); });
+$('#today').addEventListener('click', () => { $('#date').value = mountainDate(); $('#hour').value = 'all'; archivePeriod = mountainDate(); render('push'); });
 window.addEventListener('popstate', () => { readURL(); render(); });
 function setMenu(open) {
   document.body.classList.toggle('controls-open', open);

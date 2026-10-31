@@ -15,8 +15,11 @@ if ($action === 'catalog') { json_response(['cameras' => array_map(function($c) 
     return $c; }, cameras()), 'state' => state(), 'csrf' => $_SESSION['csrf'], 'timezone' => 'America/Edmonton']); }
 if ($action === 'archive') {
     $id = (string)($_GET['camera'] ?? ''); $date = (string)($_GET['date'] ?? date('Y-m-d'));
-    if (!camera($id) || !valid_date($date)) json_response(['error' => 'Choose a valid camera and date.'], 400);
-    json_response(['frames' => frames($id, $date), 'dates' => dates($id)]);
+    if (!camera($id) || ($date !== 'all' && !valid_date($date))) json_response(['error' => 'Choose a valid camera and date.'], 400);
+        $availableDates = dates($id);
+    $result = $date === 'all' ? array_merge([], ...array_map(fn($day) => frames($id, $day), $availableDates)) : frames($id, $date);
+    usort($result, fn($a, $b) => strcmp($b['stamp'], $a['stamp']));
+    json_response(['frames' => $result, 'dates' => $availableDates]);
 }
 if ($action !== 'retrieve') json_response(['error' => 'Unknown action.'], 404);
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_response(['error' => 'Use the Retrieve images button.'], 405);

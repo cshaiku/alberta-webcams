@@ -10,7 +10,7 @@ The working example is intended for https://sltd.ca/awc/. Codex project folder: 
 
 * Overview displays the latest collected snapshot from every camera.
 * The shared hosting scheduler saves a new set of JPEG images every 15 minutes, with previous images preserved when an individual camera fails. The manual retrieval button is removed.
-* Archive browses one camera by date and hour, with an enlarged viewer and previous or next image controls.
+* Front page image clicks open that camera’s full archive, newest first. The left rail groups images by month, day, hour and individual timestamp. Period controls filter the grid; individual timestamps and archive tiles open the enlarged viewer.
 * Map shows a schematic province outline using official camera coordinates. Camera buttons provide an accessible alternative.
 * The camera rail collapses to give images more room. On phones it opens as a drawer. The desktop collection uses three equal columns.
 * All times use America/Edmonton. UI timestamps record retrieval time; a source image may have an older embedded capture timestamp.

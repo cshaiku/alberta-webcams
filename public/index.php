@@ -54,9 +54,9 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="icon" type="image/png" sizes="32x32" href="/awc/assets/brand/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/awc/assets/brand/apple-touch-icon.png">
     <link rel="sitemap" type="application/xml" href="/awc/sitemap.xml">
-    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-header48">
+    <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-archive1">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
-    <script type="module" src="/awc/assets/app.js?v=20261031-header48"></script>
+    <script type="module" src="/awc/assets/app.js?v=20261031-archive1"></script>
     <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
@@ -79,14 +79,14 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <aside id="sidebar" class="sidebar" aria-label="Camera collection">
         <div class="rail-head"><span class="eyebrow">EXPLORE ALBERTA</span><button class="icon-button mobile-close" id="rail-close" aria-label="Close camera sidebar"><?= icon('close') ?></button></div>
         <button id="all-cameras" class="all selected"><?= icon('grid') ?><span>All cameras</span><span id="camera-count" class="count"><?= count($catalog) ?></span></button>
-        <div id="camera-list"><?php foreach (['Edmonton','Highways'] as $group): ?><h2 class="group-title"><?= e($group) ?></h2><?php foreach ($catalog as $c): if (($c['region'][0] === 'E' && str_starts_with($c['region'],'Edmonton') ? 'Edmonton' : 'Highways') !== $group) continue; ?><a class="camera-link" href="/awc/?view=archive&amp;camera=<?= e($c['id']) ?>" data-camera="<?= e($c['id']) ?>"><span><?= e($c['region']) ?></span><small><?= e($c['title']) ?></small></a><?php endforeach; endforeach; ?></div>
+        <nav id="archive-tree" aria-label="Camera archive timeline" hidden></nav><div id="camera-list"><?php foreach (['Edmonton','Highways'] as $group): ?><h2 class="group-title"><?= e($group) ?></h2><?php foreach ($catalog as $c): if (($c['region'][0] === 'E' && str_starts_with($c['region'],'Edmonton') ? 'Edmonton' : 'Highways') !== $group) continue; ?><a class="camera-link" href="/awc/?view=archive&amp;camera=<?= e($c['id']) ?>" data-camera="<?= e($c['id']) ?>"><span><?= e($c['region']) ?></span><small><?= e($c['title']) ?></small></a><?php endforeach; endforeach; ?></div>
         <div class="rail-foot"><span class="source-emblem"><?= icon('camera') ?></span><strong>A province in perspective.</strong><p>Camera images provided by 511 Alberta.</p><a href="https://511.alberta.ca/" target="_blank" rel="noopener">Visit the source <?= icon('external') ?></a></div>
     </aside>
     <button id="rail-backdrop" class="rail-backdrop" aria-label="Close camera sidebar" hidden></button>
     <main id="main" tabindex="-1">
         <section class="collection-intro" aria-labelledby="page-title"><div class="page-heading"><p class="eyebrow" id="eyebrow">THE CAMERA COLLECTION</p><h1 id="page-title">Alberta, in view.</h1><p class="intro-copy" id="intro-copy">A little perspective before you go. Explore highway snapshots across Alberta, or look back through the archive.</p></div><dl class="collection-stats"><div><dt>Cameras</dt><dd id="stat-cameras"><?= count($catalog) ?></dd></div><div><dt>Available</dt><dd id="stat-available"><?= $available ?></dd></div><div><dt>Time zone</dt><dd class="stat-zone">Mountain<small>Alberta, Canada</small></dd></div></dl></section>
 
-        <form id="archive-controls" class="control-strip" hidden><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
+        <form id="archive-controls" class="control-strip" hidden><strong id="archive-heading"></strong><button id="archive-all" type="button">All images</button><div class="date-controls"><button id="prev-day" type="button" aria-label="Previous day">‹</button><label>Date <input id="date" type="date" value="<?= date('Y-m-d') ?>"></label><button id="next-day" type="button" aria-label="Next day">›</button></div><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today" type="button">Today</button><span class="time-zone"><?= icon('clock') ?> Mountain time</span></form>
         <div class="status-row"><p id="status" role="status" aria-live="polite"><?= isset($snapshotState['lastResult']) ? 'Latest collection · ' . $available . ' cameras available' : 'Images are collected automatically every 15 minutes.' ?></p><span id="capture-note"><?= icon('info') ?> Times below record retrieval, not camera capture.</span></div>
         <noscript><p class="notice">The camera grid is available below. Enable JavaScript to use filters and open the archive controls.</p></noscript>
         <section id="gallery" class="gallery" aria-label="Camera snapshots"><?php foreach ($catalog as $index => $c) echo card_html($c, $snapshotState['cameras'][$c['id']] ?? [], $index); ?></section>

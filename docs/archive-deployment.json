@@ -1,0 +1,23 @@
+{
+  "url": "https://sltd.ca/awc/?view=archive&camera=ab_128",
+  "backup": "domains/sltd.ca/private/deploy-backups/awc-archive-20261031",
+  "behavior": [
+    "Front page camera images open full camera archive",
+    "Newest snapshots first",
+    "Month day hour and individual timestamp rail",
+    "Month day hour filtering and individual image viewer",
+    "Responsive rail on mobile"
+  ],
+  "checks": [
+    "make test",
+    "Local and live tests/archive.cjs",
+    "Local and live tests/browser.cjs"
+  ],
+  "files": {
+    "public/index.php": "9c4e687a4e100beb8d5041e9e7f24c0351644354d19fc87beedc10ad6a8a954a",
+    "public/api.php": "6183d68ab0682976992e573ec9901c56f9c40cae798367da97a0a18514fea499",
+    "public/assets/site.css": "2e1ce0507f7cb26790e22a346db2935ac2e4ef82ae73225fd196d781c3a5e496",
+    "public/assets/app.js": "4f1a552d78948447b3da8b2bc475abec01817d362c45c37e20474463049c7d73",
+    "app/presentation.php": "ceb64ab1ccd17947b5cb046d9a9929d9ed4df116a3e45844417ac26b18336a52"
+  }
+}

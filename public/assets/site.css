@@ -387,3 +387,19 @@
   .header .filters { flex: 0 0 auto; }
   @media (max-width: 760px) { .header .filters { flex: 1 1 100%; flex-wrap: wrap; } }
 }
+
+@layer workspace {
+  #archive-tree { padding-block-end: 20px; }
+  #app .archive-camera-title { font-size: 1rem; line-height: 1.5; padding: 12px 0; }
+  #archive-tree details { padding-inline-start: 10px; border-inline-start: 1px solid var(--rule); margin-block: 6px; }
+  #archive-tree summary { padding: 8px 2px; cursor: pointer; font-size: .85rem; }
+  #archive-tree summary span { color: var(--muted); font-size: .75rem; }
+  #app #archive-tree button { display: block; inline-size: 100%; min-block-size: 36px; padding: 6px 8px; text-align: start; border: 0; border-radius: 0; background: transparent; font-size: .8rem; }
+  #app #archive-tree button:hover,#app #archive-tree [aria-pressed="true"] { background: var(--hover); }
+  .timeline-image { font-variant-numeric: tabular-nums; }
+  .timeline-empty { font-size: .85rem; color: var(--muted); }
+  #archive-heading { font-size: .85rem; flex: 1 0 100%; padding-block: 6px; }
+  .archive-time { position: absolute; inset: auto 0 0; padding: 4px 6px; color: #fff; background: #000b; font: 12px/1.5 ui-sans-serif,system-ui,sans-serif; }
+  .camera-archive .control-strip { flex-wrap: wrap; }
+  .camera-archive .rail-foot { display: none; }
+}
