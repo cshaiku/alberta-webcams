@@ -15,7 +15,7 @@ class PreferencesCenter extends A11yComponent {
   render() {
     this.resetAll = true;
     this.mount(
-      "Accessibility Settings",
+      "Accessibility Preferences",
       "",
       group("Appearance", appearance(), true) +
         group("Text and spacing", typography()) +

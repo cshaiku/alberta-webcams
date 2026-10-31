@@ -57,7 +57,7 @@ $schema = ['@context' => 'https://schema.org', '@graph' => [
     <link rel="stylesheet" href="/awc/assets/site.css?v=20261031-header48">
     <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT) ?></script>
     <script type="module" src="/awc/assets/app.js?v=20261031-header48"></script>
-    <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-settings"></script>
+    <script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js?v=20261031-preferences"></script>
 </head>
 <body class="rail-hidden" id="app" data-sdou-a11y-content data-default-theme="dark" data-default-font="sans">
 <a class="skip" href="#main">Skip to camera images</a>
