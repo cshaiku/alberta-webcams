@@ -1,0 +1,18 @@
+<?php
+header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'");
+header('Cache-Control: no-store');
+?>
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="Explore Alberta webcam snapshots and browse the image archive by camera, date and time."><title>Alberta Webcams</title><link rel="stylesheet" href="/awc/assets/accessibility/shared/content.css"><link rel="stylesheet" href="/awc/assets/site.css?v=1"><script type="module" src="/awc/assets/app.js?v=1"></script><script type="module" src="/awc/assets/accessibility/components/preferences-center/index.js"></script></head>
+<body id="app" data-sdou-a11y-content data-default-theme="dark">
+<a class="skip" href="#main">Skip to camera images</a>
+<header class="header"><button id="rail-toggle" class="icon-button" aria-label="Toggle camera sidebar" aria-controls="sidebar" aria-expanded="true">☰</button><a class="brand" href="/awc/"><span class="wordmark">AWC</span><span>Alberta Webcams</span></a><nav class="views" aria-label="Views"><button data-view="overview" aria-pressed="true">Overview</button><button data-view="archive" aria-pressed="false">Archive</button><button data-view="map" aria-pressed="false">Map</button></nav><button id="retrieve" class="primary">↻ <span>Retrieve images</span></button></header>
+<div class="workspace"><aside id="sidebar" class="sidebar"><div class="rail-head"><h2>Cameras</h2><span id="camera-count"></span></div><label class="search"><span class="sr-only">Search cameras</span><input id="search" type="search" placeholder="Search cameras"></label><button id="all-cameras" class="all selected">All cameras</button><div id="camera-list"></div><div class="rail-foot"><span class="dot"></span> Manual retrieval<br><small>Snapshots from 511 Alberta</small></div></aside>
+<main id="main" tabindex="-1"><div class="page-heading"><div><p class="eyebrow" id="eyebrow">ALBERTA, CANADA</p><h1 id="page-title">All cameras</h1></div><label class="density">Image size <select id="density"><option value="comfortable">Large</option><option value="compact">Compact</option></select></label></div>
+<div id="archive-controls" class="control-strip" hidden><button id="prev-day" aria-label="Previous day">‹</button><label>Date <input id="date" type="date"></label><button id="next-day" aria-label="Next day">›</button><label>Hour <select id="hour"><option value="all">All hours</option></select></label><button id="today">Today</button><span>Mountain time</span></div>
+<div class="status-row"><p id="status" role="status" aria-live="polite">Loading cameras…</p><span id="capture-note">Times show retrieval, not camera capture.</span></div>
+<div id="gallery" class="gallery"></div><div id="map-panel" hidden></div>
+<footer><span>Alberta Webcams · Recovered and rebuilt</span><a href="https://511.alberta.ca/" target="_blank" rel="noopener">Source: 511 Alberta ↗</a></footer></main></div>
+<dialog id="viewer" aria-labelledby="viewer-title"><div class="viewer-toolbar"><h2 id="viewer-title"></h2><button id="viewer-close" aria-label="Close image">✕</button></div><img id="viewer-image" alt=""><div class="viewer-bottom"><button id="viewer-prev" aria-label="Previous image">←</button><p id="viewer-time"></p><button id="viewer-next" aria-label="Next image">→</button></div></dialog>
+<sdou-preferences-center target="#app" storage-key="awc.reading.v1"></sdou-preferences-center>
+</body></html>

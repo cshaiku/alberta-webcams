@@ -1,0 +1,5 @@
+/runtime/
+/config/local.php
+/.private/
+/output/
+.DS_Store

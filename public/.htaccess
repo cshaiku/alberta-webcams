@@ -1,0 +1,11 @@
+Options -Indexes
+DirectoryIndex index.php
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+RewriteEngine On
+RewriteRule ^archive/([^/]+)/([0-9]{4})/([0-9]{2})/([0-9]{2})/([0-9]{2}):([0-9]{2})/?$ index.php?view=archive&camera=$1&date=$2-$3-$4&hour=$5 [L,QSA]
+RewriteRule ^archive/?$ index.php?view=archive [L,QSA]
+RewriteRule ^map/?$ index.php?view=map [L,QSA]
