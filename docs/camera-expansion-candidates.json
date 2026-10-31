@@ -1,0 +1,119 @@
+{
+  "checkedAt": "2026-10-31T10:00:42.996237+00:00",
+  "status": "Verified candidates, not in active catalog",
+  "evidence": "Official 511 Alberta camera list metadata and successful JPEG responses, visually inspected as temporary WebP samples. Provider timestamps were current on October 31, 2026.",
+  "candidates": [
+    {
+      "id": "ab_361",
+      "title": "Bow Tr / Old Banff Coach Rd SW",
+      "region": "Calgary west",
+      "lat": 51.051986,
+      "lng": -114.181589,
+      "url": "https://511.alberta.ca/map/Cctv/621",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-361",
+      "verifiedImageDimensions": [
+        840,
+        630
+      ],
+      "imageViewId": 621
+    },
+    {
+      "id": "ab_104",
+      "title": "Hwy 16: East of the Jasper Park Gate",
+      "region": "Jasper park gate",
+      "lat": 53.2494,
+      "lng": -117.777,
+      "url": "https://511.alberta.ca/map/Cctv/258",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-104",
+      "verifiedImageDimensions": [
+        640,
+        388
+      ],
+      "imageViewId": 258
+    },
+    {
+      "id": "ab_134",
+      "title": "Hwy 63: approx. 94km S of Fort McMurray near Mariana Lake",
+      "region": "Fort McMurray south",
+      "lat": 55.9931,
+      "lng": -111.968,
+      "url": "https://511.alberta.ca/map/Cctv/325",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-134",
+      "verifiedImageDimensions": [
+        704,
+        518
+      ],
+      "imageViewId": 325
+    },
+    {
+      "id": "ab_71",
+      "title": "Hwy 1: 160m West of First St. SW in Medicine Hat",
+      "region": "Medicine Hat",
+      "lat": 50.0404,
+      "lng": -110.716,
+      "url": "https://511.alberta.ca/map/Cctv/164",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-71",
+      "verifiedImageDimensions": [
+        640,
+        388
+      ],
+      "imageViewId": 164
+    },
+    {
+      "id": "ab_24",
+      "title": "Lethbridge Whoop Up",
+      "region": "Lethbridge",
+      "lat": 49.6884,
+      "lng": -112.862,
+      "url": "https://511.alberta.ca/map/Cctv/24",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-24",
+      "verifiedImageDimensions": [
+        720,
+        518
+      ],
+      "imageViewId": 24
+    },
+    {
+      "id": "ab_96",
+      "title": "Hwy 6: North of Waterton National Park",
+      "region": "Waterton",
+      "lat": 49.1675,
+      "lng": -113.833,
+      "url": "https://511.alberta.ca/map/Cctv/237",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-96",
+      "verifiedImageDimensions": [
+        640,
+        388
+      ],
+      "imageViewId": 237
+    },
+    {
+      "id": "ab_281",
+      "title": "Lake Louise TCH",
+      "region": "Lake Louise",
+      "lat": 51.433175,
+      "lng": -116.190079,
+      "url": "https://511.alberta.ca/map/Cctv/508",
+      "source": "511 Alberta",
+      "sourcePage": "https://511.alberta.ca/#camera-281",
+      "verifiedImageDimensions": [
+        704,
+        480
+      ],
+      "imageViewId": 508
+    }
+  ],
+  "excluded": [
+    {
+      "area": "Grande Prairie, south of Cutbank River",
+      "imageViewId": 71,
+      "reason": "Image response decoded but showed static, excluded after visual inspection."
+    }
+  ]
+}
